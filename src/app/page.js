@@ -5,7 +5,7 @@ export default function Home() {
     <RootLayout>
       <section>
         <h1>Velkommen!</h1>
-        <p>Her er noget dynamisk indhold.</p>
+        <p>Her er noget dynamisk indhold</p>
       </section>
     </RootLayout>
   );
