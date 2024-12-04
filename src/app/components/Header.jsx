@@ -1,6 +1,9 @@
 export default function Header() {
   return (
     <header>
+        <div className="bg-red-800">
+            FOOTFEST
+        </div>
       <nav>
         <ul>
           <li><a href="/">Hjem</a></li>
