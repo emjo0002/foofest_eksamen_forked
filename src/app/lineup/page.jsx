@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getAllBands } from "../lib/api";
 
@@ -21,10 +22,12 @@ export default function LineupPage() {
          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
            {bands.map((band) => (
           <div key={band.id} className="bg-blue-800 p-4 rounded-lg shadow-lg hover:shadow-2xl transition duration-300">
-            <Image src={`/logos/${band.logo}`} width={250} height={250} alt={band.title} className="w-full h-64 object-cover rounded-md" />
+            <Image src={`/logos/${band.logo}`} width={250} height={250} alt={band.slug} className="w-full h-64 object-cover rounded-md" />
             <h2 className="text-2xl font-semibold mt-4">{band.name}</h2>
             <p className="mt-2">{band.description}</p>
-            <button className="mt-4 bg-white text-blue-900 px-4 py-2 rounded-lg">More Info</button>
+             <Link className="text-black" href={`/artist/${band.slug}`} name={band.name}>
+              <button className="mt-4 bg-white text-blue-900 px-4 py-2 rounded-lg">More Info</button>        
+            </Link>
           </div>
         ))}
       </div>

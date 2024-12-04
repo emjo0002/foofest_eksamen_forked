@@ -11,7 +11,7 @@ export default function Header() {
 
   return (
     <header className="relative flex justify-between items-center p-4 bg-gray-800 text-white">
-      <div className="text-xl font-bold">FOOTFEST</div>
+      <a href="/"><div className="text-xl font-bold">FOOTFEST</div></a>
 
       <button
         onClick={handleClick}
