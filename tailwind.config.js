@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       fontFamily: {
         gajraj: ["Gajraj One", "sans-serif"],
+        genos: ["Genos", "sans-serif"],
       },
       colors: {
         background: "var(--background)",
