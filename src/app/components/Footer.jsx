@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
     <footer>
-        <p>hej</p>
+      <p className="absolute">hej</p>
     </footer>
   );
 }
