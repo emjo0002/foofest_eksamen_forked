@@ -1,4 +1,4 @@
-const baseURL = process.env.NEXT_PUBLIC_API || "http://localhost:8080";
+const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 export const fetchAPI = async (endpoint, options = {}) => {
   const url = `${baseURL}${endpoint}`;
@@ -17,7 +17,7 @@ export async function getAllBands() {
     const data = await fetchAPI("/bands");
     return data;
   } catch (error) {
-    console.error("Error fetching bands:", error);
+    console.error("Fejl ved hentning af bands:", error);
     return [];
   }
 }

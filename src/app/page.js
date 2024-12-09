@@ -14,7 +14,7 @@ export default function Home() {
           LINE-UP
         </a>
         <a href="/artists" className="block text-lg md:text-2xl lg:text-4xl font-gajraj font-bold cursor-pointer hover:underline">
-          ARTISTS
+          PROGRAM
         </a>
       </div>
     </section>
