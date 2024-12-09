@@ -2,3 +2,13 @@
     overflow: visible;
     max-width: 500px;
 }
+
+.carousel-root .carousel-slider .control-arrow.control-next {
+    height: fit-content;
+    top: 30%;
+}
+
+.carousel-root .carousel-slider .control-arrow.control-prev {
+    height: fit-content;
+    top: 30%;
+} 

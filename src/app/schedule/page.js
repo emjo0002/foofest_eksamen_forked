@@ -44,7 +44,7 @@ export default function Schedule() {
     }
 
     fetchData();
-  }, []);
+  }, [filterScene]);
 
   // Her filtrerer jeg baseret på valgte dag HJÆÆLPPPPP DET VIRKER IK
   const filteredBands = bands.filter((band) => {
