@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getAllBands } from "../lib/api";
 import BandCarousel from "../components/BandCarousel";
+import { getAllBands } from "../api/api";
 
 export default function LineupPage() {
   const [bands, setBands] = useState([]);
@@ -23,6 +23,5 @@ export default function LineupPage() {
       ) : (
         <p className="text-center mt-8">Loading bands...</p>
       )}
-    </div>
-  );
-}
+      </div>
+  )}

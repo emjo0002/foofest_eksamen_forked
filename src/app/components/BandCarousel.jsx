@@ -44,5 +44,3 @@ export default function BandCarousel({ bands }) {
     </Carousel>
   );
 }
-
-//h-96 object-contain rounded-md mx-auto
