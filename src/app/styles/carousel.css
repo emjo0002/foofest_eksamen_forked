@@ -1,0 +1,4 @@
+.carousel .slider-wrapper.axis-horizontal {
+    overflow: visible;
+    max-width: 500px;
+}
