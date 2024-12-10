@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getAllBands } from "../api/api";
+import { getAllBands } from "../api/api.js";
 
 export default function Schedule() {
   const [bands, setBands] = useState([]);
@@ -29,38 +29,62 @@ export default function Schedule() {
 
   useEffect(() => {
     async function fetchData() {
-      const fetchedBands = await getAllBands();
-      const response = await fetch("http://localhost:8080/schedule");
-      const fetchedSchedule = await response.json();
+      try {
+        const fetchedBands = await getAllBands();
+        const response = await fetch("http://localhost:8080/schedule");
+        const fetchedSchedule = await response.json();
 
-      setBands(fetchedBands);
-      setSchedule(fetchedSchedule);
+        setBands(fetchedBands);
+        setSchedule(fetchedSchedule);
 
-      const scheduleDays = ["all", ...new Set(Object.keys(fetchedSchedule).flatMap((stage) => Object.keys(fetchedSchedule[stage])))];
-      setDays(scheduleDays);
+        // Hent alle dage og scener og sæt schedule til "all" som default
+        const scheduleDays = ["all", ...new Set(Object.values(fetchedSchedule).flatMap((stage) => Object.keys(stage)))];
+        setDays(scheduleDays);
 
-      const scheduleScenes = ["all", ...Object.keys(fetchedSchedule)];
-      setScenes(scheduleScenes);
+        const scheduleScenes = ["all", ...Object.keys(fetchedSchedule)];
+        setScenes(scheduleScenes);
+
+        console.log("Fetched Bands:", fetchedBands);
+        console.log("Fetched Schedule:", fetchedSchedule);
+      } catch (error) {
+        console.error("Fejl ved hentning af data:", error);
+      }
     }
 
     fetchData();
   }, []);
 
-  // Her filtrerer jeg baseret på valgte dag HJÆÆLPPPPP DET VIRKER IK
+  // Filtreringslogik
   const filteredBands = bands.filter((band) => {
-    const matchesDay = filterDay === "all" || (schedule[band.stage] && Object.keys(schedule[band.stage]).includes(filterDay));
+    if (!band.stage) return false;
 
-    const matchesScene = filterScene === "all" || band.stage === filterScene;
+    // Find den korrekte scene i schedule (case-insensitive)
+    const stageKey = Object.keys(schedule).find((key) => key.toLowerCase() === band.stage.toLowerCase());
+    if (!stageKey) return false;
 
-    return matchesDay && matchesScene;
+    const bandSchedule = schedule[stageKey];
+    if (!bandSchedule) return false;
+
+    // Matcher scene-filteret
+    const matchesScene = filterScene === "all" || stageKey.toLowerCase() === filterScene.toLowerCase();
+
+    // Matcher dag-filteret
+    const matchesDay =
+      filterDay === "all" ||
+      Object.entries(bandSchedule).some(([dayKey, acts]) => {
+        const dayMatches = dayNames[filterDay]?.toLowerCase().startsWith(dayKey.toLowerCase());
+        return dayMatches && acts.some((act) => act.act.toLowerCase() === band.name.toLowerCase() && !act.cancelled);
+      });
+
+    return matchesScene && matchesDay;
   });
 
   return (
     <div className="bg-gray-600 text-white min-h-screen px-8 py-12">
-      <h1 className="text-4xl font-bold mb-8">SCHEDULE</h1>
+      <h1 className="text-4xl font-bold mb-8">PROGRAM</h1>
 
       <header className="flex flex-col md:flex-row gap-4 mb-8">
-        {/* Her filtrerer jeg scene  */}
+        {/* Filtrer scene */}
         <div className="w-full md:w-1/2">
           <label htmlFor="scene-filter" className="block mb-2">
             Vælg scene:
@@ -74,7 +98,7 @@ export default function Schedule() {
           </select>
         </div>
 
-        {/* Filtrer dagene */}
+        {/* Filtrer dag */}
         <div className="w-full md:w-1/2">
           <label htmlFor="day-filter" className="block mb-2">
             Vælg dag:
@@ -89,18 +113,22 @@ export default function Schedule() {
         </div>
       </header>
 
-      {/* Her vises band  */}
+      {/* Viser filtrerede bands */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        {filteredBands.map((band) => (
-          <div key={band.id} className="p-4 rounded-lg shadow-lg">
-            <Image src={`/logos/${band.logo}`} width={250} height={250} alt={band.slug} className="w-full h-64 object-cover rounded-md" />
-            <h2 className="text-2xl font-semibold mt-4">{band.name}</h2>
-            <p className="mt-2">{band.description}</p>
-            <Link href={`/artist/${band.slug}`}>
-              <button className="mt-4 bg-white text-blue-900 px-4 py-2 rounded-lg">More Info</button>
-            </Link>
-          </div>
-        ))}
+        {filteredBands.length > 0 ? (
+          filteredBands.map((band) => (
+            <div key={band.id} className="p-4 rounded-lg shadow-lg bg-gray-800">
+              <Image src={`/logos/${band.logo}`} width={250} height={250} alt={band.slug} className="w-full h-64 object-cover rounded-md" />
+              <h2 className="text-2xl font-semibold mt-4">{band.name}</h2>
+              <p className="mt-2">{band.description}</p>
+              <Link href={`/artist/${band.slug}`}>
+                <button className="mt-4 bg-white text-blue-900 px-4 py-2 rounded-lg">More Info</button>
+              </Link>
+            </div>
+          ))
+        ) : (
+          <p className="text-center col-span-4 text-xl">Ingen bands fundet.</p>
+        )}
       </div>
     </div>
   );
