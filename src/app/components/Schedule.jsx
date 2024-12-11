@@ -1,42 +1,55 @@
-// import Image from "next/image.js";
-// import Link from "next/link.js";
+import React from "react";
+import Image from "next/image";
 
-// export default function Schedule({ lineUp, schedule, filterDay, filterGenre }) {
-//   const filterBands = () => {
-//     let filteredBands = lineUp;
+const Schedule = ({ bands, schedule, filterScene, filterDay }) => {
+  const filteredBands = bands.filter((band) => {
+    if (!band.scene) return false;
 
-//     if (filterDay !== "all") {
-//       let actsDay = [];
-//       Object.values(schedule).forEach((scene) => {
-//         actsDay = actsDay.concat(scene[filterDay]?.map((act) => act.act) || []);
-//       });
+    const matchesScene = filterScene === "all" || band.scene === filterScene;
 
-//       filteredBands = filteredBands.filter((band) => actsDay.includes(band.name));
-//     }
+    const stageSchedule = schedule[band.scene];
+    if (!stageSchedule) return false;
 
-//     if (filterGenre !== "all") {
-//       filteredBands = filteredBands.filter((band) => band.genre === filterGenre);
-//     }
+    const matchesDay =
+      filterDay === "all" ||
+      Object.keys(stageSchedule).some((dayKey) => {
+        return dayKey === filterDay && stageSchedule[dayKey].some((act) => act.act.toLowerCase() === band.name.toLowerCase() && !act.cancelled);
+      });
 
-//     return filteredBands;
-//   };
+    return matchesScene && matchesDay;
+  });
 
-//   const filteredLineUp = filterBands();
+  return (
+    <div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {filteredBands.map((band) => {
+          const stageSchedule = schedule[band.scene];
+          let bandSchedule = null;
 
-//   return (
-//     <div className={`grid grid-cols-2 px-6 py-5 sm:grid-cols-3 lg:grid-cols-4 gap-4`}>
-//       {filteredLineUp.map((band) => (
-//         <article key={band.name} tabIndex={0} className="relative overflow-hidden flex flex-col h-48 md:h-72 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accentColor">
-//           <Link href={band.slug} prefetch={false} className="flex flex-col h-full overflow-hidden group" aria-label={`Link to ${band.name} details`}>
-//             <figure className="relative w-full h-full transform transition">
-//               <Image src={band.logo.includes("https") ? band.logo : `/logos/${band.logo}`} fill loading="lazy" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw" alt={`Logo of ${band.name}`} className="absolute grayscale group-hover:grayscale-0 inset-0 w-full h-full object-cover duration-300 transform group-hover:scale-110" />
-//               <figcaption className="absolute inset-0 flex items-end">
-//                 <p className="text-bgColor bg-primaryColor rounded-lg p-1 bg-opacity-80 small-size">{band.name}</p>
-//               </figcaption>
-//             </figure>
-//           </Link>
-//         </article>
-//       ))}
-//     </div>
-//   );
-// }
+          if (stageSchedule) {
+            bandSchedule = Object.entries(stageSchedule).find(([day, acts]) => acts.some((act) => act.act.toLowerCase() === band.name.toLowerCase() && !act.cancelled));
+          }
+
+          const bandTime = bandSchedule && bandSchedule[1].find((act) => act.act.toLowerCase() === band.name.toLowerCase() && !act.cancelled);
+
+          return (
+            <div key={band.id} className="p-4 bg-sky-950 rounded shadow hover:bg-zinc-400 transition-all">
+              {/* Kun logo fra databasen vises */}
+
+              <Image src={`/logos/${band.logo}`} width={275} height={250} alt={band.slug} className="w-full h-48 object-cover mb-4 rounded" />
+              <h3 className="text-2xl font-semibold">{band.name}</h3>
+              <p className="text-gray-300">Scene: {band.scene}</p>
+              {bandTime && (
+                <p className="text-gray-400">
+                  Time: {bandTime.start} - {bandTime.end}
+                </p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export default Schedule;
