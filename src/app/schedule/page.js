@@ -18,7 +18,6 @@ export default function SchedulePage() {
 
         // Opdater bands med scenenavn
         const updatedBands = fetchedBands.map((band) => {
-          // Find den første scene, hvor bandet spiller
           const scene = Object.keys(fetchedSchedule).find((sceneKey) => Object.values(fetchedSchedule[sceneKey]).some((day) => day.some((act) => act.act === band.name)));
           return { ...band, scene };
         });
@@ -74,7 +73,6 @@ export default function SchedulePage() {
         </div>
       </header>
 
-      {/* Viser filtrerede bands */}
       <Schedule bands={bands} schedule={schedule} filterDay={filterDay} filterScene={filterScene} />
     </div>
   );

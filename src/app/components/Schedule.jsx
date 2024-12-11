@@ -34,8 +34,6 @@ const Schedule = ({ bands, schedule, filterScene, filterDay }) => {
 
           return (
             <div key={band.id} className="p-4 bg-sky-950 rounded shadow hover:bg-zinc-400 transition-all">
-              {/* Kun logo fra databasen vises */}
-
               <Image src={`/logos/${band.logo}`} width={275} height={250} alt={band.slug} className="w-full h-48 object-cover mb-4 rounded" />
               <h3 className="text-2xl font-semibold">{band.name}</h3>
               <p className="text-gray-300">Scene: {band.scene}</p>
