@@ -11,7 +11,7 @@ export default function Header() {
 
   return (
     <header className="absolute z-10 w-full flex justify-between items-center p-4 text-white">
-      <div className="text-xl font-bold">FOOFEST</div>
+      <a href="/"><div className="text-xl font-bold">Foofest</div></a>
 
       <button onClick={handleClick} className="flex flex-col justify-center items-center">
         <span className={`bg-white block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${isOpen ? "rotate-45 translate-y-1" : "-translate-y-0.5"}`}></span>
@@ -22,13 +22,18 @@ export default function Header() {
       <nav className={`absolute top-14 left-0 w-full bg-gray-800 text-white shadow-lg transition-all duration-300 ease-in-out ${isOpen ? "block" : "hidden"}`}>
         <ul className="flex flex-col items-center py-4 space-y-2">
           <li>
-            <a href="/about" className="block px-4 py-2 hover:bg-gray-700 rounded">
-              Om os
+            <a href="/tickets" className="block px-4 py-2 hover:bg-gray-700 rounded">
+              Tickets!
             </a>
           </li>
           <li>
-            <a href="/contact" className="block px-4 py-2 hover:bg-gray-700 rounded">
-              Kontakt
+            <a href="/lineup" className="block px-4 py-2 hover:bg-gray-700 rounded">
+              Line-ups
+            </a>
+          </li>
+           <li>
+            <a href="/schedule" className="block px-4 py-2 hover:bg-gray-700 rounded">
+              Program
             </a>
           </li>
         </ul>
