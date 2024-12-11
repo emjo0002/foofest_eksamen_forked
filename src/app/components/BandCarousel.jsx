@@ -50,7 +50,9 @@ export default function BandCarousel({ bands }) {
             <p className="mt-2">{band.description}</p>
             <button 
               onClick={() => openDialog(band)} 
-              className="mt-4 bg-white text-blue-900 px-4 py-2 rounded-lg transition duration-600s"
+              className={`mt-4 bg-white text-blue-900 px-4 py-2 rounded-lg  opacity-0${
+              currentSlide === index ? "opacity-100 transition duration-600s" : ""
+            }`}
             >
               Show Details
             </button>
