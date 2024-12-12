@@ -32,3 +32,16 @@ export async function getSchedule() {
     return {};
   }
 }
+
+export async function getAllAreas() {
+  try {
+    const response = await fetch(`${baseURL}/available-spots`, {
+      method: "GET",
+      headers: headersList,
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Fejl ved hentning af areas:", error);
+    return [];
+  }
+}
