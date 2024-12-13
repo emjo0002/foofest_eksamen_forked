@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Newsletter from "./components/Newsletter";
 
 // Registrer ScrollTrigger-plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -11,7 +12,7 @@ export default function Home() {
     const tl = gsap.timeline({ defaults: { ease: "power1.out" } });
 
     // Tekst-animation
-    tl.fromTo(".anim-text", { y: "100%", opacity: 0 }, { y: "0%", opacity: 1, duration: 2, stagger: 0.35 });
+    tl.fromTo(".anim-text", { y: "100%", opacity: 0 }, { y: "0%", opacity: 1, duration: 2, stagger: 0.45 });
   }, []);
 
   return (
@@ -60,16 +61,18 @@ export default function Home() {
           <div className="bg-gray-200 p-4 rounded-lg shadow-md">
             <img src="https://images.unsplash.com/photo-1552799446-159ba9523315?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Billede 3" className="w-full h-48 object-cover mb-4 rounded-lg" />
             <h3 className="text-black text-3xl font-genos mb-2">EN GRØN FESTIVAL</h3>
-            <p className="text-black text-sm">Endelig skete det, takket være en masse fantastiske mennesker, som har været på gaden for at støtte en god sag! Foofest har iværksat en række tiltag, for at blive endnu grønnere, og i år er det endelig lykkedes. Læs mere om vores vej mod en grønnere festival her</p>
+            <p className="text-black text-sm">Foofest har iværksat en række tiltag for at blive endnu grønnere. Læs mere her.</p>
           </div>
 
           <div className="bg-gray-200 p-4 rounded-lg shadow-md">
             <img src="https://images.unsplash.com/photo-1520066391310-428f06ebd602?q=80&w=3275&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Billede 4" className="w-full h-48 object-cover mb-4 rounded-lg" />
             <h3 className="text-black text-3xl font-genos mb-2">NYE MADBODER I ÅR</h3>
-            <p className="text-black text-sm">Vi ved du craver en masse lækker mad når du er på festival, så i år har vi været så heldige at få en masse nye madboder, hvor i som gæster kan få et sund og sollidt måltid. </p>
+            <p className="text-black text-sm">Vi har fået en masse nye madboder, så du kan nyde lækker mad på festivalen.</p>
           </div>
         </div>
       </section>
+
+      <Newsletter />
     </div>
   );
 }

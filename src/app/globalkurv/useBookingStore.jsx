@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-const useBookingStore = create((set) => ({
+const useBookingStore = create((set, get) => ({
   // Initial state for tickets
   tickets: [
     { id: 1, title: "Foo-Billet", price: 799, quantity: 0 },
@@ -13,6 +13,8 @@ const useBookingStore = create((set) => ({
     tents: { twoPerson: 0, threePerson: 0 },
     greenCamping: false,
   },
+
+  bookingFee: 99,
 
   // Funktion til at opdatere billetmængden
   updateTicketQuantity: (id, newQuantity) =>
@@ -39,6 +41,12 @@ const useBookingStore = create((set) => ({
         greenCamping: !state.campingSelection.greenCamping,
       },
     })),
+
+  // Selector til at tjekke, om der er billetter eller telte i kurven
+  hasItemsInCart: () => {
+    const { tickets, campingSelection } = get();
+    return tickets.some((ticket) => ticket.quantity > 0) || campingSelection.tents.twoPerson > 0 || campingSelection.tents.threePerson > 0;
+  },
 }));
 
 export default useBookingStore;

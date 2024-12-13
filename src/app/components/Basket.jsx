@@ -1,8 +1,10 @@
 import useBookingStore from "../globalkurv/useBookingStore";
 
 const Basket = ({ selectedArea }) => {
+  const bookingFee = useBookingStore((state) => state.bookingFee);
   const tickets = useBookingStore((state) => state.tickets);
   const campingSelection = useBookingStore((state) => state.campingSelection);
+  const hasItemsInCart = useBookingStore((state) => state.hasItemsInCart());
 
   return (
     <div className="border p-4">
@@ -43,7 +45,17 @@ const Basket = ({ selectedArea }) => {
           <p className="text-black">200 DKK</p>
         </div>
       )}
-      {selectedArea !== "Område" ? <p>Valgt Område: {selectedArea}</p> : <p>Intet område valgt</p>}
+
+      {/* Vis bookingfee hvis der er billetter eller telte i kurven */}
+      {hasItemsInCart && (
+        <div className="flex justify-between mb-2">
+          <p className="text-black font-bold">Bookingfee</p>
+          <p className="text-black font-bold">{bookingFee} DKK</p>
+        </div>
+      )}
+
+      {/* Vis valgt område */}
+      {selectedArea !== "Område" ? <p className="text-black">Valgt Område: {selectedArea}</p> : <p className="text-black">Intet område valgt</p>}
     </div>
   );
 };
