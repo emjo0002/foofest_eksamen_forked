@@ -16,7 +16,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative h-screen bg-custom bg-cover text-white">
+    <div className="relative h-screen dynamic-bg min-h-screen bg-cover text-white">
       {/* Hero Section */}
       <section className="h-screen flex flex-col justify-center items-center text-center">
         <h1 className="anim-text font-gajraj text-6xl md:text-9xl tracking-wider mb-4">FOOFEST</h1>

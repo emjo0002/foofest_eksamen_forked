@@ -36,7 +36,7 @@ export default function SchedulePage() {
   }, []);
 
   return (
-    <div className="bg-black text-white min-h-screen px-8 py-12">
+    <div className="relative dynamic-bg text-white min-h-screen px-8 py-12">
       <h1 className="font-gajraj text-6xl md:text-9xl">PROGRAM</h1>
 
       <header className="flex flex-wrap gap-4 mb-8">

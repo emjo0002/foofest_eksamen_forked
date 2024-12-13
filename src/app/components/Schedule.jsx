@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const Schedule = ({ bands, schedule, filterScene, filterDay }) => {
   const filteredBands = bands.filter((band) => {
@@ -42,6 +43,11 @@ const Schedule = ({ bands, schedule, filterScene, filterDay }) => {
                   Time: {bandTime.start} - {bandTime.end}
                 </p>
               )}
+
+              {/* Læs mere link til slug-siden */}
+              <Link href={`/program/${band.slug}`}>
+                <button className="mt-4 px-4 py-2 bg-red-800 text-white rounded hover:bg-blue-700">Læs mere</button>
+              </Link>
             </div>
           );
         })}
