@@ -14,6 +14,9 @@ const useBookingStore = create((set, get) => ({
     greenCamping: false,
   },
 
+  // Initial state for package selection
+  packageSelection: null, // Holder den anbefalede pakkeløsning (null hvis ingen pakke er valgt)
+
   bookingFee: 99,
 
   // Funktion til at opdatere billetmængden
@@ -34,6 +37,7 @@ const useBookingStore = create((set, get) => ({
       },
     })),
 
+  // Funktion til at slå Green Camping til/fra
   toggleGreenCamping: () =>
     set((state) => ({
       campingSelection: {
@@ -42,10 +46,38 @@ const useBookingStore = create((set, get) => ({
       },
     })),
 
+  // Funktion til at opdatere pakkeløsningen
+  updatePackageSelection: (packageDetails) =>
+    set(() => ({
+      packageSelection: packageDetails,
+    })),
+
+  // Funktion til at fjerne pakkeløsningen
+  removePackageSelection: () =>
+    set(() => ({
+      packageSelection: null,
+    })),
+
   // Selector til at tjekke, om der er billetter eller telte i kurven
   hasItemsInCart: () => {
-    const { tickets, campingSelection } = get();
-    return tickets.some((ticket) => ticket.quantity > 0) || campingSelection.tents.twoPerson > 0 || campingSelection.tents.threePerson > 0;
+    const { tickets, campingSelection, packageSelection } = get();
+    const ticketsInCart = tickets.some((ticket) => ticket.quantity > 0);
+    const tentsInCart = campingSelection.tents.twoPerson > 0 || campingSelection.tents.threePerson > 0;
+    const packageInCart = packageSelection !== null;
+    return ticketsInCart || tentsInCart || packageInCart;
+  },
+
+  // Funktion til at beregne totalpris
+  calculateTotal: () => {
+    const { tickets, campingSelection, packageSelection, bookingFee } = get();
+    const ticketsTotal = tickets.reduce((sum, ticket) => sum + ticket.quantity * ticket.price, 0);
+    const tentsTotal =
+      campingSelection.tents.twoPerson * 799 + campingSelection.tents.threePerson * 999;
+    const packageTotal =
+      packageSelection
+        ? packageSelection.twoPerson * 799 + packageSelection.threePerson * 999
+        : 0;
+    return ticketsTotal + tentsTotal + packageTotal + bookingFee;
   },
 }));
 
