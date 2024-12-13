@@ -7,11 +7,12 @@ import Newsletter from "./components/Newsletter";
 // Registrer ScrollTrigger-plugin
 gsap.registerPlugin(ScrollTrigger);
 
+// HER ANIMERER JEG TEKST
+
 export default function Home() {
   useEffect(() => {
     const tl = gsap.timeline({ defaults: { ease: "power1.out" } });
 
-    // Tekst-animation
     tl.fromTo(".anim-text", { y: "100%", opacity: 0 }, { y: "0%", opacity: 1, duration: 2, stagger: 0.45 });
   }, []);
 
@@ -33,7 +34,7 @@ export default function Home() {
           </a>
         </div>
 
-        {/* SCROLLING */}
+        {/* SCROLLING  --> skal ændres da den ikke virker optimalt */}
         <div className="absolute bottom-16 animate-bounce">
           <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
@@ -41,7 +42,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CARDS */}
+      {/* SENESTE NYT */}
 
       <section className="scroll-section h-screen bg-white flex flex-col justify-center items-center">
         <h2 className="text-black text-4xl md:text-8xl font-gajraj font-bold mb-12">SENESTE NYT</h2>
