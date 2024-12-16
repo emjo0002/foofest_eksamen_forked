@@ -27,7 +27,7 @@ export default function ArtistPage() {
         {/* Billede */}
         <div className="max-w-md">
           <Image src={`/logos/${band.logo}`} alt={band.name} width={500} height={500} className="w-full h-auto object-cover" />
-          <a href="#" className="block mt-4 text-2xl font-bold">
+          <a href="schedule" className="block mt-4 text-2xl font-bold">
             Tilbage
           </a>
         </div>
