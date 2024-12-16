@@ -11,7 +11,9 @@ export default function Header() {
 
   return (
     <header className="absolute z-10 w-full flex justify-between items-center p-4 text-white">
-      <a href="/"><div className="text-xl font-bold">Foofest</div></a>
+      <a href="/">
+        <div className="text-xl font-bold">Foofest</div>
+      </a>
 
       <button onClick={handleClick} className="flex flex-col justify-center items-center">
         <span className={`bg-white block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${isOpen ? "rotate-45 translate-y-1" : "-translate-y-0.5"}`}></span>
@@ -31,7 +33,7 @@ export default function Header() {
               Line-ups
             </a>
           </li>
-           <li>
+          <li>
             <a href="/schedule" className="block px-4 py-2 hover:bg-gray-700 rounded">
               Program
             </a>
