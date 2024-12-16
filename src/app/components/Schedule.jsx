@@ -34,7 +34,7 @@ const Schedule = ({ bands, schedule, filterScene, filterDay }) => {
           const bandTime = bandSchedule && bandSchedule[1].find((act) => act.act.toLowerCase() === band.name.toLowerCase() && !act.cancelled);
 
           return (
-            <div key={band.id} className="p-4 bg-neutral-800 rounded shadow hover:bg-zinc-400 transition-all">
+            <div key={band.id} className="p-4 bg-slate-900 rounded shadow hover:bg-opacity-10 transition-all">
               <Image src={`/logos/${band.logo}`} width={275} height={250} alt={band.slug} className="w-full h-48 object-cover mb-4 rounded" />
               <h3 className="text-2xl font-semibold">{band.name}</h3>
               <p className="text-gray-300">Scene: {band.scene}</p>
@@ -46,7 +46,7 @@ const Schedule = ({ bands, schedule, filterScene, filterDay }) => {
 
               {/* Læs mere link til slug-siden */}
               <Link href={`/program/${band.slug}`}>
-                <button className="mt-4 px-4 py-2 bg-red-800 text-white rounded hover:bg-blue-700">Læs mere</button>
+                <button className="mt-4 px-4 py-2 bg-zinc-300 text-black rounded hover:bg-zinc-500">Læs mere</button>
               </Link>
             </div>
           );
