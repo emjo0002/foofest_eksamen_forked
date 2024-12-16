@@ -1,63 +1,82 @@
 import useBookingStore from "../globalkurv/useBookingStore";
 
-const Basket = ({ selectedArea }) => {
-  const bookingFee = useBookingStore((state) => state.bookingFee);
-  const tickets = useBookingStore((state) => state.tickets);
-  const campingSelection = useBookingStore((state) => state.campingSelection);
-  const hasItemsInCart = useBookingStore((state) => state.hasItemsInCart());
+export default function Basket({ selectedArea }) {
+  const { tickets, campingSelection, packageSelection, calculateTotal } = useBookingStore();
+  const { twoPerson, threePerson } = campingSelection.tents;
+  const { greenCamping } = campingSelection;
 
   return (
-    <div className="border p-4">
-      <h2 className="text-xl font-bold mb-2 text-black">Basket</h2>
+    <div className="border p-4 rounded-lg shadow-md">
+      <h2 className="font-bold text-lg mb-4">Kurv</h2>
 
-      {/* Vis billetter i kurven */}
-      {tickets
-        .filter((ticket) => ticket.quantity > 0)
-        .map((ticket) => (
-          <div key={ticket.id} className="flex justify-between mb-2">
-            <p className="text-black">
-              {ticket.title} x {ticket.quantity}
+      {/* Viser valgte billetter */}
+      {tickets.map(
+        (ticket) =>
+          ticket.quantity > 0 && (
+            <p key={ticket.id} className="text-gray-700">
+              {ticket.quantity} x {ticket.title} ({ticket.price},-) ={" "}
+              {ticket.quantity * ticket.price},-
             </p>
-            <p className="text-black">{ticket.price * ticket.quantity} DKK</p>
-          </div>
-        ))}
+          )
+      )}
 
-      {/* Vis 2-personers telte */}
-      {campingSelection.tents.twoPerson > 0 && (
-        <div className="flex justify-between mb-2">
-          <p className="text-black">2-personers telt x {campingSelection.tents.twoPerson}</p>
-          <p className="text-black">{campingSelection.tents.twoPerson * 299} DKK</p>
+      {/* Viser pakkeløsning, hvis den er valgt */}
+      {packageSelection && (
+        <div className="mt-4">
+          <h3 className="font-semibold text-gray-800">Pakkeløsning</h3>
+          <p className="text-gray-700">
+            {packageSelection.twoPerson} x 2-personers telt
+          </p>
+          <p className="text-gray-700">
+            {packageSelection.threePerson} x 3-personers telt
+          </p>
+          <p className="text-gray-700">
+            Subtotal:{" "}
+            {packageSelection.twoPerson * 799 +
+              packageSelection.threePerson * 999}
+            ,-
+          </p>
         </div>
       )}
 
-      {/* Vis 3-personers telte */}
-      {campingSelection.tents.threePerson > 0 && (
-        <div className="flex justify-between mb-2">
-          <p className="text-black">3-personers telt x {campingSelection.tents.threePerson}</p>
-          <p className="text-black">{campingSelection.tents.threePerson * 399} DKK</p>
+      {/* Viser individuelle teltvalg */}
+      {(twoPerson > 0 || threePerson > 0) && (
+        <div className="mt-4">
+          <h3 className="font-semibold text-gray-800">Individuelle telte</h3>
+          {twoPerson > 0 && (
+            <p className="text-gray-700">
+              {twoPerson} x 2-personers telt (799,-) = {twoPerson * 799},-
+            </p>
+          )}
+          {threePerson > 0 && (
+            <p className="text-gray-700">
+              {threePerson} x 3-personers telt (999,-) = {threePerson * 999},-
+            </p>
+          )}
         </div>
       )}
 
-      {/* Vis Green Camping, hvis det er valgt */}
-      {campingSelection.greenCamping && (
-        <div className="flex justify-between mb-2">
-          <p className="text-black">Green Camping</p>
-          <p className="text-black">200 DKK</p>
+      {/* Viser Green Camping, hvis valgt */}
+      {greenCamping && (
+        <div className="mt-4">
+          <h3 className="font-semibold text-gray-800">Ekstra</h3>
+          <p className="text-gray-700">Green Camping: 249,-</p>
         </div>
       )}
 
-      {/* Vis bookingfee hvis der er billetter eller telte i kurven */}
-      {hasItemsInCart && (
-        <div className="flex justify-between mb-2">
-          <p className="text-black font-bold">Bookingfee</p>
-          <p className="text-black font-bold">{bookingFee} DKK</p>
+      {/* Viser valgt område */}
+      {selectedArea !== "Område" && (
+        <div className="mt-4">
+          <h3 className="font-semibold text-gray-800">Område</h3>
+          <p className="text-gray-700">{selectedArea}</p>
         </div>
       )}
 
-      {/* Vis valgt område */}
-      {selectedArea !== "Område" ? <p className="text-black">Valgt Område: {selectedArea}</p> : <p className="text-black">Intet område valgt</p>}
+      {/* Totalpris */}
+      <div className="mt-4 border-t pt-4">
+        <h3 className="font-bold text-gray-800">Total</h3>
+        <p className="text-gray-900 text-lg">{calculateTotal()},-</p>
+      </div>
     </div>
   );
-};
-
-export default Basket;
+}
