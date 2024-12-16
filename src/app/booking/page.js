@@ -16,12 +16,12 @@ export default function Booking() {
   };
 
   return (
-    <div className="px-4 max-w-5xl mx-auto mb-24">
-      <div className="flex flex-col items-center justify-center m-20">
-        <h1 className="text-7xl font-bold">Booking</h1>
+    <div className="px-4 mx-auto mb-24">
+      <div className="">
+        <h1 className="text-8xl font-gajraj font-bold mb-8">TICKETS</h1>
       </div>
 
-      <div className="grid grid-cols-[65%_30%] justify-between">
+      <div>
         {/* Venstre side */}
         <div className="ticket-selection">
           {currentView === "tickets" && <Ticket onNext={() => handleNext("camping")} />}

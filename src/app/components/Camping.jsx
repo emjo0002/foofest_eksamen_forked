@@ -157,6 +157,18 @@ export default function Camping({ onNext, onBack }) {
 
   return (
     <main>
+      <div className="px-4 max-w-5xl mx-auto mb-24">
+             <h2 className="flex justify-center text-5xl font-gajraj">Camping tilvalg</h2>
+<div className="flex justify-center items-center gap-4">
+  
+  <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">1</div>
+  <div className="w-16 h-16 flex items-center justify-center rounded-full bg-white bg-opacity-80 border-2 border-black text-black font-genos text-4xl">2</div>
+  <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">3</div>
+  <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">4</div>
+  <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">5</div>
+</div>
+      <div className="flex justify-center flex-wrap gap-8 m-20">
+        <div className="w-96 border border-black text-black text-center p-8">
       <div className="mb-4">
         <label htmlFor="area-filter" className="mr-4 text-lg font-semibold">
           Vælg Område:
@@ -175,6 +187,7 @@ export default function Camping({ onNext, onBack }) {
           ))}
         </select>
       </div>
+      
 
       <div className="mb-4">
         <h2 className="font-semibold text-lg mb-2">Anbefalet pakkeløsning</h2>
@@ -199,7 +212,7 @@ export default function Camping({ onNext, onBack }) {
         <>
           <div className="mb-4">
             <h2 className="font-semibold text-lg mb-2">Sammensæt din egen pakkeløsning</h2>
-            <div>
+            <div className="flex">
               2-personers telt - 799,-
               <Counter
                 initialQuantity={twoPerson}
@@ -209,7 +222,7 @@ export default function Camping({ onNext, onBack }) {
           </div>
 
           <div className="mb-4">
-            <div>
+            <div className="flex">
               3-personers telt - 999,-
               <Counter
                 initialQuantity={threePerson}
@@ -241,6 +254,10 @@ export default function Camping({ onNext, onBack }) {
           Det samlede antal telte overstiger de ledige pladser i det valgte område.
         </p>
       )}
+      </div>
+      <Basket selectedArea={selectedArea} />
+      </div>
+      </div>
 
       <button onClick={onBack} className="mt-4">
         Tilbage
@@ -253,7 +270,7 @@ export default function Camping({ onNext, onBack }) {
         Next
       </button>
 
-      <Basket selectedArea={selectedArea} />
+      
     </main>
   );
 }
