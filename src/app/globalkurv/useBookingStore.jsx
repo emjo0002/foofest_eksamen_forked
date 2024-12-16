@@ -1,31 +1,72 @@
 import { create } from "zustand";
 
 const useBookingStore = create((set, get) => ({
-  // Initial state for tickets
+  // Initial state
   tickets: [
     { id: 1, title: "Foo-Billet", price: 799, quantity: 0 },
     { id: 2, title: "VIP-Billet", price: 1299, quantity: 0 },
   ],
-
-  // Initial state for camping selection
   campingSelection: {
     area: null,
     tents: { twoPerson: 0, threePerson: 0 },
     greenCamping: false,
   },
-
-  // Initial state for package selection
-  packageSelection: null, // Holder den anbefalede pakkeløsning (null hvis ingen pakke er valgt)
-
+  packageSelection: null,
   bookingFee: 99,
 
-  // Funktion til at opdatere billetmængden
+  // Beregninger
+  totalTickets: () => get().tickets.reduce((sum, ticket) => sum + ticket.quantity, 0),
+  totalTents: () =>
+    get().campingSelection.tents.twoPerson +
+    get().campingSelection.tents.threePerson,
+
+  // Funktion til opdatering af billetmængden
   updateTicketQuantity: (id, newQuantity) =>
     set((state) => ({
-      tickets: state.tickets.map((ticket) => (ticket.id === id ? { ...ticket, quantity: newQuantity } : ticket)),
+      tickets: state.tickets.map((ticket) =>
+        ticket.id === id ? { ...ticket, quantity: newQuantity } : ticket
+      ),
     })),
 
-  // Funktion til at opdatere teltmængden
+  // Helper til anbefalede telte
+  calculateRecommendedTents: () => {
+    const totalTickets = get().totalTickets();
+    let remainingTickets = totalTickets;
+    const recommendedTents = { twoPerson: 0, threePerson: 0 };
+
+    if (remainingTickets >= 3) {
+      recommendedTents.threePerson = Math.floor(remainingTickets / 3);
+      remainingTickets %= 3;
+    }
+
+    if (remainingTickets > 0) {
+      recommendedTents.twoPerson = Math.ceil(remainingTickets / 2);
+    }
+
+    if (totalTickets === 4) {
+      recommendedTents.twoPerson = 2;
+      recommendedTents.threePerson = 0;
+    }
+
+    return recommendedTents;
+  },
+
+  // Funktion til opdatering af pakkeløsning
+  updatePackageSelection: (packageDetails) =>
+    set((state) => ({
+      campingSelection: {
+        ...state.campingSelection,
+        tents: { twoPerson: 0, threePerson: 0 }, // Nulstil individuelle telte
+      },
+      packageSelection: packageDetails,
+    })),
+
+  removePackageSelection: () =>
+    set(() => ({
+      packageSelection: null,
+    })),
+
+  // Funktion til opdatering af teltmængden
   updateTentQuantity: (tentType, newQuantity) =>
     set((state) => ({
       campingSelection: {
@@ -36,49 +77,6 @@ const useBookingStore = create((set, get) => ({
         },
       },
     })),
-
-  // Funktion til at slå Green Camping til/fra
-  toggleGreenCamping: () =>
-    set((state) => ({
-      campingSelection: {
-        ...state.campingSelection,
-        greenCamping: !state.campingSelection.greenCamping,
-      },
-    })),
-
-  // Funktion til at opdatere pakkeløsningen
-  updatePackageSelection: (packageDetails) =>
-    set(() => ({
-      packageSelection: packageDetails,
-    })),
-
-  // Funktion til at fjerne pakkeløsningen
-  removePackageSelection: () =>
-    set(() => ({
-      packageSelection: null,
-    })),
-
-  // Selector til at tjekke, om der er billetter eller telte i kurven
-  hasItemsInCart: () => {
-    const { tickets, campingSelection, packageSelection } = get();
-    const ticketsInCart = tickets.some((ticket) => ticket.quantity > 0);
-    const tentsInCart = campingSelection.tents.twoPerson > 0 || campingSelection.tents.threePerson > 0;
-    const packageInCart = packageSelection !== null;
-    return ticketsInCart || tentsInCart || packageInCart;
-  },
-
-  // Funktion til at beregne totalpris
-  calculateTotal: () => {
-    const { tickets, campingSelection, packageSelection, bookingFee } = get();
-    const ticketsTotal = tickets.reduce((sum, ticket) => sum + ticket.quantity * ticket.price, 0);
-    const tentsTotal =
-      campingSelection.tents.twoPerson * 799 + campingSelection.tents.threePerson * 999;
-    const packageTotal =
-      packageSelection
-        ? packageSelection.twoPerson * 799 + packageSelection.threePerson * 999
-        : 0;
-    return ticketsTotal + tentsTotal + packageTotal + bookingFee;
-  },
 }));
 
 export default useBookingStore;
