@@ -77,6 +77,33 @@ const useBookingStore = create((set, get) => ({
         },
       },
     })),
+
+  // Funktion til beregning af totalpris
+  calculateTotal: () => {
+    const { tickets, campingSelection, packageSelection, bookingFee } = get();
+
+    // Billettotal
+    const ticketsTotal = tickets.reduce(
+      (sum, ticket) => sum + ticket.quantity * ticket.price,
+      0
+    );
+
+    // Individuelle teltpriser
+    const tentsTotal =
+      campingSelection.tents.twoPerson * 799 +
+      campingSelection.tents.threePerson * 999;
+
+    // Pakkeløsning
+    const packageTotal = packageSelection
+      ? packageSelection.twoPerson * 799 + packageSelection.threePerson * 999
+      : 0;
+
+    // Green Camping-gebyr
+    const greenCampingFee = campingSelection.greenCamping ? 249 : 0;
+
+    // Total pris
+    return ticketsTotal + tentsTotal + packageTotal + greenCampingFee + bookingFee;
+  },
 }));
 
 export default useBookingStore;
