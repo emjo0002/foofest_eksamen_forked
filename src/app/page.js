@@ -2,8 +2,8 @@
 import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Newsletter from "./components/Newsletter";
 import FAQAccordion from "./components/FAQAccordion";
+import Footer from "./components/Footer";
 
 // Registrer ScrollTrigger-plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -74,7 +74,7 @@ export default function Home() {
       </section>
       <div className="space-y-12">
         <FAQAccordion />
-        <Newsletter />
+        <Footer />
       </div>
     </div>
   );

@@ -22,14 +22,14 @@ export default function ArtistPage() {
 
   return (
     <div className="relative dynamic-bg min-h-screen text-white p-8">
+      <a href="schedule" className="block mt-4 text-2xl font-bold">
+        Tilbage
+      </a>
       {/* Indhold */}
       <div className="flex flex-col md:flex-row items-center justify-center min-h-screen gap-12">
         {/* Billede */}
         <div className="max-w-md">
           <Image src={`/logos/${band.logo}`} alt={band.name} width={500} height={500} className="w-full h-auto object-cover" />
-          <a href="schedule" className="block mt-4 text-2xl font-bold">
-            Tilbage
-          </a>
         </div>
 
         {/* Tekst */}
