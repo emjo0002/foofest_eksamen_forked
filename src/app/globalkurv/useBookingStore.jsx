@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { reserveSpot } from "../api/api";
 
 const useBookingStore = create((set, get) => ({
   // Initial state
@@ -6,6 +7,7 @@ const useBookingStore = create((set, get) => ({
     { id: 1, title: "Foo-Billet", price: 799, quantity: 0 },
     { id: 2, title: "VIP-Billet", price: 1299, quantity: 0 },
   ],
+  reservationId: null,
   campingSelection: {
     area: null,
     tents: { twoPerson: 0, threePerson: 0 },
@@ -14,51 +16,64 @@ const useBookingStore = create((set, get) => ({
   packageSelection: null,
   bookingFee: 99,
 
-  // Beregninger
-  totalTickets: () => get().tickets.reduce((sum, ticket) => sum + ticket.quantity, 0),
-  totalTents: () =>
-    get().campingSelection.tents.twoPerson +
-    get().campingSelection.tents.threePerson,
+  // Beregn totalpris
+  calculateTotal: () => {
+    const { tickets, campingSelection, packageSelection, bookingFee } = get();
 
-  // Funktion til opdatering af billetmængden
+    const ticketsTotal = tickets.reduce(
+      (sum, ticket) => sum + ticket.quantity * ticket.price,
+      0
+    );
+
+    const tentsTotal =
+      campingSelection.tents.twoPerson * 799 +
+      campingSelection.tents.threePerson * 999;
+
+    const packageTotal = packageSelection
+      ? packageSelection.twoPerson * 799 + packageSelection.threePerson * 999
+      : 0;
+
+    const greenCampingFee = campingSelection.greenCamping ? 249 : 0;
+
+    return ticketsTotal + tentsTotal + packageTotal + greenCampingFee + bookingFee;
+  },
+
   updateTicketQuantity: (id, newQuantity) =>
     set((state) => ({
       tickets: state.tickets.map((ticket) =>
-        ticket.id === id ? { ...ticket, quantity: newQuantity } : ticket
+        ticket.id === id ? { ...ticket, quantity: Math.max(0, newQuantity) } : ticket
       ),
     })),
 
-  // Helper til anbefalede telte
+  // Resten af funktionerne
+  totalTickets: () => get().tickets.reduce((sum, ticket) => sum + ticket.quantity, 0),
+  totalTents: () => {
+    const { twoPerson, threePerson } = get().campingSelection.tents;
+    return twoPerson + threePerson;
+  },
+  
   calculateRecommendedTents: () => {
     const totalTickets = get().totalTickets();
-    let remainingTickets = totalTickets;
-    const recommendedTents = { twoPerson: 0, threePerson: 0 };
-
-    if (remainingTickets >= 3) {
-      recommendedTents.threePerson = Math.floor(remainingTickets / 3);
-      remainingTickets %= 3;
-    }
-
-    if (remainingTickets > 0) {
-      recommendedTents.twoPerson = Math.ceil(remainingTickets / 2);
-    }
-
-    if (totalTickets === 4) {
-      recommendedTents.twoPerson = 2;
-      recommendedTents.threePerson = 0;
-    }
-
-    return recommendedTents;
+    return {
+      twoPerson: totalTickets % 3 === 1 ? 1 : Math.ceil((totalTickets % 3) / 2),
+      threePerson: Math.floor(totalTickets / 3),
+    };
   },
 
-  // Funktion til opdatering af pakkeløsning
-  updatePackageSelection: (packageDetails) =>
+  updateTents: (tents) =>
     set((state) => ({
       campingSelection: {
         ...state.campingSelection,
-        tents: { twoPerson: 0, threePerson: 0 }, // Nulstil individuelle telte
+        tents: { ...tents },
       },
-      packageSelection: packageDetails,
+    })),
+
+  updateCampingArea: (area) =>
+    set((state) => ({
+      campingSelection: {
+        ...state.campingSelection,
+        area,
+      },
     })),
 
   removePackageSelection: () =>
@@ -66,43 +81,15 @@ const useBookingStore = create((set, get) => ({
       packageSelection: null,
     })),
 
-  // Funktion til opdatering af teltmængden
-  updateTentQuantity: (tentType, newQuantity) =>
-    set((state) => ({
-      campingSelection: {
-        ...state.campingSelection,
-        tents: {
-          ...state.campingSelection.tents,
-          [tentType]: newQuantity,
-        },
-      },
-    })),
-
-  // Funktion til beregning af totalpris
-  calculateTotal: () => {
-    const { tickets, campingSelection, packageSelection, bookingFee } = get();
-
-    // Billettotal
-    const ticketsTotal = tickets.reduce(
-      (sum, ticket) => sum + ticket.quantity * ticket.price,
-      0
-    );
-
-    // Individuelle teltpriser
-    const tentsTotal =
-      campingSelection.tents.twoPerson * 799 +
-      campingSelection.tents.threePerson * 999;
-
-    // Pakkeløsning
-    const packageTotal = packageSelection
-      ? packageSelection.twoPerson * 799 + packageSelection.threePerson * 999
-      : 0;
-
-    // Green Camping-gebyr
-    const greenCampingFee = campingSelection.greenCamping ? 249 : 0;
-
-    // Total pris
-    return ticketsTotal + tentsTotal + packageTotal + greenCampingFee + bookingFee;
+  fetchReservation: async () => {
+    try {
+      const { area } = get().campingSelection;
+      const totalTents = get().totalTents();
+      const response = await reserveSpot(area, totalTents);
+      set({ reservationId: response.id });
+    } catch (error) {
+      console.error("Failed to fetch reservation:", error);
+    }
   },
 }));
 

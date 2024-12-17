@@ -33,6 +33,7 @@ export async function getSchedule() {
   }
 }
 
+// Hent alle pladser
 export async function getAllAreas() {
   try {
     const response = await fetch(`${baseURL}/available-spots`, {
@@ -45,3 +46,29 @@ export async function getAllAreas() {
     return [];
   }
 }
+
+// PUT henter reservetion
+export async function reserveSpot(area, amount) {
+  console.log("API kald - Area:", area, "Amount (Total Tents):", amount);
+
+  const bodyContent = JSON.stringify({
+    area,
+    amount, // Her sendes KUN totalTents
+  });
+
+  const response = await fetch(`${baseURL}/reserve-spot`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: bodyContent,
+  });
+
+  const data = await response.json();
+
+  return {
+    id: data.id,
+  };
+}
+

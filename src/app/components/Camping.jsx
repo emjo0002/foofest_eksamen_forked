@@ -8,26 +8,23 @@ export default function Camping({ onNext, onBack }) {
   const {
     campingSelection,
     packageSelection,
-    updateTentQuantity,
-    updatePackageSelection,
+    updateTents,
     removePackageSelection,
-    calculateRecommendedTents, // Vi kalder denne direkte
+    calculateRecommendedTents,
+    updateCampingArea,
   } = useBookingStore();
 
-  const { twoPerson, threePerson } = campingSelection.tents;
-
-  // Vi bruger calculateRecommendedTents fra useBookingStore
-  const recommendedTents = calculateRecommendedTents();
+  const { twoPerson, threePerson } = campingSelection.tents; // Individuelle telte
+  const recommendedTents = calculateRecommendedTents(); // Anbefalede telte
   const recommendedPackagePrice =
     recommendedTents.twoPerson * 799 + recommendedTents.threePerson * 999;
 
   const [useRecommended, setUseRecommended] = useState(packageSelection !== null);
   const [errorMessage, setErrorMessage] = useState("");
-  const [selectedArea, setSelectedArea] = useState("Vælg Område");
   const [areas, setAreas] = useState([]);
   const [areaCapacityError, setAreaCapacityError] = useState(false);
 
-  // Fetch available camping areas
+  // Hent campingområder
   useEffect(() => {
     async function fetchData() {
       const fetchedAreas = await getAllAreas();
@@ -36,46 +33,45 @@ export default function Camping({ onNext, onBack }) {
     fetchData();
   }, []);
 
-  // Reset error on area selection
+  // Kapacitetskontrol
   useEffect(() => {
-    setAreaCapacityError(false);
-  }, [selectedArea]);
+    const totalTentsCount =
+      (useRecommended
+        ? recommendedTents.twoPerson + recommendedTents.threePerson
+        : twoPerson + threePerson);
 
-  // Calculate total tents dynamically
-  const totalTentsCount =
-    (useRecommended ? recommendedTents.twoPerson + recommendedTents.threePerson : 0) +
-    twoPerson +
-    threePerson;
+    const availableSpots =
+      campingSelection.area &&
+      areas.find((area) => area.area === campingSelection.area)?.available || 0;
 
-  // Check available spots in the selected area
-  const availableSpots =
-    selectedArea !== "Vælg Område"
-      ? areas.find((area) => area.area === selectedArea)?.available || 0
-      : 0;
-
-  useEffect(() => {
-    if (totalTentsCount <= availableSpots) {
-      setAreaCapacityError(false);
-    }
-  }, [totalTentsCount, availableSpots]);
+    setAreaCapacityError(totalTentsCount > availableSpots);
+  }, [campingSelection.area, areas, twoPerson, threePerson, useRecommended]);
 
   const handleRecommendedPackageChange = (checked) => {
     setUseRecommended(checked);
     if (checked) {
-      updatePackageSelection(recommendedTents);
-      updateTentQuantity("twoPerson", 0); // Reset individual tents
-      updateTentQuantity("threePerson", 0);
+      updateTents(recommendedTents); // Opdater anbefalede telte
     } else {
+      updateTents({ twoPerson: 0, threePerson: 0 }); // Nulstil telte
       removePackageSelection();
     }
   };
 
   const handleTentQuantityChange = (tentType, newQuantity) => {
-    updateTentQuantity(tentType, newQuantity);
+    updateTents({ ...campingSelection.tents, [tentType]: Math.max(0, newQuantity) });
   };
 
   const handleNextClick = () => {
-    if (selectedArea === "Vælg Område") {
+    const totalTentsCount =
+      (useRecommended
+        ? recommendedTents.twoPerson + recommendedTents.threePerson
+        : twoPerson + threePerson);
+
+    const availableSpots =
+      campingSelection.area &&
+      areas.find((area) => area.area === campingSelection.area)?.available || 0;
+
+    if (!campingSelection.area || campingSelection.area === "Vælg Område") {
       setErrorMessage("Vælg et område for at fortsætte.");
       return;
     }
@@ -87,6 +83,7 @@ export default function Camping({ onNext, onBack }) {
       setErrorMessage("Vælg venligst telte eller pakkeløsning for at fortsætte.");
       return;
     }
+
     setErrorMessage("");
     setAreaCapacityError(false);
     onNext();
@@ -95,20 +92,25 @@ export default function Camping({ onNext, onBack }) {
   return (
     <main>
       <div className="px-4 max-w-5xl mx-auto mb-24">
-        <h2 className="text-center text-5xl font-bold">Camping tilvalg</h2>
-        <div className="flex">
-        <div>
-        
-
-        {/* Area Selection */}
-        <div className="mb-6">
-          <label htmlFor="area-filter" className="block mb-2 font-semibold">
+             <h2 className="flex justify-center text-5xl font-gajraj">Camping tilvalg</h2>
+             <div className="flex justify-center items-center gap-4">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">1</div>
+              <div className="w-16 h-16 flex items-center justify-center rounded-full bg-white bg-opacity-80 border-2 border-black text-black font-genos text-4xl">2</div>
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">3</div>
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">4</div>
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">5</div>
+              </div>
+              <div className="flex justify-center flex-wrap gap-8 m-20">
+                <div className="w-96 border border-black text-black text-center p-8">
+                  <div className="mb-4">
+          {/* Dropdown-menu til valg af område */}
+    <label htmlFor="area-filter" className="block mb-2 font-semibold">
             Vælg Område:
           </label>
           <select
             id="area-filter"
-            value={selectedArea}
-            onChange={(e) => setSelectedArea(e.target.value)}
+            value={campingSelection.area || "Vælg Område"}
+            onChange={(e) => updateCampingArea(e.target.value)}
             className="bg-gray-200 p-2 rounded-lg"
           >
             <option value="Vælg Område">Vælg Område</option>
@@ -144,7 +146,7 @@ export default function Camping({ onNext, onBack }) {
         {!useRecommended && (
           <div>
             <h3 className="font-semibold text-lg mb-2">Sammensæt din egen pakkeløsning</h3>
-            <div className="mb-4">
+            <div className="flex items-center mb-4">
               2-personers telt - 799,-
               <Counter
                 quantity={twoPerson}
@@ -165,7 +167,7 @@ export default function Camping({ onNext, onBack }) {
 
         {/* Fejlmeddelelse */}
         {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-        {areaCapacityError && selectedArea !== "Vælg Område" && (
+        {areaCapacityError && campingSelection !== "Vælg Område" && (
           <p className="text-red-500">
             Det samlede antal telte overstiger de ledige pladser i det valgte område.
           </p>
@@ -173,7 +175,7 @@ export default function Camping({ onNext, onBack }) {
         </div>
 
         {/* Basket */}
-        <Basket selectedArea={selectedArea} />
+        <Basket selectedArea={campingSelection.area} />
         </div>
 
         {/* Navigation */}
