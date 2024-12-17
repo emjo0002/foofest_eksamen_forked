@@ -7,12 +7,19 @@ const useBookingStore = create((set, get) => ({
     { id: 1, title: "Foo-Billet", price: 799, quantity: 0 },
     { id: 2, title: "VIP-Billet", price: 1299, quantity: 0 },
   ],
+
   reservationId: null,
+  timer: 0,
+  timerActive: false,
+  timerInterval: null,
+  loadingReservation: false,
+
   campingSelection: {
     area: null,
     tents: { twoPerson: 0, threePerson: 0, ownTent: 0 },
     greenCamping: false,
   },
+
   packageSelection: null,
   bookingFee: 99,
 
@@ -45,7 +52,6 @@ const useBookingStore = create((set, get) => ({
       ),
     })),
 
-  // Resten af funktionerne
   totalTickets: () => get().tickets.reduce((sum, ticket) => sum + ticket.quantity, 0),
   totalTents: () => {
     const { twoPerson, threePerson, ownTent } = get().campingSelection.tents;
@@ -60,29 +66,27 @@ const useBookingStore = create((set, get) => ({
     };
   },
 
- updateTents: (tents) =>
-  set((state) => {
-    const { twoPerson, threePerson, ownTent = 0 } = { 
-      ...state.campingSelection.tents, 
-      ...tents 
-    };
-    const totalTents = twoPerson + threePerson + ownTent;
-    const totalTickets = state.tickets.reduce((sum, ticket) => sum + ticket.quantity, 0);
+  updateTents: (tents) =>
+    set((state) => {
+      const { twoPerson, threePerson, ownTent = 0 } = {
+        ...state.campingSelection.tents,
+        ...tents,
+      };
+      const totalTents = twoPerson + threePerson + ownTent;
+      const totalTickets = state.tickets.reduce((sum, ticket) => sum + ticket.quantity, 0);
 
-    // Hvis totalTents overstiger totalTickets, forhindre opdatering
-    if (totalTents > totalTickets) {
-      console.log("Antallet af telte må ikke overstige antallet af billetter.");
-      return state; // Returner nuværende state uden ændringer
-    }
+      if (totalTents > totalTickets) {
+        console.log("Antallet af telte må ikke overstige antallet af billetter.");
+        return state;
+      }
 
-    // Ellers opdater state
-    return {
-      campingSelection: {
-        ...state.campingSelection,
-        tents: { twoPerson, threePerson, ownTent },
-      },
-    };
-  }),
+      return {
+        campingSelection: {
+          ...state.campingSelection,
+          tents: { twoPerson, threePerson, ownTent },
+        },
+      };
+    }),
 
   updateCampingArea: (area) =>
     set((state) => ({
@@ -97,7 +101,7 @@ const useBookingStore = create((set, get) => ({
       packageSelection: null,
     })),
 
-    toggleGreenCamping: () =>
+  toggleGreenCamping: () =>
     set((state) => ({
       campingSelection: {
         ...state.campingSelection,
@@ -105,15 +109,62 @@ const useBookingStore = create((set, get) => ({
       },
     })),
 
-  fetchReservation: async () => {
+  // Start Timer
+  startTimer: (duration, onTimerEnd) => {
+  if (get().timerActive) return; // Hvis timeren allerede kører, gør ingenting
+
+  clearInterval(get().timerInterval); // Rens tidligere interval
+  const endTime = Date.now() + duration;
+
+  const interval = setInterval(() => {
+    const remainingTime = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+    set({ timer: remainingTime });
+
+    if (remainingTime <= 0) {
+      clearInterval(get().timerInterval);
+      set({ timerActive: false, timer: 0 });
+      if (onTimerEnd) onTimerEnd(); // Callback når timeren udløber
+    }
+  }, 1000);
+
+  set({ timerInterval: interval, timerActive: true });
+},
+
+  // Stop Timer
+  stopTimer: () => {
+    clearInterval(get().timerInterval);
+    set({ timer: 0, timerActive: false, timerInterval: null });
+  },
+
+  fetchReservation: async (onTimerEnd) => {
+  const { campingSelection, totalTents } = get();
+  const area = campingSelection.area;
+  const amount = totalTents();
+
+  if (!area || amount === 0) {
+    console.error("Område eller antal telte mangler.");
+    return null;
+  }
+
   try {
-    const { area } = get().campingSelection;
-    const totalTents = get().totalTents();
-    const response = await reserveSpot(area, totalTents);
-    console.log("Server response:", response); // Log response fra serveren
-    set({ reservationId: response.id });
+    set({ loadingReservation: true });
+
+    const { id, timeout } = await reserveSpot(area, amount);
+    console.log("Reservation timeout:", timeout);
+
+    set({
+      reservationId: id,
+      timer: Math.ceil(timeout / 1000), // Sæt timer til sekunder
+      timerActive: true,
+      loadingReservation: false,
+    });
+
+    get().startTimer(timeout, onTimerEnd);
+    return id;
   } catch (error) {
-    console.error("Failed to fetch reservation:", error);
+    console.error("Fejl ved oprettelse af reservation:", error);
+    set({ loadingReservation: false });
+    return null;
   }
 },
 }));
