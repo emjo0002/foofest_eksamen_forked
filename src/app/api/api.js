@@ -52,8 +52,8 @@ export async function reserveSpot(area, amount) {
   console.log("API kald - Area:", area, "Amount (Total Tents):", amount);
 
   const bodyContent = JSON.stringify({
-    area,
-    amount, // Her sendes KUN totalTents
+    area: area,
+    amount: amount, // Her sendes KUN totalTents
   });
 
   const response = await fetch(`${baseURL}/reserve-spot`, {

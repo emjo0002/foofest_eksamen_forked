@@ -51,7 +51,7 @@ const useBookingStore = create((set, get) => ({
     const { twoPerson, threePerson } = get().campingSelection.tents;
     return twoPerson + threePerson;
   },
-  
+
   calculateRecommendedTents: () => {
     const totalTickets = get().totalTickets();
     return {
@@ -82,15 +82,16 @@ const useBookingStore = create((set, get) => ({
     })),
 
   fetchReservation: async () => {
-    try {
-      const { area } = get().campingSelection;
-      const totalTents = get().totalTents();
-      const response = await reserveSpot(area, totalTents);
-      set({ reservationId: response.id });
-    } catch (error) {
-      console.error("Failed to fetch reservation:", error);
-    }
-  },
+  try {
+    const { area } = get().campingSelection;
+    const totalTents = get().totalTents();
+    const response = await reserveSpot(area, totalTents);
+    console.log("Server response:", response); // Log response fra serveren
+    set({ reservationId: response.id });
+  } catch (error) {
+    console.error("Failed to fetch reservation:", error);
+  }
+},
 }));
 
 export default useBookingStore;

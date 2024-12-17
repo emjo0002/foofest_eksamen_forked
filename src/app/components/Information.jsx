@@ -2,19 +2,19 @@ import React, { useEffect } from "react";
 import useBookingStore from "../globalkurv/useBookingStore";
 
 export default function Information({ onNext, onBack }) {
-  const { reservationId, fetchReservation, campingSelection } = useBookingStore();
+  const { reservationId, fetchReservation, totalTents } = useBookingStore(); // Hent totalTents fra store
 
   useEffect(() => {
-    fetchReservation(); // Hent reservation med dynamiske værdier
-  }, [fetchReservation]);
+    fetchReservation(); 
+  }, []);
 
   return (
     <main>
       <div>
         {reservationId ? (
           <div>
-          <p>Reservation ID: {reservationId}</p>
-          <p>Pladser reserveret: {campingSelection.totalTents} </p>
+            <p>Reservation ID: {reservationId}</p>
+            <p>Pladser reserveret: {totalTents()}</p> {/* Kald totalTents-funktionen */}
           </div>
         ) : (
           <p>Reserverer plads...</p>
