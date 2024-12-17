@@ -106,15 +106,7 @@ const handleAreaChange = (area) => {
   return (
     <main>
       <div className="px-4 max-w-5xl mx-auto mb-24">
-             <h2 className="flex justify-center text-5xl font-gajraj">Camping tilvalg</h2>
-             <div className="flex justify-center items-center gap-4">
-              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">1</div>
-              <div className="w-16 h-16 flex items-center justify-center rounded-full bg-white bg-opacity-80 border-2 border-black text-black font-genos text-4xl">2</div>
-              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">3</div>
-              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">4</div>
-              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">5</div>
-              </div>
-              <div className="flex justify-center flex-wrap gap-8 m-20">
+              <div className="flex justify-center flex-wrap gap-8 m-10">
                 <div className="w-96 border border-black text-black text-center p-8">
                   <div className="mb-4">
           {/* Dropdown-menu til valg af område */}

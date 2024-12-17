@@ -25,28 +25,23 @@ export default function Ticket({ onNext }) {
 
   return (
     <main>
-      <div className="px-4 max-w-5xl mx-auto mb-24">
-        <h2 className="flex justify-center text-5xl font-gajraj">Valg af billet</h2>
-        <div className="flex justify-center items-center gap-4">
-          <div className="w-16 h-16 flex items-center justify-center rounded-full bg-white bg-opacity-80 border-2 border-black text-black font-genos text-4xl">1</div>
-              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">2</div>
-              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">3</div>
-              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">4</div>
-              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">5</div>
-              </div>
-        <div className="flex justify-center flex-wrap gap-8 m-20">
+      <div className="px-4 max-w-5xl mx-auto mb-24">  
+        <div className="flex justify-center flex-wrap gap-8 m-10">
           {tickets.map((ticket) => (
             <div
               key={ticket.id}
-              className="w-96 border border-black text-black text-center p-8"
+              className="flex flex-col w-96 border border-black text-black text-center justify-center p-8"
             >
-              <h2 className="text-2xl font-bold mb-4 uppercase">{ticket.title}</h2>
-              <p className="text-xl font-bold mb-4">Pris: {ticket.price},-</p>
-              <Counter
+              <h2 className="text-2xl font-bold mb-4 uppercase font-gajraj">{ticket.title}</h2>
+              <p className="pb-4">{ticket.bio}</p>
+              <p className="text-3xl font-bold mb-4 font-genos">Pris: {ticket.price},-</p>
+              <div className="flex justify-center">
+                <Counter
                 quantity={ticket.quantity}
                 onIncrement={() => updateTicketQuantity(ticket.id, ticket.quantity + 1)}
                 onDecrement={() => updateTicketQuantity(ticket.id, ticket.quantity - 1)}
-              />
+                />
+      </div>
             </div>
           ))}
         </div>

@@ -4,8 +4,8 @@ import { reserveSpot } from "../api/api";
 const useBookingStore = create((set, get) => ({
   // Initial state
   tickets: [
-    { id: 1, title: "Foo-Billet", price: 799, quantity: 0 },
-    { id: 2, title: "VIP-Billet", price: 1299, quantity: 0 },
+    { id: 1, title: "Foo-Billet", price: 799, quantity: 0, bio: "Få adgang til alle scener, koncerter og fællesområder. Nyd musik, madboder og aktiviteter i en livlig festivalstemning."},
+    { id: 2, title: "VIP-Billet", price: 1299, quantity: 0, bio: "Opgrader til VIP med eksklusive områder, bedre udsyn, loungefaciliteter, private barer, VIP-toiletter og en lækker goodiebag."},
   ],
 
   reservationId: null,
