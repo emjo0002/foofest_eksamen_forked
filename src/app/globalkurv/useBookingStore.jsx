@@ -10,7 +10,7 @@ const useBookingStore = create((set, get) => ({
   reservationId: null,
   campingSelection: {
     area: null,
-    tents: { twoPerson: 0, threePerson: 0 },
+    tents: { twoPerson: 0, threePerson: 0, ownTent: 0 },
     greenCamping: false,
   },
   packageSelection: null,
@@ -48,8 +48,8 @@ const useBookingStore = create((set, get) => ({
   // Resten af funktionerne
   totalTickets: () => get().tickets.reduce((sum, ticket) => sum + ticket.quantity, 0),
   totalTents: () => {
-    const { twoPerson, threePerson } = get().campingSelection.tents;
-    return twoPerson + threePerson;
+    const { twoPerson, threePerson, ownTent } = get().campingSelection.tents;
+    return twoPerson + threePerson + ownTent;
   },
 
   calculateRecommendedTents: () => {
@@ -60,13 +60,29 @@ const useBookingStore = create((set, get) => ({
     };
   },
 
-  updateTents: (tents) =>
-    set((state) => ({
+ updateTents: (tents) =>
+  set((state) => {
+    const { twoPerson, threePerson, ownTent = 0 } = { 
+      ...state.campingSelection.tents, 
+      ...tents 
+    };
+    const totalTents = twoPerson + threePerson + ownTent;
+    const totalTickets = state.tickets.reduce((sum, ticket) => sum + ticket.quantity, 0);
+
+    // Hvis totalTents overstiger totalTickets, forhindre opdatering
+    if (totalTents > totalTickets) {
+      console.log("Antallet af telte må ikke overstige antallet af billetter.");
+      return state; // Returner nuværende state uden ændringer
+    }
+
+    // Ellers opdater state
+    return {
       campingSelection: {
         ...state.campingSelection,
-        tents: { ...tents },
+        tents: { twoPerson, threePerson, ownTent },
       },
-    })),
+    };
+  }),
 
   updateCampingArea: (area) =>
     set((state) => ({
@@ -79,6 +95,14 @@ const useBookingStore = create((set, get) => ({
   removePackageSelection: () =>
     set(() => ({
       packageSelection: null,
+    })),
+
+    toggleGreenCamping: () =>
+    set((state) => ({
+      campingSelection: {
+        ...state.campingSelection,
+        greenCamping: !state.campingSelection.greenCamping,
+      },
     })),
 
   fetchReservation: async () => {

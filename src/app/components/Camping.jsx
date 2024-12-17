@@ -10,12 +10,14 @@ export default function Camping({ onNext, onBack }) {
     packageSelection,
     updateTents,
     removePackageSelection,
+    toggleGreenCamping,
     calculateRecommendedTents,
     updateCampingArea,
   } = useBookingStore();
 
-  const { twoPerson, threePerson } = campingSelection.tents; // Individuelle telte
+  const { twoPerson, threePerson, ownTent } = campingSelection.tents; // Individuelle telte
   const recommendedTents = calculateRecommendedTents(); // Anbefalede telte
+  const { greenCamping } = campingSelection;
   const recommendedPackagePrice =
     recommendedTents.twoPerson * 799 + recommendedTents.threePerson * 999;
 
@@ -23,6 +25,9 @@ export default function Camping({ onNext, onBack }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [areas, setAreas] = useState([]);
   const [areaCapacityError, setAreaCapacityError] = useState(false);
+  const totalTickets = useBookingStore((state) => state.totalTickets());
+  const totalTents = twoPerson + threePerson + ownTent;
+  const disableIncrement = totalTents >= totalTickets;
 
   // Hent campingområder
   useEffect(() => {
@@ -33,61 +38,70 @@ export default function Camping({ onNext, onBack }) {
     fetchData();
   }, []);
 
-  // Kapacitetskontrol
-  useEffect(() => {
-    const totalTentsCount =
-      (useRecommended
-        ? recommendedTents.twoPerson + recommendedTents.threePerson
-        : twoPerson + threePerson);
-
-    const availableSpots =
-      campingSelection.area &&
-      areas.find((area) => area.area === campingSelection.area)?.available || 0;
-
-    setAreaCapacityError(totalTentsCount > availableSpots);
-  }, [campingSelection.area, areas, twoPerson, threePerson, useRecommended]);
-
   const handleRecommendedPackageChange = (checked) => {
-    setUseRecommended(checked);
-    if (checked) {
-      updateTents(recommendedTents); // Opdater anbefalede telte
-    } else {
-      updateTents({ twoPerson: 0, threePerson: 0 }); // Nulstil telte
-      removePackageSelection();
-    }
-  };
+  setUseRecommended(checked);
+  setErrorMessage(""); // Fjern fejlmeddelelsen
+  if (checked) {
+    updateTents(recommendedTents); // Opdater teltene
+    useBookingStore.setState({ packageSelection: recommendedTents }); // Opdater packageSelection
+  } else {
+    updateTents({ twoPerson: 0, threePerson: 0 }); // Nulstil telte
+    removePackageSelection(); // Fjern packageSelection
+  }
+};
 
   const handleTentQuantityChange = (tentType, newQuantity) => {
-    updateTents({ ...campingSelection.tents, [tentType]: Math.max(0, newQuantity) });
-  };
+  setErrorMessage(""); // Fjern fejlmeddelelsen
+  updateTents({ ...campingSelection.tents, [tentType]: Math.max(0, newQuantity) });
+};
+
+const handleAreaChange = (area) => {
+  setErrorMessage(""); // Nulstil fejlmeddelelse
+  updateCampingArea(area); // Opdater område i store
+};
 
   const handleNextClick = () => {
-    const totalTentsCount =
-      (useRecommended
-        ? recommendedTents.twoPerson + recommendedTents.threePerson
-        : twoPerson + threePerson);
+  const errors = []; // Array til at samle fejl
+  const totalTentsCount = useRecommended
+    ? recommendedTents.twoPerson + recommendedTents.threePerson
+    : twoPerson + threePerson + ownTent;
 
-    const availableSpots =
-      campingSelection.area &&
-      areas.find((area) => area.area === campingSelection.area)?.available || 0;
+  const availableSpots =
+    campingSelection.area &&
+    areas.find((area) => area.area === campingSelection.area)?.available || 0;
 
-    if (!campingSelection.area || campingSelection.area === "Vælg Område") {
-      setErrorMessage("Vælg et område for at fortsætte.");
-      return;
-    }
-    if (totalTentsCount > availableSpots) {
-      setAreaCapacityError(true);
-      return;
-    }
-    if (!useRecommended && totalTentsCount === 0) {
-      setErrorMessage("Vælg venligst telte eller pakkeløsning for at fortsætte.");
-      return;
-    }
+  // Fejl: Intet område valgt
+  if (!campingSelection.area || campingSelection.area === "Vælg Område") {
+    errors.push("Vælg venligst et område for at fortsætte.");
+  }
 
-    setErrorMessage("");
-    setAreaCapacityError(false);
-    onNext();
-  };
+  // Fejl: Telte overstiger kapaciteten - tjek kun, hvis et område er valgt
+  if (
+    campingSelection.area &&
+    campingSelection.area !== "Vælg Område" &&
+    totalTentsCount > availableSpots
+  ) {
+    errors.push(
+      "Det samlede antal telte overstiger de ledige pladser i det valgte område."
+    );
+  }
+
+  // Fejl: Ingen telte valgt og ingen pakkeløsning
+  if (!useRecommended && totalTentsCount === 0) {
+    errors.push("Vælg venligst telte eller pakkeløsning for at fortsætte.");
+  }
+
+  // Hvis der er fejl, vis dem alle
+  if (errors.length > 0) {
+    setErrorMessage(errors.join(" "));
+    return;
+  }
+
+  // Hvis alt er OK, fortsæt uden fejl
+  setErrorMessage(""); // Nulstil fejlmeddelelse
+  setAreaCapacityError(false); // Nulstil kapacitetsfejl
+  onNext();
+};
 
   return (
     <main>
@@ -108,18 +122,18 @@ export default function Camping({ onNext, onBack }) {
             Vælg Område:
           </label>
           <select
-            id="area-filter"
-            value={campingSelection.area || "Vælg Område"}
-            onChange={(e) => updateCampingArea(e.target.value)}
-            className="bg-gray-200 p-2 rounded-lg"
-          >
-            <option value="Vælg Område">Vælg Område</option>
-            {areas.map((area) => (
-              <option key={area.id} value={area.area}>
-                {area.area} (Ledige pladser: {area.available})
-              </option>
-            ))}
-          </select>
+  id="area-filter"
+  value={campingSelection.area || "Vælg Område"}
+  onChange={(e) => handleAreaChange(e.target.value)}
+  className="bg-gray-200 p-2 rounded-lg"
+>
+  <option value="Vælg Område">Vælg Område</option>
+  {areas.map((area) => (
+    <option key={area.id} value={area.area}>
+      {area.area} (Ledige pladser: {area.available})
+    </option>
+  ))}
+</select>
         </div>
 
         {/* Anbefalet pakkeløsning */}
@@ -152,6 +166,7 @@ export default function Camping({ onNext, onBack }) {
                 quantity={twoPerson}
                 onIncrement={() => handleTentQuantityChange("twoPerson", twoPerson + 1)}
                 onDecrement={() => handleTentQuantityChange("twoPerson", twoPerson - 1)}
+                disableIncrement={disableIncrement}
               />
             </div>
             <div className="mb-4">
@@ -160,10 +175,37 @@ export default function Camping({ onNext, onBack }) {
                 quantity={threePerson}
                 onIncrement={() => handleTentQuantityChange("threePerson", threePerson + 1)}
                 onDecrement={() => handleTentQuantityChange("threePerson", threePerson - 1)}
+                disableIncrement={disableIncrement}
               />
             </div>
+            <div className="mb-4">
+              Eget telt med
+              <Counter
+                quantity={ownTent}
+                onIncrement={() => handleTentQuantityChange("ownTent", ownTent + 1)}
+                onDecrement={() => handleTentQuantityChange("ownTent", ownTent - 1)}
+                disableIncrement={disableIncrement}
+              />
+            </div>
+            
           </div>
         )}
+
+        
+
+        {/* Checkbox til Green Camping */}
+      <div className="flex items-center mb-4">
+        <input
+          type="checkbox"
+          id="greenCamping"
+          checked={greenCamping}
+          onChange={toggleGreenCamping}
+          className="mr-2"
+        />
+        <label htmlFor="greenCamping" className="text-black">
+          Green Camping
+        </label>
+      </div>
 
         {/* Fejlmeddelelse */}
         {errorMessage && <p className="text-red-500">{errorMessage}</p>}
