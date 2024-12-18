@@ -6,13 +6,11 @@ import { X } from "lucide-react";
 export default function Header() {
   return (
     <header className="absolute z-10 w-full flex justify-between items-center p-4 text-white">
-<<<<<<< HEAD
-      <a href="/"><div className="text-xs font-bold"><b className="text-4xl">F</b>oofest</div></a>
-=======
       <a href="/">
-        <div className="text-xl font-bold">Foofest</div>
+        <div className="text-xs font-bold">
+          <b className="text-4xl">F</b>oofest
+        </div>
       </a>
->>>>>>> burgermenu_accordion
 
       <Sheet>
         <SheetTrigger asChild>
