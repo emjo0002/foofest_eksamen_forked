@@ -1,30 +1,19 @@
-import { useState } from "react";
+import React from "react";
 
-export default function Counter({ initialQuantity, onChange = () => {}, disableIncrement }) {
-  const [quantity, setQuantity] = useState(initialQuantity || 0);
-
-  const handleIncrement = () => {
-    if (disableIncrement) return; // Stop hvis increment ikke er tilladt
-    const newQuantity = quantity + 1;
-    setQuantity(newQuantity);
-    onChange(newQuantity);
-  };
-
-  const handleDecrement = () => {
-    const newQuantity = quantity > 0 ? quantity - 1 : 0;
-    setQuantity(newQuantity);
-    onChange(newQuantity);
-  };
-
+export default function Counter({ quantity, onIncrement, onDecrement, disableIncrement }) {
   return (
-    <div className="flex items-center space-x-2">
-      <button onClick={handleDecrement} className="border px-2 py-1">
+    <div className="flex items-center space-x-2 border font-genos text-2xl">
+      <button
+        onClick={onDecrement}
+        className="px-2 py-1"
+        disabled={quantity <= 0} // Deaktiver knappen, hvis mængden er 0
+      >
         -
       </button>
       <span>{quantity}</span>
       <button
-        onClick={handleIncrement}
-        className={`border px-2 py-1 ${disableIncrement ? "cursor-not-allowed opacity-50" : ""}`}
+        onClick={onIncrement}
+        className={`px-2 py-1 ${disableIncrement ? "cursor-not-allowed opacity-50" : ""}`}
         disabled={disableIncrement} // Deaktiver knappen, hvis increment ikke er tilladt
       >
         +

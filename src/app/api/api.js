@@ -33,6 +33,7 @@ export async function getSchedule() {
   }
 }
 
+// Hent alle pladser
 export async function getAllAreas() {
   try {
     const response = await fetch(`${baseURL}/available-spots`, {
@@ -45,3 +46,28 @@ export async function getAllAreas() {
     return [];
   }
 }
+
+// PUT henter reservetion
+export async function reserveSpot(area, amount) {
+  try {
+    const response = await fetch(`${baseURL}/reserve-spot`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ area, amount }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Fejl: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Fejl i reserveSpot:", error);
+    throw error;
+  }
+}
+
+

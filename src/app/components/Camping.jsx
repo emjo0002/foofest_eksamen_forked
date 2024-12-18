@@ -5,27 +5,31 @@ import { getAllAreas } from "../api/api";
 import { useState, useEffect } from "react";
 
 export default function Camping({ onNext, onBack }) {
-  const [areas, setAreas] = useState([]); // Liste af områder hentet fra databasen
-  const [selectedArea, setSelectedArea] = useState("Vælg Område"); // Standard områdevalg
   const {
-    tickets,
     campingSelection,
     packageSelection,
-    updateTentQuantity,
-    toggleGreenCamping,
-    updatePackageSelection,
+    updateTents,
     removePackageSelection,
+    toggleGreenCamping,
+    calculateRecommendedTents,
+    updateCampingArea,
   } = useBookingStore();
-  const { twoPerson, threePerson } = campingSelection.tents;
+
+  const { twoPerson, threePerson, ownTent } = campingSelection.tents; // Individuelle telte
+  const recommendedTents = calculateRecommendedTents(); // Anbefalede telte
   const { greenCamping } = campingSelection;
-  const [useRecommended, setUseRecommended] = useState(false); // Tilstand for pakkeløsning
-  const [hasAttemptedNext, setHasAttemptedNext] = useState(false); // Om brugeren har forsøgt at klikke på Next
-  const [errorMessage, setErrorMessage] = useState(""); // Fejlmeddelelse
-  const [areaCapacityError, setAreaCapacityError] = useState(false); // Fejl for ledige pladser
+  const recommendedPackagePrice =
+    recommendedTents.twoPerson * 799 + recommendedTents.threePerson * 999;
 
-  // Beregn det samlede antal valgte billetter
-  const totalTickets = tickets.reduce((sum, ticket) => sum + ticket.quantity, 0);
+  const [useRecommended, setUseRecommended] = useState(packageSelection !== null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [areas, setAreas] = useState([]);
+  const [areaCapacityError, setAreaCapacityError] = useState(false);
+  const totalTickets = useBookingStore((state) => state.totalTickets());
+  const totalTents = twoPerson + threePerson + ownTent;
+  const disableIncrement = totalTents >= totalTickets;
 
+  // Hent campingområder
   useEffect(() => {
     async function fetchData() {
       const fetchedAreas = await getAllAreas();
@@ -34,243 +38,205 @@ export default function Camping({ onNext, onBack }) {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    // Sørg for at sætte `useRecommended` til true, hvis en pakkeløsning allerede er valgt
-    if (packageSelection) {
-      setUseRecommended(true);
-    }
-  }, [packageSelection]);
-
-  useEffect(() => {
-    // Fjern kapacitetsfejlen, når et nyt område vælges
-    setAreaCapacityError(false);
-  }, [selectedArea]);
-
-  // Dynamisk opdatering af fejlmeddelelse
-  useEffect(() => {
-    if (hasAttemptedNext) {
-      if (!useRecommended && selectedArea === "Vælg Område") {
-        setErrorMessage("Vælg en pakkeløsning og et område for at fortsætte.");
-      } else if (!useRecommended) {
-        setErrorMessage("Vælg en pakkeløsning for at fortsætte.");
-      } else if (selectedArea === "Vælg Område") {
-        setErrorMessage("Vælg et område for at fortsætte.");
-      } else {
-        setErrorMessage(""); // Ryd fejlmeddelelsen, hvis alt er opfyldt
-      }
-    }
-  }, [useRecommended, selectedArea, hasAttemptedNext]);
-
-  // Anbefalede telte baseret på antal billetter
-  const calculateRecommendedTents = () => {
-    let remainingTickets = totalTickets;
-    const recommendedTents = { twoPerson: 0, threePerson: 0 };
-
-    // Start med at fylde med 3-personers telte
-    if (remainingTickets >= 3) {
-      recommendedTents.threePerson = Math.floor(remainingTickets / 3);
-      remainingTickets %= 3;
-    }
-
-    // Hvis der er 2 eller færre billetter tilbage, brug 2-personers telte
-    if (remainingTickets > 0) {
-      recommendedTents.twoPerson = Math.ceil(remainingTickets / 2);
-      remainingTickets = 0; // Alle billetter er fordelt
-    }
-
-    // Særligt tilfælde: Hvis der er præcis 4 billetter, vælg 2x 2-personers telte
-    if (totalTickets === 4) {
-      recommendedTents.twoPerson = 2;
-      recommendedTents.threePerson = 0;
-    }
-
-    return recommendedTents;
-  };
-
-  const recommendedTents = calculateRecommendedTents();
-
-  // Beregn samlet pris for pakkeløsning
-  const recommendedPackagePrice =
-    recommendedTents.twoPerson * 799 + recommendedTents.threePerson * 999;
-
-  // Beregn samlet antal telte
-  const totalTents =
-    (useRecommended ? recommendedTents.twoPerson + recommendedTents.threePerson : 0) +
-    twoPerson +
-    threePerson;
-
-  // Beregn ledige pladser i det valgte område
-  const availableSpots =
-    selectedArea !== "Vælg Område"
-      ? areas.find((area) => area.area === selectedArea)?.available || 0
-      : 0;
-
-  // Overvåg ændringer i totalTents og fjern kapacitetsfejl, hvis de opfylder betingelserne
-  useEffect(() => {
-    if (totalTents <= availableSpots) {
-      setAreaCapacityError(false);
-    }
-  }, [totalTents, availableSpots]);
-
-  // Handler for checkboxen for pakkeløsning
   const handleRecommendedPackageChange = (checked) => {
-    setUseRecommended(checked);
-    if (checked) {
-      // Tilføj pakkeløsning til kurven
-      updatePackageSelection({
-        twoPerson: recommendedTents.twoPerson,
-        threePerson: recommendedTents.threePerson,
-      });
-    } else {
-      // Fjern pakkeløsningen og nulstil de individuelt valgte telte
-      removePackageSelection();
-      updateTentQuantity("twoPerson", 0); // Nulstil 2-personers telte
-      updateTentQuantity("threePerson", 0); // Nulstil 3-personers telte
-    }
-  };
+  setUseRecommended(checked);
+  setErrorMessage(""); // Fjern fejlmeddelelsen
+  if (checked) {
+    updateTents(recommendedTents); // Opdater teltene
+    useBookingStore.setState({ packageSelection: recommendedTents }); // Opdater packageSelection
+  } else {
+    updateTents({ twoPerson: 0, threePerson: 0 }); // Nulstil telte
+    removePackageSelection(); // Fjern packageSelection
+  }
+};
 
-  // Handler til teltantal
   const handleTentQuantityChange = (tentType, newQuantity) => {
-    updateTentQuantity(tentType, newQuantity);
-  };
+  setErrorMessage(""); // Fjern fejlmeddelelsen
+  updateTents({ ...campingSelection.tents, [tentType]: Math.max(0, newQuantity) });
+};
 
-  // Kontrollér, om brugeren kan gå videre
-  const canProceed =
-    useRecommended && selectedArea !== "Vælg Område" && totalTents <= availableSpots;
+const handleAreaChange = (area) => {
+  setErrorMessage(""); // Nulstil fejlmeddelelse
+  updateCampingArea(area); // Opdater område i store
+};
 
   const handleNextClick = () => {
-    setHasAttemptedNext(true); // Marker, at brugeren har forsøgt at klikke på Next
-    if (selectedArea === "Vælg Område") {
-      setErrorMessage("Vælg et område for at fortsætte.");
-      return;
-    }
-    if (totalTents > availableSpots) {
-      setAreaCapacityError(true); // Sæt kapacitetsfejl, hvis der ikke er plads nok
-      return;
-    }
-    if (!canProceed) {
-      return; // Stop, hvis betingelserne ikke er opfyldt
-    }
-    setAreaCapacityError(false); // Fjern kapacitetsfejl
-    onNext(); // Fortsæt, hvis alt er korrekt
-  };
+  const errors = []; // Array til at samle fejl
+  const totalTentsCount = useRecommended
+    ? recommendedTents.twoPerson + recommendedTents.threePerson
+    : twoPerson + threePerson + ownTent;
+
+  const availableSpots =
+    campingSelection.area &&
+    areas.find((area) => area.area === campingSelection.area)?.available || 0;
+
+  // Fejl: Intet område valgt
+  if (!campingSelection.area || campingSelection.area === "Vælg Område") {
+    errors.push("Vælg venligst et område for at fortsætte.");
+  }
+
+  // Fejl: Telte overstiger kapaciteten - tjek kun, hvis et område er valgt
+  if (
+    campingSelection.area &&
+    campingSelection.area !== "Vælg Område" &&
+    totalTentsCount > availableSpots
+  ) {
+    errors.push(
+      "Det samlede antal telte overstiger de ledige pladser i det valgte område."
+    );
+  }
+
+  // Fejl: Ingen telte valgt og ingen pakkeløsning
+  if (!useRecommended && totalTentsCount === 0) {
+    errors.push("Vælg venligst telte eller pakkeløsning for at fortsætte.");
+  }
+
+  // Hvis der er fejl, vis dem alle
+  if (errors.length > 0) {
+    setErrorMessage(errors.join(" "));
+    return;
+  }
+
+  // Hvis alt er OK, fortsæt uden fejl
+  setErrorMessage(""); // Nulstil fejlmeddelelse
+  setAreaCapacityError(false); // Nulstil kapacitetsfejl
+  onNext();
+};
 
   return (
     <main>
-      <div className="px-4 max-w-5xl mx-auto mb-24">
-             <h2 className="flex justify-center text-5xl font-gajraj">Camping tilvalg</h2>
-<div className="flex justify-center items-center gap-4">
-  
-  <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">1</div>
-  <div className="w-16 h-16 flex items-center justify-center rounded-full bg-white bg-opacity-80 border-2 border-black text-black font-genos text-4xl">2</div>
-  <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">3</div>
-  <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">4</div>
-  <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black bg-opacity-70 text-white font-genos text-3xl">5</div>
-</div>
-      <div className="flex justify-center flex-wrap gap-8 m-20">
-        <div className="w-96 border border-black text-black text-center p-8">
-      <div className="mb-4">
-        <label htmlFor="area-filter" className="mr-4 text-lg font-semibold">
-          Vælg Område:
-        </label>
-        <select
-          id="area-filter"
-          value={selectedArea}
-          onChange={(e) => setSelectedArea(e.target.value)}
-          className="bg-red text-black px-6 py-2 rounded-lg"
-        >
-          <option value="Vælg Område">Vælg Område</option>
-          {areas.map((area) => (
-            <option key={area.id} value={area.area}>
-              {area.area} (Ledige pladser: {area.available})
-            </option>
-          ))}
-        </select>
-      </div>
-      
-
-      <div className="mb-4">
-        <h2 className="font-semibold text-lg mb-2">Anbefalet pakkeløsning</h2>
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            id="recommendedPackage"
-            checked={useRecommended}
-            onChange={(e) => handleRecommendedPackageChange(e.target.checked)}
-            className="mr-2"
-          />
-          <label htmlFor="recommendedPackage" className="text-black">
-            {recommendedTents.twoPerson > 0 && `${recommendedTents.twoPerson} x 2-personers telt`}
-            {recommendedTents.twoPerson > 0 && recommendedTents.threePerson > 0 && " og "}
-            {recommendedTents.threePerson > 0 && `${recommendedTents.threePerson} x 3-personers telt`}
-            {` - ${recommendedPackagePrice},-`}
+      <div className="max-w-6xl mx-auto lg:mb-24">
+              <div className="flex justify-center gap-8 m-10 flex-wrap lg:flex-nowrap">
+                <div className="border border-white text-black text-center lg:w-full p-8">
+                  <div className="mb-4">
+          {/* Dropdown-menu til valg af område */}
+          <h2 className="font-gajraj text-5xl text-white">Tilvalg</h2>
+          <p className="font-genos text-xl text-white p-6">Bemærk: Prisen inkluderer opsætning af dit telt af vores team</p>
+    <label htmlFor="area-filter" className="mb-2 font-extrabold font-genos text-3xl text-white flex flex-col">
+            Campingområde:
           </label>
+          <select
+          id="area-filter"
+          value={campingSelection.area || "Vælg Område"}
+          onChange={(e) => handleAreaChange(e.target.value)}
+          className="bg-white p-2 rounded-3xl border-none font-genos text-center appearance-none mt-3">
+            <option value="Vælg Område">Vælg Område</option>
+            {areas.map((area) => (
+              <option key={area.id} value={area.area}>
+                {area.area} (Ledige pladser: {area.available})
+              </option>
+            ))}
+          </select>
         </div>
-      </div>
 
-      {/* Individuelle telte */}
-        <>
-          <div className="mb-4">
-            <h2 className="font-semibold text-lg mb-2">Sammensæt din egen pakkeløsning</h2>
-            <div className="flex">
-              2-personers telt - 799,-
+        {/* Individuelle telte */}
+        {!useRecommended && (
+          <div>
+            <h3 className="font-extrabold font-genos text-3xl text-white mb-2">Sammensæt din egen pakkeløsning</h3>
+            <div className="flex justify-between font-genos text-2xl font-black text-white">
+              <h4>Tilvalg</h4>
+              <h4>Pris</h4>
+              <h4 className="pr-5">Antal</h4>
+              </div>
+            <div className="flex items-center mb-4 justify-between text-white font-genos font-extralight text-2xl mt-3">
+              <p>2-personers telt</p> 
+              <p className="pr-16">799,-</p>
               <Counter
-                initialQuantity={twoPerson}
-                onChange={(newQuantity) => handleTentQuantityChange("twoPerson", newQuantity)}
+                quantity={twoPerson}
+                onIncrement={() => handleTentQuantityChange("twoPerson", twoPerson + 1)}
+                onDecrement={() => handleTentQuantityChange("twoPerson", twoPerson - 1)}
+                disableIncrement={disableIncrement}
               />
             </div>
-          </div>
-
-          <div className="mb-4">
-            <div className="flex">
-              3-personers telt - 999,-
+            <div className="flex items-center mb-4 justify-between text-white font-genos font-extralight text-2xl mt-3">
+              <p>3-personers telt</p> 
+              <p className="pr-16">999,-</p>
               <Counter
-                initialQuantity={threePerson}
-                onChange={(newQuantity) => handleTentQuantityChange("threePerson", newQuantity)}
+                quantity={threePerson}
+                onIncrement={() => handleTentQuantityChange("threePerson", threePerson + 1)}
+                onDecrement={() => handleTentQuantityChange("threePerson", threePerson - 1)}
+                disableIncrement={disableIncrement}
               />
             </div>
+           <div className="flex items-center mb-4 justify-between text-white font-genos font-extralight text-2xl mt-3">
+              <p>Eget telt med </p> 
+              <p className="pr-10">GRATS</p>
+              <Counter
+                quantity={ownTent}
+                onIncrement={() => handleTentQuantityChange("ownTent", ownTent + 1)}
+                onDecrement={() => handleTentQuantityChange("ownTent", ownTent - 1)}
+                disableIncrement={disableIncrement}
+              />
+            </div>
+            
           </div>
-        </>
-      
+        )}
 
-      {/* Checkbox til Green Camping */}
-      <div className="flex items-center mb-4">
+        {/* Anbefalet pakkeløsning */}
+        <div className="mb-4">
+          <h3 className="font-extrabold font-genos text-3xl text-white mb-2">Anbefalet pakkeløsning</h3>
+          <div className="flex items-end justify-between font-genos text-2xl text-white mt-3">
+          <label htmlFor="recommendedPackage" className="flex items-end">
+            <div>
+              {recommendedTents.twoPerson > 0 && (
+                <span className="block">{`${recommendedTents.twoPerson} x 2-personers telt`}</span>)}
+                {recommendedTents.threePerson > 0 && (
+                  <span className="block">{`${recommendedTents.threePerson} x 3-personers telt`}</span>
+                  )}
+            </div>
+                  <span className="pl-6">{`${recommendedPackagePrice},-`}</span>
+                  </label>
+                  <div className="flex">
+                  <input
+                  type="checkbox"
+                  id="recommendedPackage"
+                  checked={useRecommended}
+                  onChange={(e) => handleRecommendedPackageChange(e.target.checked)}
+                  className="items-end appearance-none w-5 h-5 border border-white checked:border-white relative 
+                  checked:after:content-['✔'] checked:after:absolute checked:after:top-[-6px] checked:after:left-[3px] checked:after:text-white"
+                  />
+                  </div>
+          </div>
+        </div>
+
+        {/* Checkbox til Green Camping */}
+      <div className="flex items-center justify-between font-genos text-2xl text-white mt-3">
+        <label htmlFor="greenCamping" className="text-white">
+          Green Camping
+        </label>
         <input
           type="checkbox"
           id="greenCamping"
           checked={greenCamping}
           onChange={toggleGreenCamping}
-          className="mr-2"
+          className="appearance-none w-5 h-5 border border-white checked:border-white relative 
+             checked:after:content-['✔'] checked:after:absolute checked:after:top-[-6px] checked:after:left-[3px] checked:after:text-white"
         />
-        <label htmlFor="greenCamping" className="text-black">
-          Green Camping
-        </label>
       </div>
 
-      {/* Fejlmeddelelse */}
-      {hasAttemptedNext && errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
-      {areaCapacityError && selectedArea !== "Vælg Område" && (
-        <p className="text-red-500 mt-2">
-          Det samlede antal telte overstiger de ledige pladser i det valgte område.
-        </p>
-      )}
-      </div>
-      <Basket selectedArea={selectedArea} />
-      </div>
-      </div>
+        {/* Fejlmeddelelse */}
+        {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+        {areaCapacityError && campingSelection !== "Vælg Område" && (
+          <p className="text-red-500">
+            Det samlede antal telte overstiger de ledige pladser i det valgte område.
+          </p>
+        )}
+        </div>
 
-      <button onClick={onBack} className="mt-4">
-        Tilbage
-      </button>
+        {/* Basket */}
+        <Basket selectedArea={campingSelection.area} />
+        </div>
 
-      <button
-        onClick={handleNextClick}
-        className="mt-4 px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white"
-      >
-        Next
-      </button>
-
-      
+        {/* Navigation */}
+        <div className="flex justify-between mt-6">
+          <button onClick={onBack} className="font-gajraj mt-4 px-4 py-2 text-3xl text-white lg:text-5xl">
+            Tilbage
+          </button>
+          <button onClick={handleNextClick} className="font-gajraj mt-4 px-4 py-2 text-3xl text-white lg:text-5xl">
+            Reserver
+          </button>
+        </div>
+      </div>
     </main>
   );
 }
