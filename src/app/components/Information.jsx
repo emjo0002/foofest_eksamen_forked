@@ -3,7 +3,7 @@ import useBookingStore from "../globalkurv/useBookingStore";
 import { postSub } from "../lib/supabase";
 
 export default function Information({ onNext, onBack }) {
-  const { reservationId, fetchReservation, totalTents, tickets } = useBookingStore();
+  const { reservationId, fetchReservation, totalTents, tickets, updateUserInfo } = useBookingStore();
 
   // STATE DER GEMMER BRUGERINFORMATION
   const [userInfo, setUserInfo] = useState([]);
@@ -29,6 +29,7 @@ export default function Information({ onNext, onBack }) {
       // GEM DATAEN I SUPABASE
       await postSub(newUser);
       setUserInfo((prev) => [...prev, newUser]);
+      updateUserInfo(newUser); // Gem data i useBookingStore
       alert("Information gemt i databasen!");
     } catch (error) {
       console.error("Fejl ved gemning i Supabase:", error);
@@ -73,7 +74,7 @@ export default function Information({ onNext, onBack }) {
 
                 {/* E-MAIL */}
                 <div className="mb-4">
-                  <label htmlFor={`email-${ticket.id}-${index}`} className="block font-medium mb-2">
+                  <label htmlFor={`email-${ticket.id}-${index}`} className="block font-medium mb-2 text-black">
                     E-mail:
                   </label>
                   <input type="email" id={`email-${ticket.id}-${index}`} className="w-full px-3 py-2 border border-gray-300 text-black rounded-md" placeholder="Indtast din e-mail" required />

@@ -15,43 +15,43 @@ const useBookingStore = create((set, get) => ({
   },
   packageSelection: null,
   bookingFee: 99,
+  userInfo: [],
 
-  // Beregn totalpris
+  updateUserInfo: (newUser) =>
+    set((state) => ({
+      userInfo: [...state.userInfo, newUser],
+    })),
+
   calculateTotal: () => {
     const { tickets, campingSelection, packageSelection, bookingFee } = get();
 
-    const ticketsTotal = tickets.reduce(
-      (sum, ticket) => sum + ticket.quantity * ticket.price,
-      0
-    );
+    const ticketsTotal = tickets.reduce((sum, ticket) => sum + ticket.quantity * ticket.price, 0);
 
-    const tentsTotal =
-      campingSelection.tents.twoPerson * 799 +
-      campingSelection.tents.threePerson * 999;
+    const tentsTotal = campingSelection.tents.twoPerson * 799 + campingSelection.tents.threePerson * 999;
 
-    const packageTotal = packageSelection
-      ? packageSelection.twoPerson * 799 + packageSelection.threePerson * 999
-      : 0;
+    const packageTotal = packageSelection ? packageSelection.twoPerson * 799 + packageSelection.threePerson * 999 : 0;
 
     const greenCampingFee = campingSelection.greenCamping ? 249 : 0;
 
     return ticketsTotal + tentsTotal + packageTotal + greenCampingFee + bookingFee;
   },
 
+  // Funktion til at opdatere billetantal
   updateTicketQuantity: (id, newQuantity) =>
     set((state) => ({
-      tickets: state.tickets.map((ticket) =>
-        ticket.id === id ? { ...ticket, quantity: Math.max(0, newQuantity) } : ticket
-      ),
+      tickets: state.tickets.map((ticket) => (ticket.id === id ? { ...ticket, quantity: Math.max(0, newQuantity) } : ticket)),
     })),
 
-  // Resten af funktionerne
+  // Beregner det samlede antal billetter
   totalTickets: () => get().tickets.reduce((sum, ticket) => sum + ticket.quantity, 0),
+
+  // Beregner det samlede antal telte
   totalTents: () => {
     const { twoPerson, threePerson, ownTent } = get().campingSelection.tents;
     return twoPerson + threePerson + ownTent;
   },
 
+  // Beregner anbefalede telte baseret på antal billetter
   calculateRecommendedTents: () => {
     const totalTickets = get().totalTickets();
     return {
@@ -60,30 +60,36 @@ const useBookingStore = create((set, get) => ({
     };
   },
 
- updateTents: (tents) =>
-  set((state) => {
-    const { twoPerson, threePerson, ownTent = 0 } = { 
-      ...state.campingSelection.tents, 
-      ...tents 
-    };
-    const totalTents = twoPerson + threePerson + ownTent;
-    const totalTickets = state.tickets.reduce((sum, ticket) => sum + ticket.quantity, 0);
+  // Funktion til at opdatere telte
+  updateTents: (tents) =>
+    set((state) => {
+      const {
+        twoPerson,
+        threePerson,
+        ownTent = 0,
+      } = {
+        ...state.campingSelection.tents,
+        ...tents,
+      };
+      const totalTents = twoPerson + threePerson + ownTent;
+      const totalTickets = state.tickets.reduce((sum, ticket) => sum + ticket.quantity, 0);
 
-    // Hvis totalTents overstiger totalTickets, forhindre opdatering
-    if (totalTents > totalTickets) {
-      console.log("Antallet af telte må ikke overstige antallet af billetter.");
-      return state; // Returner nuværende state uden ændringer
-    }
+      // Hvis totalTents overstiger totalTickets, forhindre opdatering
+      if (totalTents > totalTickets) {
+        console.log("Antallet af telte må ikke overstige antallet af billetter.");
+        return state; // Returner nuværende state uden ændringer
+      }
 
-    // Ellers opdater state
-    return {
-      campingSelection: {
-        ...state.campingSelection,
-        tents: { twoPerson, threePerson, ownTent },
-      },
-    };
-  }),
+      // Ellers opdater state
+      return {
+        campingSelection: {
+          ...state.campingSelection,
+          tents: { twoPerson, threePerson, ownTent },
+        },
+      };
+    }),
 
+  // Funktion til at opdatere campingområde
   updateCampingArea: (area) =>
     set((state) => ({
       campingSelection: {
@@ -92,12 +98,14 @@ const useBookingStore = create((set, get) => ({
       },
     })),
 
+  // Funktion til at fjerne pakkeløsning
   removePackageSelection: () =>
     set(() => ({
       packageSelection: null,
     })),
 
-    toggleGreenCamping: () =>
+  // Funktion til at toggle Green Camping
+  toggleGreenCamping: () =>
     set((state) => ({
       campingSelection: {
         ...state.campingSelection,
@@ -105,17 +113,18 @@ const useBookingStore = create((set, get) => ({
       },
     })),
 
+  // Funktion til at hente reservation
   fetchReservation: async () => {
-  try {
-    const { area } = get().campingSelection;
-    const totalTents = get().totalTents();
-    const response = await reserveSpot(area, totalTents);
-    console.log("Server response:", response); // Log response fra serveren
-    set({ reservationId: response.id });
-  } catch (error) {
-    console.error("Failed to fetch reservation:", error);
-  }
-},
+    try {
+      const { area } = get().campingSelection;
+      const totalTents = get().totalTents();
+      const response = await reserveSpot(area, totalTents);
+      console.log("Server response:", response);
+      set({ reservationId: response.id });
+    } catch (error) {
+      console.error("Failed to fetch reservation:", error);
+    }
+  },
 }));
 
 export default useBookingStore;
