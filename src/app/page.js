@@ -10,11 +10,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
   useEffect(() => {
-    // Animation for hero-teksten (h1 og p)
+    //ANIMATION TIL H1 OG LINKS
     const tl = gsap.timeline({ defaults: { ease: "power1.out" } });
     tl.fromTo(".anim-text", { y: "100%", opacity: 0 }, { y: "0%", opacity: 1, duration: 2, stagger: 0.25 });
 
-    // Animation for overskriften og kortene uden for hero-sektionen
+    // ANIMATION TIL TEKST OG CARDS
     gsap.fromTo(
       ".anim-section-text",
       { y: "100%", opacity: 0 },
@@ -33,7 +33,7 @@ export default function Home() {
       }
     );
 
-    // Animation for kortene
+    // ANIMATION TIL CARDS
     gsap.from(".grid > div", {
       opacity: 0,
       y: 50,
@@ -51,7 +51,6 @@ export default function Home() {
 
   return (
     <div className="relative h-screen dynamic-bg min-h-screen bg-cover text-white">
-      {/* Hero Section */}
       <section className="h-screen flex flex-col justify-center items-center text-center">
         <h1 className="anim-text font-gajraj text-6xl md:text-9xl tracking-wider mb-4">FOOFEST</h1>
         <p className="anim-text font-genos text-2xl md:text-4xl lg:text-6xl mb-8">24 - 31 august</p>
