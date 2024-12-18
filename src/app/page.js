@@ -62,7 +62,7 @@ export default function Home() {
           <a href="/lineup" className="anim-text block text-xl md:text-3xl font-gajraj font-bold hover:underline">
             LINE-UP
           </a>
-          <a href="/artists" className="anim-text block text-xl md:text-3xl font-gajraj font-bold hover:underline">
+          <a href="/schedule" className="anim-text block text-xl md:text-3xl font-gajraj font-bold hover:underline">
             PROGRAM
           </a>
         </div>
