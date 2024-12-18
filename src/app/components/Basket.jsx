@@ -12,7 +12,7 @@ export default function Basket({ selectedArea }) {
     <div 
     className="
   w-full border border-black text-black p-8 
-  lg:w-96 lg:cursor-default 
+  lg: lg:cursor-default 
   fixed bottom-0 left-0 right-0 bg-red-300 opacity-80 z-50 
   lg:static lg:bg-transparent lg:text-black"
 

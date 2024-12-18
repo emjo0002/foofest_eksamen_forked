@@ -39,16 +39,16 @@ export default function Booking() {
   const stepIndicator = (viewName, stepNumber) => {
     const isActive = currentView === viewName;
     return `flex items-center justify-center rounded-full 
-            ${isActive ? "w-14 h-14 bg-white border-2 border-black text-black" : "w-10 h-10 bg-black bg-opacity-70 text-white"} 
+            ${isActive ? "w-12 h-12 bg-white border-2 border-black text-black" : "w-10 h-10 bg-black bg-opacity-70 text-white"} 
             font-genos ${isActive ? "text-3xl" : "text-2xl"}`;
   };
 
   return (
     <div className="px-4 mx-auto mb-24 bg-custom">
       <div className="flex justify-center lg:justify-start">
-        <h1 className="text-8xl font-gajraj font-bold pt-16 lg: pb-2">TICKETS</h1>
+        <h1 className="text-white text-7xl font-gajraj font-bold pt-20 lg: pb-2">TICKETS</h1>
         </div>
-      <h2 className="flex justify-center text-5xl font-gajraj pb-6">{currentView}</h2>
+      <h2 className="flex text-white justify-center text-5xl font-gajraj pb-6">{currentView}</h2>
 
       {/* Trinindikator */}
       <div className="flex justify-center items-center gap-4">
