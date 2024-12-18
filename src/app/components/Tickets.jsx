@@ -55,7 +55,7 @@ export default function Ticket({ onNext }) {
         <div className="flex justify-end">
           <button
             onClick={handleNext}
-            className="font-gajraj mt-4 px-4 py-2 text-5xl text-white"
+            className="font-gajraj mt-4 px-4 py-2 text-3xl text-white lg:text-5xl"
           >
             Forsæt
           </button>

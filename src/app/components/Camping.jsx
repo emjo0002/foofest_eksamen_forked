@@ -105,9 +105,9 @@ const handleAreaChange = (area) => {
 
   return (
     <main>
-      <div className="px-4 max-w-6xl mx-auto mb-24">
+      <div className="max-w-6xl mx-auto lg:mb-24">
               <div className="flex justify-center gap-8 m-10 flex-wrap lg:flex-nowrap">
-                <div className="w-96 border border-white text-black text-center p-8 lg:w-full">
+                <div className="border border-white text-black text-center lg:w-full p-8">
                   <div className="mb-4">
           {/* Dropdown-menu til valg af område */}
           <h2 className="font-gajraj text-5xl text-white">Tilvalg</h2>
@@ -129,27 +129,6 @@ const handleAreaChange = (area) => {
           </select>
         </div>
 
-        {/* Anbefalet pakkeløsning */}
-        <div className="mb-4">
-          <h3 className="font-extrabold font-genos text-3xl text-white mb-2">Anbefalet pakkeløsning</h3>
-          <div className="flex items-center justify-between font-genos text-2xl text-white mt-3">
-            <label htmlFor="recommendedPackage">
-              {recommendedTents.twoPerson > 0 && `${recommendedTents.twoPerson} x 2-personers telt`}
-              {recommendedTents.twoPerson > 0 && recommendedTents.threePerson > 0 && " og "}
-              {recommendedTents.threePerson > 0 && `${recommendedTents.threePerson} x 3-personers telt`}
-              {` - ${recommendedPackagePrice},-`}
-            </label>
-            <input
-            type="checkbox"
-            id="recommendedPackage"
-            checked={useRecommended}
-            onChange={(e) => handleRecommendedPackageChange(e.target.checked)}
-            className="appearance-none w-5 h-5 border border-white checked:border-white relative 
-             checked:after:content-['✔'] checked:after:absolute checked:after:top-[-6px] checked:after:left-[3px] checked:after:text-white"
- />
-          </div>
-        </div>
-
         {/* Individuelle telte */}
         {!useRecommended && (
           <div>
@@ -157,11 +136,11 @@ const handleAreaChange = (area) => {
             <div className="flex justify-between font-genos text-2xl font-black text-white">
               <h4>Tilvalg</h4>
               <h4>Pris</h4>
-              <h4>Antal</h4>
+              <h4 className="pr-5">Antal</h4>
               </div>
             <div className="flex items-center mb-4 justify-between text-white font-genos font-extralight text-2xl mt-3">
               <p>2-personers telt</p> 
-              <p>799,-</p>
+              <p className="pr-16">799,-</p>
               <Counter
                 quantity={twoPerson}
                 onIncrement={() => handleTentQuantityChange("twoPerson", twoPerson + 1)}
@@ -171,7 +150,7 @@ const handleAreaChange = (area) => {
             </div>
             <div className="flex items-center mb-4 justify-between text-white font-genos font-extralight text-2xl mt-3">
               <p>3-personers telt</p> 
-              <p>999,-</p>
+              <p className="pr-16">999,-</p>
               <Counter
                 quantity={threePerson}
                 onIncrement={() => handleTentQuantityChange("threePerson", threePerson + 1)}
@@ -181,7 +160,7 @@ const handleAreaChange = (area) => {
             </div>
            <div className="flex items-center mb-4 justify-between text-white font-genos font-extralight text-2xl mt-3">
               <p>Eget telt med </p> 
-              <p>GRATS</p>
+              <p className="pr-10">GRATS</p>
               <Counter
                 quantity={ownTent}
                 onIncrement={() => handleTentQuantityChange("ownTent", ownTent + 1)}
@@ -193,7 +172,32 @@ const handleAreaChange = (area) => {
           </div>
         )}
 
-        
+        {/* Anbefalet pakkeløsning */}
+        <div className="mb-4">
+          <h3 className="font-extrabold font-genos text-3xl text-white mb-2">Anbefalet pakkeløsning</h3>
+          <div className="flex items-end justify-between font-genos text-2xl text-white mt-3">
+          <label htmlFor="recommendedPackage" className="flex items-end">
+            <div>
+              {recommendedTents.twoPerson > 0 && (
+                <span className="block">{`${recommendedTents.twoPerson} x 2-personers telt`}</span>)}
+                {recommendedTents.threePerson > 0 && (
+                  <span className="block">{`${recommendedTents.threePerson} x 3-personers telt`}</span>
+                  )}
+            </div>
+                  <span className="pl-6">{`${recommendedPackagePrice},-`}</span>
+                  </label>
+                  <div className="flex">
+                  <input
+                  type="checkbox"
+                  id="recommendedPackage"
+                  checked={useRecommended}
+                  onChange={(e) => handleRecommendedPackageChange(e.target.checked)}
+                  className="items-end appearance-none w-5 h-5 border border-white checked:border-white relative 
+                  checked:after:content-['✔'] checked:after:absolute checked:after:top-[-6px] checked:after:left-[3px] checked:after:text-white"
+                  />
+                  </div>
+          </div>
+        </div>
 
         {/* Checkbox til Green Camping */}
       <div className="flex items-center justify-between font-genos text-2xl text-white mt-3">
@@ -225,10 +229,10 @@ const handleAreaChange = (area) => {
 
         {/* Navigation */}
         <div className="flex justify-between mt-6">
-          <button onClick={onBack} className="font-gajraj mt-4 px-4 py-2 text-5xl text-white">
+          <button onClick={onBack} className="font-gajraj mt-4 px-4 py-2 text-3xl text-white lg:text-5xl">
             Tilbage
           </button>
-          <button onClick={handleNextClick} className="font-gajraj mt-4 px-4 py-2 text-5xl text-white">
+          <button onClick={handleNextClick} className="font-gajraj mt-4 px-4 py-2 text-3xl text-white lg:text-5xl">
             Reserver
           </button>
         </div>

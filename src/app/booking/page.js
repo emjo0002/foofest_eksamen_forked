@@ -44,7 +44,7 @@ export default function Booking() {
   };
 
   return (
-    <div className="px-4 mx-auto mb-24 bg-custom">
+    <div className="mx-auto mb-24 bg-custom lg:px-4">
       <div className="flex justify-center lg:justify-start">
         <h1 className="text-white text-7xl font-gajraj font-bold pt-20 lg: pb-2">TICKETS</h1>
         </div>
