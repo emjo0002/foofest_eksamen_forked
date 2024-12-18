@@ -49,27 +49,25 @@ export async function getAllAreas() {
 
 // PUT henter reservetion
 export async function reserveSpot(area, amount) {
-  console.log("API kald - Area:", area, "Amount (Total Tents):", amount);
+  try {
+    const response = await fetch(`${baseURL}/reserve-spot`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ area, amount }),
+    });
 
-  const bodyContent = JSON.stringify({
-    area: area,
-    amount: amount, // Her sendes KUN totalTents
-  });
+    if (!response.ok) {
+      throw new Error(`Fejl: ${response.status}`);
+    }
 
-  const response = await fetch(`${baseURL}/reserve-spot`, {
-    method: "PUT",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: bodyContent,
-  });
-
-  const data = await response.json();
-
-  return {
-    id: data.id,
-    timeout: data.timeout || 300000
-  };
+    return await response.json();
+  } catch (error) {
+    console.error("Fejl i reserveSpot:", error);
+    throw error;
+  }
 }
+
 

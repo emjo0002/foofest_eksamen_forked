@@ -11,27 +11,14 @@ import Opsummering from "../components/Opsummering";
 
 export default function Booking() {
   const [currentView, setCurrentView] = useState("tickets");
-  const { timer, timerActive, stopTimer, fetchReservation, loadingReservation } =
+  const { fetchReservation } =
     useBookingStore();
-
-  const handleTimerEnd = () => {
-    alert("Din reservation er udløbet. Du bliver sendt tilbage til billetvalg.");
-    setCurrentView("tickets");
-    stopTimer();
-  };
-
-  useEffect(() => {
-    if (timer === 0 && timerActive) {
-      handleTimerEnd();
-    }
-  }, [timer, timerActive]);
 
   const handleNext = (nextView) => {
     setCurrentView(nextView);
   };
 
   const handleBack = (previousView) => {
-    stopTimer();
     setCurrentView(previousView);
   };
 
@@ -58,21 +45,6 @@ export default function Booking() {
         <div className={stepIndicator("opsummering", 4)}>4</div>
         <div className={stepIndicator("payment", 5)}>5</div>
       </div>
-
-      {/* Loading besked */}
-      {loadingReservation && (
-        <div className="text-center py-4 bg-gray-200">
-          Henter reservation, vent venligst...
-        </div>
-      )}
-
-      {/* Timer visning */}
-      {timerActive && (
-        <div className="sticky top-0 z-50 bg-red-300 text-primary border-b border-t border-primary text-center py-2 mb-8">
-          Reservation expires in: {Math.floor(timer / 60)}:
-          {String(timer % 60).padStart(2, "0")}
-        </div>
-      )}
 
       {/* Indhold */}
       <div>
