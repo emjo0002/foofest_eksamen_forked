@@ -11,8 +11,7 @@ import Opsummering from "../components/Opsummering";
 
 export default function Booking() {
   const [currentView, setCurrentView] = useState("tickets");
-  const { fetchReservation } =
-    useBookingStore();
+  const { fetchReservation } = useBookingStore();
 
   const handleNext = (nextView) => {
     setCurrentView(nextView);
@@ -31,10 +30,10 @@ export default function Booking() {
   };
 
   return (
-    <div className="mx-auto mb-24 bg-custom lg:px-4">
+    <div className="mx-auto mb-24 relative dynamic-bg lg:px-4">
       <div className="flex justify-center lg:justify-start">
         <h1 className="text-white text-7xl font-gajraj font-bold pt-20 lg: pb-2">TICKETS</h1>
-        </div>
+      </div>
       <h2 className="flex text-white justify-center text-5xl font-gajraj pb-6">{currentView}</h2>
 
       {/* Trinindikator */}
@@ -50,30 +49,13 @@ export default function Booking() {
       <div>
         {currentView === "tickets" && <Ticket onNext={() => handleNext("camping")} />}
 
-        {currentView === "camping" && (
-          <Camping
-            onNext={() => handleNext("information")}
-            onBack={() => handleBack("tickets")}
-          />
-        )}
+        {currentView === "camping" && <Camping onNext={() => handleNext("information")} onBack={() => handleBack("tickets")} />}
 
-        {currentView === "information" && (
-          <Information
-            onNext={() => handleNext("opsummering")}
-            onBack={() => handleBack("camping")}
-          />
-        )}
+        {currentView === "information" && <Information onNext={() => handleNext("opsummering")} onBack={() => handleBack("camping")} />}
 
-        {currentView === "opsummering" && (
-          <Opsummering
-            onNext={() => handleNext("payment")}
-            onBack={() => handleBack("information")}
-          />
-        )}
+        {currentView === "opsummering" && <Opsummering onNext={() => handleNext("payment")} onBack={() => handleBack("information")} />}
 
-        {currentView === "payment" && (
-          <Payment onBack={() => handleBack("opsummering")} />
-        )}
+        {currentView === "payment" && <Payment onBack={() => handleBack("opsummering")} />}
       </div>
     </div>
   );

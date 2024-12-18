@@ -56,7 +56,7 @@ export default function Home() {
         <h1 className="anim-text font-gajraj text-6xl md:text-9xl tracking-wider mb-4">FOOFEST</h1>
         <p className="anim-text font-genos text-2xl md:text-4xl lg:text-6xl mb-8">24 - 31 august</p>
         <div className="absolute bottom-8 right-8 space-y-4 text-right">
-          <a href="/tickets" className="anim-text block text-xl md:text-3xl font-gajraj font-bold hover:underline">
+          <a href="/booking" className="anim-text block text-xl md:text-3xl font-gajraj font-bold hover:underline">
             TICKETS!
           </a>
           <a href="/lineup" className="anim-text block text-xl md:text-3xl font-gajraj font-bold hover:underline">
