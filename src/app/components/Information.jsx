@@ -1,26 +1,44 @@
 import React, { useEffect, useState } from "react";
 import useBookingStore from "../globalkurv/useBookingStore";
+import { postSub } from "../lib/supabase";
 
 export default function Information({ onNext, onBack }) {
   const { reservationId, fetchReservation, totalTents, tickets } = useBookingStore();
 
-  // State til at gemme brugerinformation
+  // STATE DER GEMMER BRUGERINFORMATION
   const [userInfo, setUserInfo] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchReservation();
   }, []);
 
-  // Håndter formularindsendelse for hver billet
-  const handleSubmit = (e, ticket, index) => {
+  // HÅNDTERER DEN INFORMATION DER KOMMER IND
+  const handleSubmit = async (e, ticket, index) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
     const name = e.target[`name-${ticket.id}-${index}`].value;
     const email = e.target[`email-${ticket.id}-${index}`].value;
 
-    setUserInfo((prev) => [...prev, { name, email }]);
+    const newUser = { name, email };
+
+    try {
+      // GEM DATAEN I SUPABASE
+      await postSub(newUser);
+      setUserInfo((prev) => [...prev, newUser]);
+      alert("Information gemt i databasen!");
+    } catch (error) {
+      console.error("Fejl ved gemning i Supabase:", error);
+      setError("Der skete en fejl ved gemning i databasen.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  // Opret en liste over billetter gentaget efter antal valgt
+  // OPRET EN LISTE OVER BILLETTER UD FRA HVOR MANGE DER ER VALGT
   const selectedTickets = tickets.flatMap((ticket) => Array(ticket.quantity).fill(ticket));
 
   return (
@@ -45,27 +63,27 @@ export default function Information({ onNext, onBack }) {
                   Info Form - {ticket.title} #{index + 1}
                 </h2>
 
-                {/* Navn */}
+                {/* NAVN */}
                 <div className="mb-4">
-                  <label htmlFor={`name-${ticket.id}-${index}`} className="block font-medium mb-2">
+                  <label htmlFor={`name-${ticket.id}-${index}`} className="block font-medium mb-2 text-black">
                     Navn:
                   </label>
-                  <input type="text" id={`name-${ticket.id}-${index}`} className="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Indtast dit navn" required />
+                  <input type="text" id={`name-${ticket.id}-${index}`} className="w-full px-3 py-2 border border-gray-300 text-black rounded-md" placeholder="Indtast dit navn" required />
                 </div>
 
-                {/* Email */}
+                {/* E-MAIL */}
                 <div className="mb-4">
                   <label htmlFor={`email-${ticket.id}-${index}`} className="block font-medium mb-2">
                     E-mail:
                   </label>
-                  <input type="email" id={`email-${ticket.id}-${index}`} className="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Indtast din e-mail" required />
+                  <input type="email" id={`email-${ticket.id}-${index}`} className="w-full px-3 py-2 border border-gray-300 text-black rounded-md" placeholder="Indtast din e-mail" required />
                 </div>
 
-                {/* Submit knap */}
-                <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
-                  Gem Information
+                <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600" disabled={isLoading}>
+                  {isLoading ? "Gemmer..." : "Gem Information"}
                 </button>
               </form>
+              {error && <p className="text-red-500 mt-2">{error}</p>}
             </div>
           ))}
         </div>
