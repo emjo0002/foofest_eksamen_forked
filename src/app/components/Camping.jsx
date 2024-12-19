@@ -5,20 +5,26 @@ import { getAllAreas } from "../api/api";
 import { useState, useEffect } from "react";
 
 export default function Camping({ onNext, onBack }) {
-  const { campingSelection, packageSelection, updateTents, removePackageSelection, toggleGreenCamping, calculateRecommendedTents, updateCampingArea } = useBookingStore();
+  const { 
+    campingSelection, 
+    packageSelection, 
+    updateTents, 
+    removePackageSelection, 
+    toggleGreenCamping, 
+    calculateRecommendedTents, 
+    updateCampingArea, 
+    totalTickets 
+  } = useBookingStore();
 
-  const { twoPerson, threePerson, ownTent } = campingSelection.tents; // Individuelle telte
-  const recommendedTents = calculateRecommendedTents(); // Anbefalede telte
-  const { greenCamping } = campingSelection;
+  const { twoPerson, threePerson, ownTent, greenCamping } = campingSelection.tents;
+  const recommendedTents = calculateRecommendedTents();
   const recommendedPackagePrice = recommendedTents.twoPerson * 799 + recommendedTents.threePerson * 999;
-
   const [useRecommended, setUseRecommended] = useState(packageSelection !== null);
   const [errorMessage, setErrorMessage] = useState("");
   const [areas, setAreas] = useState([]);
   const [areaCapacityError, setAreaCapacityError] = useState(false);
-  const totalTickets = useBookingStore((state) => state.totalTickets());
   const totalTents = twoPerson + threePerson + ownTent;
-  const disableIncrement = totalTents >= totalTickets;
+  const disableIncrement = totalTents >= totalTickets();
 
   // Hent campingområder
   useEffect(() => {
@@ -53,9 +59,9 @@ export default function Camping({ onNext, onBack }) {
   };
 
   const handleAreaChange = (area) => {
-    setErrorMessage(""); // Nulstil fejlmeddelelse
-    updateCampingArea(area); // Opdater område i store
-  };
+  setErrorMessage(""); // Nulstil fejlmeddelelse
+  updateCampingArea(area); // Gem det valgte område i store
+};
 
   const handleNextClick = () => {
     const errors = []; // Array til at samle fejl
@@ -145,11 +151,16 @@ export default function Camping({ onNext, onBack }) {
               <div className="flex items-end justify-between font-genos text-2xl text-white mt-3">
                 <label htmlFor="recommendedPackage" className="flex items-end">
                   <div>
-                    {recommendedTents.twoPerson > 0 && <span className="block">{`${recommendedTents.twoPerson} x 2-personers telt`}</span>}
-                    {recommendedTents.threePerson > 0 && <span className="block">{`${recommendedTents.threePerson} x 3-personers telt`}</span>}
+                    {recommendedTents.twoPerson > 0 && (
+                      <span className="block">{recommendedTents.twoPerson} x 2-personers telt</span>
+                    )}
+                    {recommendedTents.threePerson > 0 && (
+                      <span className="block">{recommendedTents.threePerson} x 3-personers telt</span>
+                    )}
                   </div>
-                  <span className="pl-6">{`Pris ${recommendedPackagePrice},-`}</span>
+                  <span className="pl-6">Pris {recommendedPackagePrice},-</span>
                 </label>
+
                 <div className="flex">
                   <input
                     type="checkbox"
@@ -179,8 +190,8 @@ export default function Camping({ onNext, onBack }) {
             </div>
 
             {/* Fejlmeddelelse */}
-            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-            {areaCapacityError && campingSelection !== "Vælg Område" && <p className="text-red-500">Det samlede antal telte overstiger de ledige pladser i det valgte område.</p>}
+            {errorMessage && <p className="font-genos text-2xl text-red-500">{errorMessage}</p>}
+            {areaCapacityError && campingSelection !== "Vælg Område" && <p className="font-genos text-2xl text-red-500">Det samlede antal telte overstiger de ledige pladser i det valgte område.</p>}
           </div>
 
           {/* Basket */}

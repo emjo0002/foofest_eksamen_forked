@@ -48,26 +48,44 @@ export async function getAllAreas() {
 }
 
 // PUT henter reservetion
-export async function reserveSpot(area, amount) {
-  try {
-    const response = await fetch(`${baseURL}/reserve-spot`, {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ area, amount }),
-    });
+export async function reserveSpot (area, amount) {
+  const bodyContent = JSON.stringify({
+    area: area,
+    amount: amount
+  })
 
-    if (!response.ok) {
-      throw new Error(`Fejl: ${response.status}`);
-    }
+  const response = await fetch(`${baseURL}/reserve-spot`, {
+    method: 'PUT',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: bodyContent
+  })
 
-    return await response.json();
-  } catch (error) {
-    console.error("Fejl i reserveSpot:", error);
-    throw error;
+  const data = await response.json()
+
+  return {
+    id: data.id, 
+    timeout: data.timeout
   }
 }
 
+// POST Fuldfør reservation
+export async function fullfillReservation (reservationId) {
+  const bodyContent = JSON.stringify({
+    id: reservationId
+  })
+  const response = await fetch(`${baseURL}/fullfill-reservation`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: bodyContent 
+  })
+
+  const data = await response.json()
+  return data 
+}
 
