@@ -31,14 +31,7 @@ const useBookingStore = create((set, get) => ({
       return { timer: 0, timerActive: false }; // Stop timeren
     }
   }),
-
-  // Stop timeren
-  stopTimer: () =>
-  set((state) => ({
-    timer: 0, // Valgfrit: Nulstil timer, hvis ønsket
-    timerActive: false,
-  })),
-
+  
   // Nulstil bookingdata
    resetBooking: () =>
     set({
