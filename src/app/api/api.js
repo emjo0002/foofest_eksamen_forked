@@ -67,7 +67,8 @@ export async function reserveSpot (area, amount) {
 
   return {
     id: data.id, 
-    timeout: data.timeout
+    // timeout: data.timeout
+    timeout: 30000
   }
 }
 
