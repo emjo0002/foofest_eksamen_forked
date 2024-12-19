@@ -1,4 +1,3 @@
-"use client";
 import "./styles/globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -20,9 +19,9 @@ const gajrajOne = Gajraj_One({
 export default function RootLayout({ children }) {
   return (
     <html lang="da">
-      <body className={`dynamic-bg ${genos.variable} ${gajrajOne.variable}`}>
+      <body>
         <Header />
-        <main className="pb-10 relative z-10">
+        <main className="pb-10">
           <div>{children}</div>
         </main>
         <Footer />

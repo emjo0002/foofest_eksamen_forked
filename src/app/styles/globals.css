@@ -7,35 +7,22 @@ body {
 }
 
 /* BAGGRUND */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer utilities {
-  .dynamic-bg {
-    @apply w-full min-h-screen overflow-hidden;
-    background: radial-gradient(circle, #2d50c8, /* Blå */ #000a40, /* Mørkeblå */ #5a7ded, /* Lys blå */ #0d0d0d /* Sort */);
-    background-size: 500% 500%;
-    animation: flowingGradient 15s ease-in-out infinite alternate;
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 60% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
 
-@keyframes flowingGradient {
-  0% {
-    background-position: 0% 0%;
-  }
-  25% {
-    background-position: 50% 30%;
-  }
-  50% {
-    background-position: 50% 50%;
-  }
-  75% {
-    background-position: 30% 70%;
-  }
-  100% {
-    background-position: 0% 100%;
-  }
+.dynamic-bg {
+  background: linear-gradient(135deg, #000000, #000000, #1e3a8a, #000000);
+  background-size: 300% 300%;
+  animation: gradientMove 10s ease infinite;
 }
 
 @layer base {
