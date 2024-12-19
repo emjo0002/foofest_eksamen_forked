@@ -10,47 +10,48 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
   useEffect(() => {
-    // Tjek skærmbredden for at køre animationer kun på desktop
-    const isDesktop = window.innerWidth > 768;
+    if (typeof window !== "undefined") {
+      const isDesktop = window.innerWidth > 768;
 
-    if (isDesktop) {
-      // ANIMATION TIL H1 OG LINKS
-      const tl = gsap.timeline({ defaults: { ease: "power1.out" } });
-      tl.fromTo(".anim-text", { y: "100%", opacity: 0 }, { y: "0%", opacity: 1, duration: 3, stagger: 0.4 });
+      if (isDesktop) {
+        // ANIMATION TIL H1 OG LINKS
+        const tl = gsap.timeline({ defaults: { ease: "power1.out" } });
+        tl.fromTo(".anim-text", { y: "100%", opacity: 0 }, { y: "0%", opacity: 1, duration: 3, stagger: 0.4 });
 
-      // ANIMATION TIL TEKST OG CARDS
-      gsap.fromTo(
-        ".anim-section-text",
-        { y: "100%", opacity: 0 },
-        {
-          y: "0%",
-          opacity: 1,
-          duration: 4.5,
+        // ANIMATION TIL TEKST OG CARDS
+        gsap.fromTo(
+          ".anim-section-text",
+          { y: "100%", opacity: 0 },
+          {
+            y: "0%",
+            opacity: 1,
+            duration: 4.5,
+            ease: "power2.out",
+            stagger: 0.9,
+            scrollTrigger: {
+              trigger: ".scroll-section",
+              start: "top 80%",
+              end: "bottom 50%",
+              scrub: true,
+            },
+          }
+        );
+
+        // ANIMATION TIL CARDS
+        gsap.from(".grid > div", {
+          opacity: 0,
+          y: 50,
+          duration: 5,
+          stagger: 1.5,
           ease: "power2.out",
-          stagger: 0.9,
           scrollTrigger: {
-            trigger: ".scroll-section",
-            start: "top 80%",
-            end: "bottom 50%",
+            trigger: ".grid",
+            start: "top 90%",
+            end: "top 50%",
             scrub: true,
           },
-        }
-      );
-
-      // ANIMATION TIL CARDS
-      gsap.from(".grid > div", {
-        opacity: 0,
-        y: 50,
-        duration: 5,
-        stagger: 1.5,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: ".grid",
-          start: "top 90%",
-          end: "top 50%",
-          scrub: true,
-        },
-      });
+        });
+      }
     }
   }, []);
 
