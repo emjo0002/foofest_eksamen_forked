@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Schedule from "../components/Schedule";
 import { getAllBands, getSchedule } from "../api/api";
 import Footer from "../components/Footer";
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 export default function SchedulePage() {
   const [bands, setBands] = useState([]);
@@ -39,6 +40,9 @@ export default function SchedulePage() {
   return (
     <div className="relative dynamic-bg text-white h-auto px-8 py-12">
       <h1 className="font-gajraj text-6xl md:text-9xl">PROGRAM</h1>
+      <a href="/" className="block mb-4 text-5xl font-bold">
+        <IoIosArrowRoundBack />
+      </a>
 
       <header className="flex flex-wrap gap-4 mb-8">
         {/* Filtrer scene */}
