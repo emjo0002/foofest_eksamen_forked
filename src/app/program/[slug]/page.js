@@ -10,22 +10,22 @@ export default function ArtistPage() {
   const [band, setBand] = useState(null);
   const [schedule, setSchedule] = useState(null);
   const [performance, setPerformance] = useState({ scene: "", start: "", end: "" });
-  const [isExpanded, setIsExpanded] = useState(false); // Tilføjet "Læs mere"-funktion
+  const [isExpanded, setIsExpanded] = useState(false); // LÆS MERE FUNKTIONEN
 
   useEffect(() => {
     async function fetchData() {
       try {
-        // Hent band data
+        // FETCHER BAND DATA
         const bandRes = await fetch(`http://localhost:8080/bands/${slug}`);
         const bandData = await bandRes.json();
         setBand(bandData);
 
-        // Hent schedule data
+        // FETCHER SCHEDULE DATA
         const scheduleRes = await fetch(`http://localhost:8080/schedule`);
         const scheduleData = await scheduleRes.json();
         setSchedule(scheduleData);
 
-        // Find bandets scene og tidspunkt
+        // FINDER OG HENTER DAG OG SCENE
         let foundPerformance = null;
 
         for (const scene in scheduleData) {
@@ -56,13 +56,12 @@ export default function ArtistPage() {
 
   if (!band) return <p className="text-white">Indlæser...</p>;
 
-  // Begræns beskrivelsen til 300 tegn
+  //BEGRÆNSER BESKRIVELSEN TIL MAX 300 TEGN
   const truncatedBio = band.bio.length > 300 ? `${band.bio.slice(0, 300)}...` : band.bio;
 
   return (
     <div className="relative dynamic-bg min-h-screen text-white p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Bandnavn */}
         <h1 className="text-8xl font-gajraj font-bold mb-8 mt-10">{band.name.toUpperCase()}</h1>
         <a href="/schedule" className="text-white text-4xl hover:scale-110 hover:text-blue-400 transition-transform duration-200">
           <IoIosArrowRoundBack />

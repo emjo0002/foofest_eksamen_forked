@@ -6,23 +6,23 @@ const FAQAccordion = () => {
       <h1 className="text-2xl font-bold mb-4">FAQ</h1>
       <Accordion type="single" collapsible className="w-full max-w-lg mb-16">
         <AccordionItem value="item-1">
-          <AccordionTrigger>Hvornår er det muligt at ankomme til festivalen?</AccordionTrigger>
-          <AccordionContent>Festivalen åbner onsdag kl. 12:00, hvor du har mulighed for at sætte dit telt op.</AccordionContent>
+          <AccordionTrigger>When is it possible to arrive at the festival?</AccordionTrigger>
+          <AccordionContent>The festival opens on Wednesday at 12:00 PM, where you can set up your tent.</AccordionContent>
         </AccordionItem>
 
         <AccordionItem value="item-2">
-          <AccordionTrigger>Er der offentlig transport i nærheden af festivalen?</AccordionTrigger>
-          <AccordionContent>Ja, du kan tage enten toget til stationen og gå derfra til festivalen, eller tage bus 202 fra stationen, som kører dig hen til festivalpladsens private busstoppested.</AccordionContent>
+          <AccordionTrigger>Is there public transportation near the festival?</AccordionTrigger>
+          <AccordionContent>Yes, you can either take the train to the station and walk from there to the festival, or take bus 202 from the station, which will take you to the festival's private bus stop.</AccordionContent>
         </AccordionItem>
 
         <AccordionItem value="item-3">
-          <AccordionTrigger>Er det muligt at oplade sin telefon på festivalen?</AccordionTrigger>
-          <AccordionContent>Ja, du kan benytte vores offentlige opladestandere, som befinder sig rundt omkring på festivalpladsen. Spørg endelig en medarbejder, hvis du er i tvivl om, hvor du kan finde dem.</AccordionContent>
+          <AccordionTrigger>Is it possible to charge your phone at the festival?</AccordionTrigger>
+          <AccordionContent>Yes, you can use our public charging stations located around the festival grounds. Feel free to ask a staff member if you are unsure where to find them.</AccordionContent>
         </AccordionItem>
 
         <AccordionItem value="item-4">
-          <AccordionTrigger>Hvad skal jeg gøre, hvis jeg fortryder min billet?</AccordionTrigger>
-          <AccordionContent>Hvis du står i den ærgerlige situation og vil fortryde din billet, skal du kontakte os på DuVilForTrydeDet.com.</AccordionContent>
+          <AccordionTrigger>What should I do if I want to cancel my ticket?</AccordionTrigger>
+          <AccordionContent>If you are in the unfortunate situation of wanting to cancel your ticket, please contact us at DuVilForTrydeDet.com.</AccordionContent>
         </AccordionItem>
       </Accordion>
     </section>

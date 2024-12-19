@@ -17,13 +17,13 @@ export default function LineupPage() {
         const fetchedBands = await getAllBands();
         const fetchedSchedule = await getSchedule();
 
-        // Tilføj scene, start, slut og slug til hvert band
+        //TILFØJER SCENE, START SLUT OG SLUG TIL HVERT BAND VI KALDER
         const updatedBands = fetchedBands.map((band) => {
           let scene = null;
           let start = null;
           let end = null;
 
-          // Find scene, start, og slut-tidspunkt i schedule
+          // SCENE, START, OG SLUT TIDSPUNKT
           Object.keys(fetchedSchedule).forEach((sceneKey) => {
             Object.values(fetchedSchedule[sceneKey]).forEach((day) => {
               day.forEach((act) => {
@@ -36,7 +36,7 @@ export default function LineupPage() {
             });
           });
 
-          // Generer en slug baseret på bandets navn
+          // GENERER SLUG BASERET PÅ NAVN
           const slug = band.slug || band.name.toLowerCase().replace(/ /g, "-");
 
           return { ...band, scene, start, end, slug };

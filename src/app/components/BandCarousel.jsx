@@ -17,7 +17,7 @@ export default function BandCarousel({ bands }) {
           <Image src={`/logos/${band.logo}`} width={100} height={100} alt={band.name} className="h-96 object-contain rounded-md mx-auto" />
           <h2 className="text-4xl font-semibold mt-4 font-gajraj">{band.name}</h2>
 
-          {/* Vis scene, start og slut tidspunkt */}
+          {/* VIS SCENE, START OG SLUT TIDSPUNKT FOR BANDS */}
           {band.scene && band.start && band.end && (
             <p className="mt-2 text-lg font-genos">
               {band.scene} - Kl. {band.start} til {band.end}
@@ -25,7 +25,7 @@ export default function BandCarousel({ bands }) {
           )}
 
           <Link href={`/program/${band.slug}`} className="mt-4 inline-block bg-white text-black px-4 py-2 rounded-lg hover:bg-zinc-300">
-            Læs mere
+            Read more
           </Link>
         </div>
       ))}

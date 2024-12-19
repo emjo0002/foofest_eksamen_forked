@@ -2,8 +2,8 @@ import { create } from "zustand";
 import { reserveSpot, fullfillReservation } from "../api/api";
 
 const initialTickets = [
-  { id: 1, title: "Foo-Billet", price: 799, quantity: 0, bio: "Få adgang til alle scener, koncerter og fællesområder. Nyd musik, madboder og aktiviteter i en livlig festivalstemning." },
-  { id: 2, title: "VIP-Billet", price: 1299, quantity: 0, bio: "Opgrader til VIP med eksklusive områder, bedre udsyn, loungefaciliteter, private barer, VIP-toiletter og en lækker goodiebag." },
+  { id: 1, title: "Foo-Ticket", price: 799, quantity: 0, bio: "Get access to all stages, concerts and common areas. Enjoy music, food stalls and activities in a lively festival atmosphere." },
+  { id: 2, title: "VIP-Ticket", price: 1299, quantity: 0, bio: "Upgrade to VIP with exclusive areas, better views, lounge facilities, private bars, VIP toilets and a delicious goodie bag." },
 ];
 
 const initialCampingSelection = {
@@ -24,7 +24,7 @@ const useBookingStore = create((set, get) => ({
   timerActive: false,
 
   // Nulstil bookingdata
-   resetBooking: () =>
+  resetBooking: () =>
     set({
       tickets: [...initialTickets],
       campingSelection: { ...initialCampingSelection },
@@ -34,53 +34,53 @@ const useBookingStore = create((set, get) => ({
       timerActive: false,
     }),
 
-    resetReservationId: () => set({ reservationId: null }),
+  resetReservationId: () => set({ reservationId: null }),
 
-    resetUserInfo: () => set({ userInfo: [] }),
+  resetUserInfo: () => set({ userInfo: [] }),
 
-   // Funktion til at hente reservation og start timer
+  // Funktion til at hente reservation og start timer
   fetchReservation: async () => {
-  try {
-    const { reservationId, campingSelection, totalTents } = get();
+    try {
+      const { reservationId, campingSelection, totalTents } = get();
 
-    // Hvis et reservations-ID allerede findes, returner det direkte
-    if (reservationId) {
-      console.log("Existing reservation found:", reservationId);
-      return reservationId;
-    }
+      // Hvis et reservations-ID allerede findes, returner det direkte
+      if (reservationId) {
+        console.log("Existing reservation found:", reservationId);
+        return reservationId;
+      }
 
-    const { area } = campingSelection;
-    const tentsCount = totalTents();
+      const { area } = campingSelection;
+      const tentsCount = totalTents();
 
-    // Hvis der ikke er et område valgt, eller ingen telte er angivet
-    if (!area || tentsCount === 0) {
-      console.error("Cannot fetch reservation: area or tents not specified");
+      // Hvis der ikke er et område valgt, eller ingen telte er angivet
+      if (!area || tentsCount === 0) {
+        console.error("Cannot fetch reservation: area or tents not specified");
+        return null;
+      }
+
+      // Lav en ny reservation via API'et
+      const { id, timeout } = await reserveSpot(area, tentsCount);
+      set({
+        reservationId: id,
+        timer: timeout / 1000, // Konverter timeout til sekunder
+        timerActive: true,
+      });
+
+      console.log("New reservation created:", id);
+      return id;
+    } catch (error) {
+      console.error("Failed to fetch reservation:", error);
       return null;
     }
+  },
 
-    // Lav en ny reservation via API'et
-    const { id, timeout } = await reserveSpot(area, tentsCount);
-    set({
-      reservationId: id,
-      timer: timeout / 1000, // Konverter timeout til sekunder
-      timerActive: true,
-    });
-
-    console.log("New reservation created:", id);
-    return id;
-  } catch (error) {
-    console.error("Failed to fetch reservation:", error);
-    return null;
-  }
-},
-
-completeReservation: async () => {
+  completeReservation: async () => {
     const { reservationId } = get();
     if (!reservationId) {
       console.error("Ingen reservations-ID fundet.");
       return null;
     }
-  
+
     try {
       const response = await fullfillReservation(reservationId);
       set({ reservationId: response.id || reservationId });
@@ -131,14 +131,18 @@ completeReservation: async () => {
     };
   },
 
- updateTents: (tents) =>
-  set((state) => {
-    const { twoPerson, threePerson, ownTent = 0 } = { 
-      ...state.campingSelection.tents, 
-      ...tents 
-    };
-    const totalTents = twoPerson + threePerson + ownTent;
-    const totalTickets = state.tickets.reduce((sum, ticket) => sum + ticket.quantity, 0);
+  updateTents: (tents) =>
+    set((state) => {
+      const {
+        twoPerson,
+        threePerson,
+        ownTent = 0,
+      } = {
+        ...state.campingSelection.tents,
+        ...tents,
+      };
+      const totalTents = twoPerson + threePerson + ownTent;
+      const totalTickets = state.tickets.reduce((sum, ticket) => sum + ticket.quantity, 0);
 
       // Hvis totalTents overstiger totalTickets, forhindre opdatering
       if (totalTents > totalTickets) {
@@ -157,12 +161,12 @@ completeReservation: async () => {
 
   // Funktion til at opdatere campingområde
   updateCampingArea: (area) =>
-  set((state) => ({
-    campingSelection: {
-      ...state.campingSelection,
-      area,
-    },
-  })),
+    set((state) => ({
+      campingSelection: {
+        ...state.campingSelection,
+        area,
+      },
+    })),
 
   // Funktion til at fjerne pakkeløsning
   removePackageSelection: () =>

@@ -18,7 +18,7 @@ export default function SchedulePage() {
         const fetchedBands = await getAllBands();
         const fetchedSchedule = await getSchedule();
 
-        // Opdater bands med scenenavn
+        // OPDATERER BAND MED SCENE
         const updatedBands = fetchedBands.map((band) => {
           const scene = Object.keys(fetchedSchedule).find((sceneKey) => Object.values(fetchedSchedule[sceneKey]).some((day) => day.some((act) => act.act === band.name)));
           return { ...band, scene };
@@ -45,13 +45,11 @@ export default function SchedulePage() {
       </a>
 
       <header className="flex flex-wrap gap-4 mb-8">
-        {/* Filtrer scene */}
+        {/* FILTRERER SCENE */}
         <div className="w-full sm:w-1/2 md:w-1/4">
-          <label htmlFor="scene-filter" className="block mb-2">
-            Vælg scene:
-          </label>
+          <label htmlFor="scene-filter" className="block mb-2"></label>
           <select id="scene-filter" value={filterScene} onChange={(e) => setFilterScene(e.target.value)} className="w-full p-2 rounded text-black">
-            <option value="all">Alle scener</option>
+            <option value="all">Alle stages</option>
             {Object.keys(schedule).map((scene) => (
               <option key={scene} value={scene}>
                 {scene}
@@ -60,20 +58,18 @@ export default function SchedulePage() {
           </select>
         </div>
 
-        {/* Filtrer dag */}
+        {/* FILTRERER SCENE */}
         <div className="w-full sm:w-1/2 md:w-1/4">
-          <label htmlFor="day-filter" className="block mb-2">
-            Vælg dag:
-          </label>
+          <label htmlFor="day-filter" className="block mb-2"></label>
           <select id="day-filter" value={filterDay} onChange={(e) => setFilterDay(e.target.value)} className="w-full p-2 rounded text-black">
-            <option value="all">Alle dage</option>
-            <option value="mon">Mandag</option>
-            <option value="tue">Tirsdag</option>
-            <option value="wed">Onsdag</option>
-            <option value="thu">Torsdag</option>
-            <option value="fri">Fredag</option>
-            <option value="sat">Lørdag</option>
-            <option value="sun">Søndag</option>
+            <option value="all">All days</option>
+            <option value="mon">Monday</option>
+            <option value="tue">Thursday</option>
+            <option value="wed">Wensday</option>
+            <option value="thu">Thursday</option>
+            <option value="fri">Friday</option>
+            <option value="sat">Saturday</option>
+            <option value="sun">Sunday</option>
           </select>
         </div>
       </header>

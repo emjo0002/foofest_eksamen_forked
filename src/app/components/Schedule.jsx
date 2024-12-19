@@ -58,7 +58,7 @@ const Schedule = ({ bands, schedule, filterScene, filterDay }) => {
               {isCancelled && <p className="text-red-500 font-bold">Cancelled</p>}
 
               <Link href={`/program/${band.slug}`}>
-                <button className="mt-4 px-4 py-2 bg-zinc-300 text-black rounded hover:bg-blue-700 hover:text-white">Læs mere</button>
+                <button className="mt-4 px-4 py-2 bg-zinc-300 text-black rounded hover:bg-blue-700 hover:text-white">Read more</button>
               </Link>
             </div>
           );
