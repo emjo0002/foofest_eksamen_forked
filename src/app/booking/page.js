@@ -40,6 +40,14 @@ export default function Booking() {
     }
   }, [timer, timerActive, resetBooking]);
 
+  // Funktion til at bestemme trin-styling baseret på currentView
+  const stepIndicator = (viewName, stepNumber) => {
+    const isActive = currentView === viewName;
+    return `flex items-center justify-center rounded-full 
+            ${isActive ? "w-12 h-12 bg-white border-2 border-black text-black" : "w-10 h-10 bg-black bg-opacity-70 text-white"} 
+            font-genos ${isActive ? "text-3xl" : "text-2xl"}`;
+  };
+
   const handleNext = (nextView) => {
     setCurrentView(nextView);
   };
