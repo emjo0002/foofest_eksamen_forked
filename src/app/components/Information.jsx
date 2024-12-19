@@ -14,25 +14,32 @@ export default function Information({ onNext, onBack }) {
     fetchReservation();
   }, []);
 
-  // HÅNDTERER DEN INFORMATION DER KOMMER IND
-  const handleSubmit = async (e, ticket, index) => {
-    e.preventDefault();
+  // HÅNDTER ÆNDRINGER I INPUTFELTER
+  const handleChange = (e, ticket, index) => {
+    const { name, value } = e.target;
+    setUserInfo((prev) => {
+      const updatedInfo = [...prev];
+      updatedInfo[index] = { ...updatedInfo[index], [name]: value, ticketId: ticket.id };
+      return updatedInfo;
+    });
+  };
+
+  // GEM DATA I DATABASEN OG GÅ TIL NÆSTE SIDE
+  const handleContinue = async () => {
     setIsLoading(true);
     setError(null);
 
-    const name = e.target[`name-${ticket.id}-${index}`].value;
-    const email = e.target[`email-${ticket.id}-${index}`].value;
-
-    const newUser = { name, email };
-
     try {
-      // GEM DATAEN I SUPABASE
-      await postSub(newUser);
-      setUserInfo((prev) => [...prev, newUser]);
-      updateUserInfo(newUser); // Gem data i useBookingStore
-      alert("Information gemt i databasen!");
+      for (const user of userInfo) {
+        const { name, email } = user; // Send kun name og email
+        console.log("Data der sendes til Supabase:", { name, email });
+        await postSub({ name, email }); // Send kun de nødvendige felter
+        updateUserInfo({ name, email });
+      }
+
+      onNext(userInfo); // Fortsæt til næste side
     } catch (error) {
-      console.error("Fejl ved gemning i Supabase:", error);
+      console.error("Fejl ved gemning i Supabase:", error.message);
       setError("Der skete en fejl ved gemning i databasen.");
     } finally {
       setIsLoading(false);
@@ -59,32 +66,25 @@ export default function Information({ onNext, onBack }) {
         <div className="flex flex-col gap-8 justify-center p-8 w-full max-w-md">
           {selectedTickets.map((ticket, index) => (
             <div key={`${ticket.id}-${index}`} className="border border-black text-white p-6 rounded">
-              <form onSubmit={(e) => handleSubmit(e, ticket, index)}>
-                <h2 className="text-2xl font-bold mb-4 text-center">
-                  Info Form - {ticket.title} #{index + 1}
-                </h2>
+              <h2 className="text-2xl font-bold mb-4 text-center">
+                Info Form - {ticket.title} #{index + 1}
+              </h2>
 
-                {/* NAVN */}
-                <div className="mb-4">
-                  <label htmlFor={`name-${ticket.id}-${index}`} className="block font-medium mb-2 text-black">
-                    Navn:
-                  </label>
-                  <input type="text" id={`name-${ticket.id}-${index}`} className="w-full px-3 py-2 border border-gray-300 text-black rounded-md" placeholder="Indtast dit navn" required />
-                </div>
+              {/* NAVN */}
+              <div className="mb-4">
+                <label htmlFor={`name-${ticket.id}-${index}`} className="block font-medium mb-2 text-black">
+                  Navn:
+                </label>
+                <input type="text" name="name" id={`name-${ticket.id}-${index}`} className="w-full px-3 py-2 border border-gray-300 text-black rounded-md" placeholder="Indtast dit navn" onChange={(e) => handleChange(e, ticket, index)} required />
+              </div>
 
-                {/* E-MAIL */}
-                <div className="mb-4">
-                  <label htmlFor={`email-${ticket.id}-${index}`} className="block font-medium mb-2 text-black">
-                    E-mail:
-                  </label>
-                  <input type="email" id={`email-${ticket.id}-${index}`} className="w-full px-3 py-2 border border-gray-300 text-black rounded-md" placeholder="Indtast din e-mail" required />
-                </div>
-
-                <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600" disabled={isLoading}>
-                  {isLoading ? "Gemmer..." : "Gem Information"}
-                </button>
-              </form>
-              {error && <p className="text-red-500 mt-2">{error}</p>}
+              {/* E-MAIL */}
+              <div className="mb-4">
+                <label htmlFor={`email-${ticket.id}-${index}`} className="block font-medium mb-2 text-black">
+                  E-mail:
+                </label>
+                <input type="email" name="email" id={`email-${ticket.id}-${index}`} className="w-full px-3 py-2 border border-gray-300 text-black rounded-md" placeholder="Indtast din e-mail" onChange={(e) => handleChange(e, ticket, index)} required />
+              </div>
             </div>
           ))}
         </div>
@@ -94,10 +94,12 @@ export default function Information({ onNext, onBack }) {
           <button onClick={onBack} className="px-4 py-2 bg-gray-300 rounded">
             Tilbage
           </button>
-          <button onClick={() => onNext(userInfo)} className="px-4 py-2 bg-blue-500 text-white rounded">
-            Fortsæt
+          <button onClick={handleContinue} className="px-4 py-2 bg-blue-500 text-white rounded" disabled={isLoading}>
+            {isLoading ? "Gemmer..." : "Fortsæt"}
           </button>
         </div>
+
+        {error && <p className="text-red-500 mt-2">{error}</p>}
       </div>
     </main>
   );
