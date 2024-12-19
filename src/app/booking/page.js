@@ -19,6 +19,8 @@ export default function Booking() {
     stopTimer,
     resetBooking,
     resetReservationId,
+    resetUserInfo,
+    
   } = useBookingStore();
 
   // Start timer nedtælling, når timerActive er true
@@ -99,7 +101,7 @@ export default function Booking() {
         {currentView === "camping" && <Camping onNext={() => handleNext("information")} onBack={() => handleBack("tickets")} />}
         {currentView === "information" && <Information onNext={() => handleNext("opsummering")} onBack={() => handleBack("camping")} />}
         {currentView === "opsummering" && <Opsummering onNext={() => handleNext("payment")} onBack={() => handleBack("information")} />}
-        {currentView === "payment" && <Payment onBack={() => handleBack("opsummering")} onSuccess={() => {resetBooking(); setCurrentView("tickets"); }}/>}
+        {currentView === "payment" && <Payment onBack={() => handleBack("opsummering")} onSuccess={() => {resetUserInfo(), resetBooking(); setCurrentView("tickets"); }}/>}
       </div>
     </div>
   );
