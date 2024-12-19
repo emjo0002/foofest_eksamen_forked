@@ -34,6 +34,7 @@ export default function Booking() {
       <div className="flex justify-center lg:justify-start">
         <h1 className="text-white text-7xl font-gajraj font-bold pt-20 lg: pb-2">TICKETS</h1>
       </div>
+
       <h2 className="flex text-white justify-center text-5xl font-gajraj pb-6">{currentView}</h2>
 
       {/* Trinindikator */}
