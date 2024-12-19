@@ -20,7 +20,7 @@ body {
 }
 
 .dynamic-bg {
-  background: linear-gradient(135deg, #000000, #000000, #1e3a8a, #000000);
+  background: linear-gradient(135deg, #09086981, #000000, #1e3a8a, #07035c);
   background-size: 300% 300%;
   animation: gradientMove 10s ease infinite;
 }
