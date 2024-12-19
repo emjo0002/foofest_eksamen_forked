@@ -64,17 +64,15 @@ export default function ArtistPage() {
       <div className="max-w-7xl mx-auto">
         {/* Bandnavn */}
         <h1 className="text-8xl font-gajraj font-bold mb-8 mt-10">{band.name.toUpperCase()}</h1>
-        <a href="/schedule" className="block mb-4 text-5xl font-bold">
+        <a href="/schedule" className="text-white text-4xl hover:scale-110 hover:text-blue-400 transition-transform duration-200">
           <IoIosArrowRoundBack />
         </a>
 
         <div className="flex flex-col md:flex-row items-start gap-12">
-          {/* Billede */}
           <div className="max-w-lg">
             <Image src={`/logos/${band.logo}`} alt={band.name} width={500} height={500} className="h-auto object-cover" />
           </div>
 
-          {/* Tekstindhold der flugter med billedets højde */}
           <div className="max-w-lg flex flex-col justify-between">
             <div>
               <div className="mb-6">
