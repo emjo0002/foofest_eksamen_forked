@@ -72,4 +72,5 @@ export default function Ticket({ onNext }) {
       </div>
     </main>
   );
+    
 }
