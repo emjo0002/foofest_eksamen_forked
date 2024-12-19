@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import BandCarousel from "../components/BandCarousel";
 import { getAllBands, getSchedule } from "../api/api";
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 export default function LineupPage() {
   const [bands, setBands] = useState([]);
@@ -69,14 +70,15 @@ export default function LineupPage() {
   const genres = ["All", ...new Set(bands.map((band) => band.genre))];
 
   return (
-    <div className="relative dynamic-bg text-white min-h-screen px-8 py-12 bg-custom bg-cover bg-center pt-19">
+    <div className="relative dynamic-bg text-white min-h-screen px-8 py-12 bg-cover bg-center pt-19">
       <h1 className="text-8xl font-gajraj font-bold mb-8">LINE-UP</h1>
+      <a href="/" className="block mb-4 text-5xl font-bold">
+        <IoIosArrowRoundBack />
+      </a>
 
       <div className="sm:w-4/5 lg:flex gap-10">
         <div className="mb-8">
-          <label htmlFor="genre-filter" className="mr-4 text-lg font-semibold">
-            Filter by Genre:
-          </label>
+          <label htmlFor="genre-filter" className="mr-4 text-lg font-semibold"></label>
           <select id="genre-filter" value={selectedGenre} onChange={(e) => setSelectedGenre(e.target.value)} className="bg-white text-black px-6 py-2 rounded-lg">
             {genres.map((genre) => (
               <option key={genre} value={genre}>
@@ -87,9 +89,7 @@ export default function LineupPage() {
         </div>
 
         <div className="mb-8 flex items-center">
-          <label htmlFor="search" className="mr-4 text-lg font-semibold">
-            Search:
-          </label>
+          <label htmlFor="search" className="mr-4 text-lg font-semibold"></label>
           <input id="search" type="text" placeholder="Search by name..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="bg-white text-black px-4 py-2 rounded-lg w-full max-w-72" />
         </div>
       </div>

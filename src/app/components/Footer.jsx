@@ -7,7 +7,7 @@ import Newsletter from "./Newsletter";
 
 export default function Footer() {
   return (
-    <footer className="flex flex-col items-center bg-blue-950 text-white p-8 gap-6">
+    <footer className="flex flex-col items-center dynamic-bg text-white p-8 gap-6">
       <Newsletter />
 
       <p className="text-center max-w-md text-gray-300">Skriv dig op til vores nyhedsbrev, og bliv en del af vores fælleskab, hvor du ikke går glip af nyheder, fede events, særlige goder. Vi glæder os til at vise dig hvad Foofest 2024 byder på!</p>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 export default function ArtistPage() {
   const { slug } = useParams();
@@ -60,43 +61,47 @@ export default function ArtistPage() {
 
   return (
     <div className="relative dynamic-bg min-h-screen text-white p-8">
-      <a href="schedule" className="block mt-4 text-2xl font-bold">
-        Tilbage
-      </a>
-      {/* Indhold */}
-      <div className="flex flex-col md:flex-row items-center justify-center min-h-screen gap-12">
-        {/* Billede */}
-        <div className="max-w-md">
-          <Image src={`/logos/${band.logo}`} alt={band.name} width={500} height={500} className="h-auto object-cover" />
-        </div>
+      <div className="max-w-7xl mx-auto">
+        {/* Bandnavn */}
+        <h1 className="text-8xl font-gajraj font-bold mb-8 mt-10">{band.name.toUpperCase()}</h1>
+        <a href="/schedule" className="block mb-4 text-5xl font-bold">
+          <IoIosArrowRoundBack />
+        </a>
 
-        {/* Tekst */}
-        <div className="max-w-lg">
-          <h1 className="text-5xl font-bold mb-6 tracking-wider">{band.name.toUpperCase()}</h1>
-
-          <div className="mb-6">
-            <h2 className="text-lg font-bold mb-2">DESCRIPTION</h2>
-            <p className="text-gray-300 leading-relaxed">{isExpanded ? band.bio : truncatedBio}</p>
-            {band.bio.length > 300 && (
-              <button onClick={() => setIsExpanded(!isExpanded)} className="text-blue-500 hover:underline mt-2">
-                {isExpanded ? "Læs mindre" : "Læs mere"}
-              </button>
-            )}
+        <div className="flex flex-col md:flex-row items-start gap-12">
+          {/* Billede */}
+          <div className="max-w-lg">
+            <Image src={`/logos/${band.logo}`} alt={band.name} width={500} height={500} className="h-auto object-cover" />
           </div>
 
-          <div className="mb-6">
-            <h2 className="text-lg font-bold mb-2">GENRE</h2>
-            <p className="text-gray-300">{band.genre}</p>
-          </div>
+          {/* Tekstindhold der flugter med billedets højde */}
+          <div className="max-w-lg flex flex-col justify-between">
+            <div>
+              <div className="mb-6">
+                <h2 className="text-lg font-bold mb-2">DESCRIPTION</h2>
+                <p className="text-gray-300 leading-relaxed">{isExpanded ? band.bio : truncatedBio}</p>
+                {band.bio.length > 300 && (
+                  <button onClick={() => setIsExpanded(!isExpanded)} className="text-blue-500 hover:underline mt-2">
+                    {isExpanded ? "Læs mindre" : "Læs mere"}
+                  </button>
+                )}
+              </div>
 
-          <div className="mb-6">
-            <h2 className="text-lg font-bold mb-2">MEMBER</h2>
-            <p className="text-gray-300">{band.members.join(", ")}</p>
-          </div>
+              <div className="mb-6">
+                <h2 className="text-lg font-bold mb-2">GENRE</h2>
+                <p className="text-gray-300">{band.genre}</p>
+              </div>
 
-          <div>
-            <h2 className="text-lg font-bold mb-2">PLAYING</h2>
-            <p className="text-gray-300">{performance.scene ? `${performance.scene} fra ${performance.start} til ${performance.end}` : "Ingen scene eller tidspunkt tilgængeligt"}</p>
+              <div className="mb-6">
+                <h2 className="text-lg font-bold mb-2">MEMBER</h2>
+                <p className="text-gray-300">{band.members.join(", ")}</p>
+              </div>
+
+              <div>
+                <h2 className="text-lg font-bold mb-2">PLAYING</h2>
+                <p className="text-gray-300">{performance.scene ? `${performance.scene} fra ${performance.start} til ${performance.end}` : "Ingen scene eller tidspunkt tilgængeligt"}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
