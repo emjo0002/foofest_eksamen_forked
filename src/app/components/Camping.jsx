@@ -30,16 +30,22 @@ export default function Camping({ onNext, onBack }) {
   }, []);
 
   const handleRecommendedPackageChange = (checked) => {
-    setUseRecommended(checked);
-    setErrorMessage(""); // Fjern fejlmeddelelsen
-    if (checked) {
-      updateTents(recommendedTents); // Opdater teltene
-      useBookingStore.setState({ packageSelection: recommendedTents }); // Opdater packageSelection
-    } else {
-      updateTents({ twoPerson: 0, threePerson: 0 }); // Nulstil telte
-      removePackageSelection(); // Fjern packageSelection
-    }
-  };
+  setUseRecommended(checked);
+  setErrorMessage(""); // Fjern fejlmeddelelsen
+  if (checked) {
+    // Opdater til den anbefalede løsning
+    updateTents({
+      twoPerson: recommendedTents.twoPerson,
+      threePerson: recommendedTents.threePerson,
+      ownTent: 0, // Nulstil eget telt
+    });
+    useBookingStore.setState({ packageSelection: recommendedTents }); // Opdater packageSelection
+  } else {
+    // Nulstil alle telte, når den anbefalede løsning fjernes
+    updateTents({ twoPerson: 0, threePerson: 0, ownTent: 0 });
+    removePackageSelection(); // Fjern packageSelection
+  }
+};
 
   const handleTentQuantityChange = (tentType, newQuantity) => {
     setErrorMessage(""); // Fjern fejlmeddelelsen
@@ -86,8 +92,8 @@ export default function Camping({ onNext, onBack }) {
 
   return (
     <main>
-      <div className="max-w-6xl mx-auto lg:mb-24">
-        <div className="flex justify-center gap-8 m-10 flex-wrap lg:flex-nowrap">
+      <div className="max-w-6xl mx-auto pb-5">
+        <div className="flex justify-center gap-8 mt-10 mr-10 ml-10 mb-5 flex-wrap lg:flex-nowrap">
           <div className="border border-white text-black text-center lg:w-full p-8">
             <div className="mb-4">
               {/* Dropdown-menu til valg af område */}
@@ -96,8 +102,8 @@ export default function Camping({ onNext, onBack }) {
               <label htmlFor="area-filter" className="mb-2 font-extrabold font-genos text-3xl text-white flex flex-col">
                 Campingområde:
               </label>
-              <select id="area-filter" value={campingSelection.area || "Vælg Område"} onChange={(e) => handleAreaChange(e.target.value)} className="bg-white p-2 rounded-3xl border-none font-genos text-center appearance-none mt-3">
-                <option value="Vælg Område">Vælg Område</option>
+              <select id="area-filter" value={campingSelection.area || "Vælg område"} onChange={(e) => handleAreaChange(e.target.value)} className="bg-white p-2 rounded-3xl border-none font-genos text-center appearance-none mt-3">
+                <option value="Vælg Område">Vælg område</option>
                 {areas.map((area) => (
                   <option key={area.id} value={area.area}>
                     {area.area} (Ledige pladser: {area.available})
@@ -116,13 +122,13 @@ export default function Camping({ onNext, onBack }) {
                   <h4 className="pr-5">Antal</h4>
                 </div>
                 <div className="flex items-center mb-4 justify-between text-white font-genos font-extralight text-2xl mt-3">
-                  <p>2-personers telt</p>
-                  <p className="pr-16">799,-</p>
+                  <p>2-pers telt</p>
+                  <p className="pr-3">799,-</p>
                   <Counter quantity={twoPerson} onIncrement={() => handleTentQuantityChange("twoPerson", twoPerson + 1)} onDecrement={() => handleTentQuantityChange("twoPerson", twoPerson - 1)} disableIncrement={disableIncrement} />
                 </div>
                 <div className="flex items-center mb-4 justify-between text-white font-genos font-extralight text-2xl mt-3">
-                  <p>3-personers telt</p>
-                  <p className="pr-16">999,-</p>
+                  <p>3-pers telt</p>
+                  <p className="pr-3">999,-</p>
                   <Counter quantity={threePerson} onIncrement={() => handleTentQuantityChange("threePerson", threePerson + 1)} onDecrement={() => handleTentQuantityChange("threePerson", threePerson - 1)} disableIncrement={disableIncrement} />
                 </div>
                 <div className="flex items-center mb-4 justify-between text-white font-genos font-extralight text-2xl mt-3">
@@ -142,7 +148,7 @@ export default function Camping({ onNext, onBack }) {
                     {recommendedTents.twoPerson > 0 && <span className="block">{`${recommendedTents.twoPerson} x 2-personers telt`}</span>}
                     {recommendedTents.threePerson > 0 && <span className="block">{`${recommendedTents.threePerson} x 3-personers telt`}</span>}
                   </div>
-                  <span className="pl-6">{`${recommendedPackagePrice},-`}</span>
+                  <span className="pl-6">{`Pris ${recommendedPackagePrice},-`}</span>
                 </label>
                 <div className="flex">
                   <input
@@ -183,10 +189,10 @@ export default function Camping({ onNext, onBack }) {
 
         {/* Navigation */}
         <div className="flex justify-between mt-6">
-          <button onClick={onBack} className="font-gajraj mt-4 px-4 py-2 text-3xl text-white lg:text-5xl">
+          <button onClick={onBack} className="font-gajraj px-4 py-2 text-3xl text-white lg:text-5xl">
             Tilbage
           </button>
-          <button onClick={handleNextClick} className="font-gajraj mt-4 px-4 py-2 text-3xl text-white lg:text-5xl">
+          <button onClick={handleNextClick} className="font-gajraj px-4 py-2 text-3xl text-white lg:text-5xl">
             Reserver
           </button>
         </div>

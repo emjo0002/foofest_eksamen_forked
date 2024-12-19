@@ -62,10 +62,11 @@ const useBookingStore = create((set, get) => ({
 
  updateTents: (tents) =>
   set((state) => {
-    const { twoPerson, threePerson, ownTent = 0 } = { 
+    const { twoPerson = 0, threePerson = 0, ownTent = 0 } = { 
       ...state.campingSelection.tents, 
       ...tents 
     };
+
     const totalTents = twoPerson + threePerson + ownTent;
     const totalTickets = state.tickets.reduce((sum, ticket) => sum + ticket.quantity, 0);
 

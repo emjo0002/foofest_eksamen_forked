@@ -25,8 +25,8 @@ export default function Ticket({ onNext }) {
 
   return (
     <main>
-      <div className="px-4 max-w-6xl mx-auto mb-24">  
-  <div className="flex justify-center gap-8 m-10 flex-wrap lg:flex-nowrap">
+      <div className="px-4 max-w-6xl mx-auto pb-5">  
+        <div className="flex justify-center gap-8 mt-10 mr-10 ml-10 mb-5 flex-wrap lg:flex-nowrap">
     {tickets.map((ticket) => (
       <div
         key={ticket.id}
