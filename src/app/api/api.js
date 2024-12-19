@@ -12,7 +12,10 @@ export async function getAllBands() {
       method: "GET",
       headers: headersList,
     });
-    return await response.json();
+
+    const bands = await response.json();
+
+    return bands;
   } catch (error) {
     console.error("Fejl ved hentning af bands:", error);
     return [];
@@ -69,5 +72,3 @@ export async function reserveSpot(area, amount) {
     throw error;
   }
 }
-
-
