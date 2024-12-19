@@ -26,37 +26,36 @@ export default function Information({ onNext, onBack }) {
 
   // HÅNDTER FORTSÆT-KNAP
   const handleContinue = async (event) => {
-  event.preventDefault(); // Forhindre standardformularindsendelse
+    event.preventDefault();
 
-  // Validering: Tjek at alle felter er udfyldt for faktisk valgte billetter
-  const isFormValid = selectedTickets.every((_, index) => {
-    const user = userInfo[index];
-    return user?.name && user?.lastname && user?.number && user?.email;
-  });
+    const isFormValid = selectedTickets.every((_, index) => {
+      const user = userInfo[index];
+      return user?.name && user?.lastname && user?.number && user?.email;
+    });
 
-  if (!isFormValid) {
-    setError("Alle felter skal udfyldes korrekt.");
-    return;
-  }
-
-  setIsLoading(true);
-  setError(null);
-
-  try {
-    for (const user of userInfo) {
-      const { name, lastname, number, email } = user; // Send kun nødvendige felter
-      console.log("Data der sendes til Supabase:", { name, lastname, number, email });
-      await postSub({ name, lastname, number, email });
-      updateUserInfo({ name, lastname, number, email });
+    if (!isFormValid) {
+      setError("All fields must be filled in correctly.");
+      return;
     }
-    onNext(); // Fortsæt til næste side
-  } catch (error) {
-    console.error("Fejl ved gemning i Supabase:", error.message);
-    setError("Der skete en fejl ved gemning i databasen.");
-  } finally {
-    setIsLoading(false);
-  }
-};
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      for (const user of userInfo) {
+        const { name, lastname, number, email } = user;
+        console.log("Data der sendes til Supabase:", { name, lastname, number, email });
+        await postSub({ name, lastname, number, email });
+        updateUserInfo({ name, lastname, number, email });
+      }
+      onNext();
+    } catch (error) {
+      console.error("Fejl ved gemning i Supabase:", error.message);
+      setError("Der skete en fejl ved gemning i databasen.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // OPRET EN LISTE OVER BILLETTER UD FRA HVOR MANGE DER ER VALGT
   const selectedTickets = tickets.flatMap((ticket) => Array(ticket.quantity).fill(ticket));
@@ -73,97 +72,45 @@ export default function Information({ onNext, onBack }) {
 
               {/* NAVN */}
               <div className="mb-4">
-                <label
-                  htmlFor={`name-${ticket.id}-${index}`}
-                  className="block font-medium mb-2 text-white"
-                >
-                  Navn:
+                <label htmlFor={`name-${ticket.id}-${index}`} className="block font-medium mb-2 text-white">
+                  Name:
                 </label>
-                <input
-                  type="text"
-                  name="name"
-                  id={`name-${ticket.id}-${index}`}
-                  className="w-full px-3 py-2 border border-gray-300 text-black"
-                  placeholder="Indtast dit navn"
-                  onChange={(e) => handleChange(e, ticket, index)}
-                  required
-                />
+                <input type="text" name="name" id={`name-${ticket.id}-${index}`} className="w-full px-3 py-2 border border-gray-300 text-black" placeholder="Name" onChange={(e) => handleChange(e, ticket, index)} required />
               </div>
 
               {/* EFTERNAVN */}
               <div className="mb-4">
-                <label
-                  htmlFor={`lastname-${ticket.id}-${index}`}
-                  className="block font-medium mb-2 text-white"
-                >
-                  Efternavn:
+                <label htmlFor={`lastname-${ticket.id}-${index}`} className="block font-medium mb-2 text-white">
+                  Last name:
                 </label>
-                <input
-                  type="text"
-                  name="lastname"
-                  id={`lastname-${ticket.id}-${index}`}
-                  className="w-full px-3 py-2 border border-gray-300 text-black"
-                  placeholder="Indtast dit efternavn"
-                  onChange={(e) => handleChange(e, ticket, index)}
-                  required
-                />
+                <input type="text" name="lastname" id={`lastname-${ticket.id}-${index}`} className="w-full px-3 py-2 border border-gray-300 text-black" placeholder="Last name" onChange={(e) => handleChange(e, ticket, index)} required />
               </div>
 
               {/* TELEFONNUMMER */}
               <div className="mb-4">
-                <label
-                  htmlFor={`number-${ticket.id}-${index}`}
-                  className="block font-medium mb-2 text-white"
-                >
-                  Telefon nummer:
+                <label htmlFor={`number-${ticket.id}-${index}`} className="block font-medium mb-2 text-white">
+                  Telephone number:
                 </label>
-                <input
-                  type="text"
-                  name="number"
-                  id={`number-${ticket.id}-${index}`}
-                  className="w-full px-3 py-2 border border-gray-300 text-black"
-                  placeholder="Indtast dit telefon nummer"
-                  onChange={(e) => handleChange(e, ticket, index)}
-                  required
-                />
+                <input type="text" name="number" id={`number-${ticket.id}-${index}`} className="w-full px-3 py-2 border border-gray-300 text-black" placeholder="Phone number" onChange={(e) => handleChange(e, ticket, index)} required />
               </div>
 
               {/* E-MAIL */}
               <div className="mb-4">
-                <label
-                  htmlFor={`email-${ticket.id}-${index}`}
-                  className="block font-medium mb-2 text-white"
-                >
+                <label htmlFor={`email-${ticket.id}-${index}`} className="block font-medium mb-2 text-white">
                   E-mail:
                 </label>
-                <input
-                  type="email"
-                  name="email"
-                  id={`email-${ticket.id}-${index}`}
-                  className="w-full px-3 py-2 border border-gray-300 text-black"
-                  placeholder="Indtast din e-mail"
-                  onChange={(e) => handleChange(e, ticket, index)}
-                  required
-                />
+                <input type="email" name="email" id={`email-${ticket.id}-${index}`} className="w-full px-3 py-2 border border-gray-300 text-black" placeholder="E-mail" onChange={(e) => handleChange(e, ticket, index)} required />
               </div>
             </div>
           ))}
         </div>
 
-        {/* Knapper */}
         <div className="flex justify-between w-full lg:w-3/4">
-          <button
-            onClick={onBack}
-            className="font-gajraj px-4 py-2 text-3xl text-white lg:text-5xl"
-          >
-            Tilbage
+          <button onClick={onBack} className="font-gajraj px-4 py-2 text-3xl text-white lg:text-5xl">
+            Back
           </button>
-          <button
-            onClick={handleContinue}
-            className="font-gajraj px-4 py-2 text-3xl text-white lg:text-5xl"
-            disabled={isLoading}
-          >
-            {isLoading ? "Gemmer..." : "Fortsæt"}
+          <button onClick={handleContinue} className="font-gajraj px-4 py-2 text-3xl text-white lg:text-5xl" disabled={isLoading}>
+            {isLoading ? "Saving..." : "Continue"}
           </button>
         </div>
 

@@ -11,44 +11,34 @@ import Opsummering from "../components/Opsummering";
 
 export default function Booking() {
   const [currentView, setCurrentView] = useState("tickets");
-  const {
-    fetchReservation,
-    timer,
-    timerActive,
-    decrementTimer,
-    stopTimer,
-    resetBooking,
-    resetReservationId,
-    resetUserInfo,
-    
-  } = useBookingStore();
+  const { fetchReservation, timer, timerActive, decrementTimer, stopTimer, resetBooking, resetReservationId, resetUserInfo } = useBookingStore();
 
-  // Start timer nedtælling, når timerActive er true
+  //STARTER TIMER NEDTÆLLING, NÅR TIMERACTIVE ER TRUE
   useEffect(() => {
-  let interval;
-  if (timerActive) {
-    interval = setInterval(() => {
-      decrementTimer();
-    }, 1000);
-  }
-
-  return () => {
-    if (interval) {
-      clearInterval(interval); // Ryd op i intervallet
+    let interval;
+    if (timerActive) {
+      interval = setInterval(() => {
+        decrementTimer();
+      }, 1000);
     }
-  };
-}, [timerActive, decrementTimer])
 
-  // Håndter, når timer når 0
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [timerActive, decrementTimer]);
+
+  //HÅNDTER NÅR TIMER NÅR TIL 0
   useEffect(() => {
     if (timer === 0 && timerActive) {
       alert("Din reservation er udløbet.");
-      resetBooking(); // Nulstil bookingdata
-      setCurrentView("tickets"); // Gå tilbage til billetsiden
+      resetBooking();
+      setCurrentView("tickets");
     }
   }, [timer, timerActive, resetBooking]);
 
-  // Funktion til at bestemme trin-styling baseret på currentView
+  // DENNE FUKTION BESTEMMER TRIN STYLING BASERET PÅ CURRUNTVIEW
   const stepIndicator = (viewName, stepNumber) => {
     const isActive = currentView === viewName;
     return `flex items-center justify-center rounded-full 
@@ -60,16 +50,16 @@ export default function Booking() {
     setCurrentView(nextView);
   };
 
- const handleBack = (previousView) => {
-  if (currentView === "information") {
-    stopTimer(); // Stop timeren
-    resetReservationId(); // Nulstil reservationId
-  }
-  if (currentView === "opsummering") {
-    useBookingStore.getState().resetUserInfo(); // Nulstil userInfo
-  }
-  setCurrentView(previousView);
-};
+  const handleBack = (previousView) => {
+    if (currentView === "information") {
+      stopTimer();
+      resetReservationId();
+    }
+    if (currentView === "opsummering") {
+      useBookingStore.getState().resetUserInfo();
+    }
+    setCurrentView(previousView);
+  };
 
   return (
     <div className="mx-auto relative dynamic-bg lg:px-4">
@@ -79,7 +69,7 @@ export default function Booking() {
 
       <h2 className="flex text-white justify-center text-5xl font-gajraj pb-6">{currentView}</h2>
 
-      {/* Trinindikator */}
+      {/* VORES TRIN I BOOKINGFLOW */}
       <div className="flex justify-center items-center gap-4">
         <div className={stepIndicator("tickets", 1)}>1</div>
         <div className={stepIndicator("camping", 2)}>2</div>
@@ -90,18 +80,25 @@ export default function Booking() {
 
       {timerActive && (
         <div className="text-white text-xl font-genos text-center p-5">
-          Reservation expires in: {Math.floor(timer / 60)}:
-          {String(timer % 60).padStart(2, "0")}
+          Reservation expires in: {Math.floor(timer / 60)}:{String(timer % 60).padStart(2, "0")}
         </div>
       )}
 
-      {/* Indhold */}
+      {/* OVERSIGT OVER NAVIGATIONS PÅ BOOKINGFLOW */}
       <div>
         {currentView === "tickets" && <Ticket onNext={() => handleNext("camping")} />}
         {currentView === "camping" && <Camping onNext={() => handleNext("information")} onBack={() => handleBack("tickets")} />}
         {currentView === "information" && <Information onNext={() => handleNext("opsummering")} onBack={() => handleBack("camping")} />}
         {currentView === "opsummering" && <Opsummering onNext={() => handleNext("payment")} onBack={() => handleBack("information")} />}
-        {currentView === "payment" && <Payment onBack={() => handleBack("opsummering")} onSuccess={() => {resetUserInfo(), resetBooking(); setCurrentView("tickets"); }}/>}
+        {currentView === "payment" && (
+          <Payment
+            onBack={() => handleBack("opsummering")}
+            onSuccess={() => {
+              resetUserInfo(), resetBooking();
+              setCurrentView("tickets");
+            }}
+          />
+        )}
       </div>
     </div>
   );

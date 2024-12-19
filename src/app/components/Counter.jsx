@@ -6,16 +6,12 @@ export default function Counter({ quantity, onIncrement, onDecrement, disableInc
       <button
         onClick={onDecrement}
         className="px-2 py-1"
-        disabled={quantity <= 0} // Deaktiver knappen, hvis mængden er 0
+        disabled={quantity <= 0} // DETTE BETYDER AT DEN DEAKTIVERES HVIS MÆNGDEN ER MINDRE END 0
       >
         -
       </button>
       <span>{quantity}</span>
-      <button
-        onClick={onIncrement}
-        className={`px-2 py-1 ${disableIncrement ? "cursor-not-allowed opacity-50" : ""}`}
-        disabled={disableIncrement} // Deaktiver knappen, hvis increment ikke er tilladt
-      >
+      <button onClick={onIncrement} className={`px-2 py-1 ${disableIncrement ? "cursor-not-allowed opacity-50" : ""}`} disabled={disableIncrement}>
         +
       </button>
     </div>

@@ -9,12 +9,12 @@ export default function Payment({ onBack, onSuccess }) {
   const handlePayment = async (event) => {
     event.preventDefault();
 
-    // Hent formen via ID
+    // HENT FORMEN VIA ID
     const form = document.getElementById("payment-form");
 
-    // Tjek om formen er valid
+    // DENNE TJEKKER OM DEN ER VALID
     if (!form.checkValidity()) {
-      form.reportValidity(); // Vis fejlbeskeder
+      form.reportValidity();
       return;
     }
 
@@ -32,7 +32,6 @@ export default function Payment({ onBack, onSuccess }) {
     <main className="max-w-6xl mx-auto pb-5">
       <div className="flex justify-center gap-8 mt-10 mr-10 ml-10 mb-5 flex-wrap lg:flex-nowrap">
         <div className="border border-white text-white lg:w-full p-8">
-          {/* Reservation ID */}
           <div className="mb-8 text-left">
             {reservationId ? (
               <div>
@@ -41,73 +40,46 @@ export default function Payment({ onBack, onSuccess }) {
                 </p>
               </div>
             ) : (
-              <p className="font-genos text-2xl">Reserverer plads...</p>
+              <p className="font-genos text-2xl">Reserve an area..</p>
             )}
           </div>
 
-          {/* Form for betaling */}
+          {/* BETALINGS FORM */}
           <form id="payment-form">
-            {/* Konto Nummer */}
             <div className="mb-4">
               <label htmlFor="account-number" className="block font-medium mb-2 text-white">
-                Kontonummer:
+                Account number:
               </label>
-              <input
-                type="text"
-                name="accountNumber"
-                id="account-number"
-                className="w-full px-3 py-2 border border-gray-300 text-black"
-                placeholder="Indtast dit kontonummer"
-                required // HTML5 validering
-              />
+              <input type="text" name="accountNumber" id="account-number" className="w-full px-3 py-2 border border-gray-300 text-black" placeholder="Enter account number" required />
             </div>
 
-            {/* Udløbsdato og CVR */}
+            {/* UDLØBSDATO OG CVR */}
             <div className="mb-4 flex gap-4">
               <div className="flex-1">
                 <label htmlFor="expiry-date" className="block font-medium mb-2 text-white">
-                  Udløbsdato:
+                  EXPIRE DATE:
                 </label>
-                <input
-                  type="text"
-                  name="expiryDate"
-                  id="expiry-date"
-                  className="w-full px-3 py-2 border border-gray-300 text-black"
-                  placeholder="MM/ÅÅ"
-                  required // HTML5 validering
-                />
+                <input type="text" name="expiryDate" id="expiry-date" className="w-full px-3 py-2 border border-gray-300 text-black" placeholder="MM/ÅÅ" required />
               </div>
               <div className="flex-1">
                 <label htmlFor="cvr" className="block font-medium mb-2 text-white">
                   CVR:
                 </label>
-                <input
-                  type="text"
-                  name="cvr"
-                  id="cvr"
-                  className="w-full px-3 py-2 border border-gray-300 text-black"
-                  placeholder="Indtast CVR"
-                  required // HTML5 validering
-                />
+                <input type="text" name="cvr" id="cvr" className="w-full px-3 py-2 border border-gray-300 text-black" placeholder="Indtast CVR" required />
               </div>
             </div>
           </form>
         </div>
 
-        {/* Basket-komponent */}
         <Basket />
       </div>
 
-      {/* Navigation */}
       <div className="flex justify-between mt-6">
         <button onClick={onBack} className="font-gajraj px-6 py-2 text-3xl text-white">
-          Tilbage
+          BACK
         </button>
-        <button
-          onClick={handlePayment}
-          className="font-gajraj px-6 py-2 text-3xl text-white"
-        >
-          Betal
+        <button onClick={handlePayment} className="font-gajraj px-6 py-2 text-3xl text-white">
+          PAY
         </button>
       </div>
     </main>
