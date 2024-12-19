@@ -23,7 +23,7 @@ export default function Header() {
 
         <SheetContent side="right">
           <nav className="flex flex-col font-gajraj items-center py-4 text-4xl space-y-4">
-            <a href="/tickets" className="block px-4 py-2 hover:text-blue-700">
+            <a href="/program" className="block px-4 py-2 hover:text-blue-700">
               TICKETS
             </a>
             <a href="/lineup" className="block px-4 py-2 hover:text-blue-700">
