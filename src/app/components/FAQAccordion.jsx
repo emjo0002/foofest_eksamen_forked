@@ -4,7 +4,7 @@ const FAQAccordion = () => {
   return (
     <section className="flex text-black flex-col items-center justify-center p-4">
       <h1 className="text-2xl font-bold mb-4">FAQ</h1>
-      <Accordion type="single" collapsible className="w-full max-w-lg">
+      <Accordion type="single" collapsible className="w-full max-w-lg mb-16">
         <AccordionItem value="item-1">
           <AccordionTrigger>Hvornår er det muligt at ankomme til festivalen?</AccordionTrigger>
           <AccordionContent>Festivalen åbner onsdag kl. 12:00, hvor du har mulighed for at sætte dit telt op.</AccordionContent>
