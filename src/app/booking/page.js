@@ -15,7 +15,6 @@ export default function Booking() {
     fetchReservation,
     timer,
     timerActive,
-    decrementTimer,
     stopTimer,
     resetBooking,
     resetReservationId,
@@ -23,12 +22,17 @@ export default function Booking() {
     
   } = useBookingStore();
 
-  // Start timer nedtælling, når timerActive er true
-  useEffect(() => {
+ useEffect(() => {
   let interval;
   if (timerActive) {
     interval = setInterval(() => {
-      decrementTimer();
+      set((state) => {
+        if (state.timer > 0) {
+          return { timer: state.timer - 1 };
+        } else {
+          return { timer: 0, timerActive: false }; 
+        }
+      });
     }, 1000);
   }
 
@@ -37,7 +41,7 @@ export default function Booking() {
       clearInterval(interval); // Ryd op i intervallet
     }
   };
-}, [timerActive, decrementTimer])
+}, [timerActive]);
 
   // Håndter, når timer når 0
   useEffect(() => {
