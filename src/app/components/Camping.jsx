@@ -59,9 +59,9 @@ export default function Camping({ onNext, onBack }) {
   };
 
   const handleAreaChange = (area) => {
-    setErrorMessage(""); // Nulstil fejlmeddelelse
-    updateCampingArea(area); // Opdater område i store
-  };
+  setErrorMessage(""); // Nulstil fejlmeddelelse
+  updateCampingArea(area); // Gem det valgte område i store
+};
 
   const handleNextClick = () => {
     const errors = []; // Array til at samle fejl
@@ -190,8 +190,8 @@ export default function Camping({ onNext, onBack }) {
             </div>
 
             {/* Fejlmeddelelse */}
-            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-            {areaCapacityError && campingSelection !== "Vælg Område" && <p className="text-red-500">Det samlede antal telte overstiger de ledige pladser i det valgte område.</p>}
+            {errorMessage && <p className="font-genos text-2xl text-red-500">{errorMessage}</p>}
+            {areaCapacityError && campingSelection !== "Vælg Område" && <p className="font-genos text-2xl text-red-500">Det samlede antal telte overstiger de ledige pladser i det valgte område.</p>}
           </div>
 
           {/* Basket */}

@@ -18,18 +18,24 @@ export default function Booking() {
     decrementTimer,
     stopTimer,
     resetBooking,
+    resetReservationId,
   } = useBookingStore();
 
   // Start timer nedtælling, når timerActive er true
   useEffect(() => {
-    if (timerActive) {
-      const interval = setInterval(() => {
-        decrementTimer();
-      }, 1000);
+  let interval;
+  if (timerActive) {
+    interval = setInterval(() => {
+      decrementTimer();
+    }, 1000);
+  }
 
-      return () => clearInterval(interval); // Ryd op, hvis komponenten unmountes
+  return () => {
+    if (interval) {
+      clearInterval(interval); // Ryd op i intervallet
     }
-  }, [timerActive, decrementTimer]);
+  };
+}, [timerActive, decrementTimer])
 
   // Håndter, når timer når 0
   useEffect(() => {
@@ -52,9 +58,16 @@ export default function Booking() {
     setCurrentView(nextView);
   };
 
-  const handleBack = (previousView) => {
-    setCurrentView(previousView);
-  };
+ const handleBack = (previousView) => {
+  if (currentView === "information") {
+    stopTimer(); // Stop timeren
+    resetReservationId(); // Nulstil reservationId
+  }
+  if (currentView === "opsummering") {
+    useBookingStore.getState().resetUserInfo(); // Nulstil userInfo
+  }
+  setCurrentView(previousView);
+};
 
   return (
     <div className="mx-auto relative dynamic-bg lg:px-4">
@@ -85,7 +98,7 @@ export default function Booking() {
         {currentView === "camping" && <Camping onNext={() => handleNext("information")} onBack={() => handleBack("tickets")} />}
         {currentView === "information" && <Information onNext={() => handleNext("opsummering")} onBack={() => handleBack("camping")} />}
         {currentView === "opsummering" && <Opsummering onNext={() => handleNext("payment")} onBack={() => handleBack("information")} />}
-        {currentView === "payment" && <Payment onBack={() => handleBack("opsummering")} />}
+        {currentView === "payment" && <Payment onBack={() => handleBack("opsummering")} onSuccess={() => {resetBooking(); setCurrentView("tickets"); }}/>}
       </div>
     </div>
   );

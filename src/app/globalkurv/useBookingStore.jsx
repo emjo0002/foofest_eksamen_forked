@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { reserveSpot } from "../api/api";
+import { reserveSpot, fullfillReservation } from "../api/api";
 
 const initialTickets = [
   { id: 1, title: "Foo-Billet", price: 799, quantity: 0, bio: "Få adgang til alle scener, koncerter og fællesområder. Nyd musik, madboder og aktiviteter i en livlig festivalstemning." },
@@ -23,10 +23,6 @@ const useBookingStore = create((set, get) => ({
   timer: 0,
   timerActive: false,
 
-  // Timer state
-  timer: 0,
-  timerActive: false,
-
   // Reducer timeren med 1 sekund
   decrementTimer: () => set((state) => {
     if (state.timer > 0) {
@@ -37,13 +33,11 @@ const useBookingStore = create((set, get) => ({
   }),
 
   // Stop timeren
-  stopTimer: () => set({ timerActive: false }),
-
-  resetBasket: () =>
-  set({
-    tickets: [...initialTickets],
-    campingSelection: { ...initialCampingSelection },
-  }),
+  stopTimer: () =>
+  set((state) => ({
+    timer: 0, // Valgfrit: Nulstil timer, hvis ønsket
+    timerActive: false,
+  })),
 
   // Nulstil bookingdata
    resetBooking: () =>
@@ -56,20 +50,60 @@ const useBookingStore = create((set, get) => ({
       timerActive: false,
     }),
 
+    resetReservationId: () => set({ reservationId: null }),
+
+    resetUserInfo: () => set({ userInfo: [] }),
+
    // Funktion til at hente reservation og start timer
   fetchReservation: async () => {
+  try {
+    const { reservationId, campingSelection, totalTents } = get();
+
+    // Hvis et reservations-ID allerede findes, returner det direkte
+    if (reservationId) {
+      console.log("Existing reservation found:", reservationId);
+      return reservationId;
+    }
+
+    const { area } = campingSelection;
+    const tentsCount = totalTents();
+
+    // Hvis der ikke er et område valgt, eller ingen telte er angivet
+    if (!area || tentsCount === 0) {
+      console.error("Cannot fetch reservation: area or tents not specified");
+      return null;
+    }
+
+    // Lav en ny reservation via API'et
+    const { id, timeout } = await reserveSpot(area, tentsCount);
+    set({
+      reservationId: id,
+      timer: timeout / 1000, // Konverter timeout til sekunder
+      timerActive: true,
+    });
+
+    console.log("New reservation created:", id);
+    return id;
+  } catch (error) {
+    console.error("Failed to fetch reservation:", error);
+    return null;
+  }
+},
+
+completeReservation: async () => {
+    const { reservationId } = get();
+    if (!reservationId) {
+      console.error("Ingen reservations-ID fundet.");
+      return null;
+    }
+  
     try {
-      const { area } = get().campingSelection;
-      const totalTents = get().totalTents();
-      const { id, timeout } = await reserveSpot(area, totalTents);
-      set({
-        reservationId: id,
-        timer: timeout / 1000, // Konverter timeout til sekunder
-        timerActive: true,
-      });
-      return id;
+      const response = await fullfillReservation(reservationId);
+      set({ reservationId: response.id || reservationId });
+      set({ timer: 0, timerActive: false });
+      return response;
     } catch (error) {
-      console.error("Failed to fetch reservation:", error);
+      console.error("Fejl ved fuldførelse af reservation:", error);
       return null;
     }
   },
@@ -139,12 +173,12 @@ const useBookingStore = create((set, get) => ({
 
   // Funktion til at opdatere campingområde
   updateCampingArea: (area) =>
-    set((state) => ({
-      campingSelection: {
-        ...state.campingSelection,
-        area,
-      },
-    })),
+  set((state) => ({
+    campingSelection: {
+      ...state.campingSelection,
+      area,
+    },
+  })),
 
   // Funktion til at fjerne pakkeløsning
   removePackageSelection: () =>

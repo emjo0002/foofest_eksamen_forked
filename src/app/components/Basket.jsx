@@ -8,7 +8,7 @@ export default function Basket({ selectedArea }) {
   const { greenCamping } = campingSelection;
 
   return (
-  <div className="w-full text-white flex flex-col max-h-[720px] lg:border lg:border-white lg:p-8">
+  <div className="w-full text-white flex flex-col lg:max-h-[752px] lg:border lg:border-white lg:p-8">
     <div
       className="text-center lg:cursor-default fixed bottom-0 left-0 right-0 bg-black opacity-95 z-50 lg:h-full lg:static lg:bg-transparent lg:text-white lg:flex lg:flex-col"
       onClick={() => {
@@ -83,7 +83,7 @@ export default function Basket({ selectedArea }) {
         
         <div className="mt-4 flex justify-between">
           <h3 className="font-extrabold font-genos text-3xl text-white mb-2">Campingområde:</h3>
-          <p className="text-white font-genos text-2xl">{selectedArea || "Vælg område"}</p>
+          <p className="text-white font-genos text-2xl">{campingSelection.area || "Vælg område"}</p>
         </div>
       </div>
       

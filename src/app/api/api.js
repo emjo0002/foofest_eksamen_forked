@@ -76,7 +76,7 @@ export async function fullfillReservation (reservationId) {
   const bodyContent = JSON.stringify({
     id: reservationId
   })
-  const response = await fetch(`${baseURL}/reserve-spot`, {
+  const response = await fetch(`${baseURL}/fullfill-reservation`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
