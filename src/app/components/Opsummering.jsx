@@ -1,8 +1,8 @@
 import React from "react";
 import useBookingStore from "../globalkurv/useBookingStore";
 
-export default function Opsummering({ onNext, onBack, userInfo = [] }) {
-  const { tickets, reservationId, totalTents, calculateTotal, campingSelection } = useBookingStore();
+export default function Opsummering({ onNext, onBack }) {
+  const { tickets, reservationId, totalTents, calculateTotal, campingSelection, userInfo } = useBookingStore();
 
   // HER FILTRERER JEG DE VALGTE BILLETTER
   const selectedTickets = tickets.filter((ticket) => ticket.quantity > 0);
