@@ -12,7 +12,10 @@ export async function getAllBands() {
       method: "GET",
       headers: headersList,
     });
-    return await response.json();
+
+    const bands = await response.json();
+
+    return bands;
   } catch (error) {
     console.error("Fejl ved hentning af bands:", error);
     return [];
@@ -48,44 +51,43 @@ export async function getAllAreas() {
 }
 
 // PUT henter reservetion
-export async function reserveSpot (area, amount) {
+export async function reserveSpot(area, amount) {
   const bodyContent = JSON.stringify({
     area: area,
-    amount: amount
-  })
+    amount: amount,
+  });
 
   const response = await fetch(`${baseURL}/reserve-spot`, {
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
-    body: bodyContent
-  })
+    body: bodyContent,
+  });
 
-  const data = await response.json()
+  const data = await response.json();
 
   return {
-    id: data.id, 
-    timeout: data.timeout
-  }
+    id: data.id,
+    timeout: data.timeout,
+  };
 }
 
 // POST Fuldfør reservation
-export async function fullfillReservation (reservationId) {
+export async function fullfillReservation(reservationId) {
   const bodyContent = JSON.stringify({
-    id: reservationId
-  })
+    id: reservationId,
+  });
   const response = await fetch(`${baseURL}/fullfill-reservation`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
-    body: bodyContent 
-  })
+    body: bodyContent,
+  });
 
-  const data = await response.json()
-  return data 
+  const data = await response.json();
+  return data;
 }
-
