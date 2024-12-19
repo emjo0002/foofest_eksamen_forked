@@ -67,7 +67,7 @@ export default function ArtistPage() {
       <div className="flex flex-col md:flex-row items-center justify-center min-h-screen gap-12">
         {/* Billede */}
         <div className="max-w-md">
-          <Image src={`/logos/${band.logo}`} alt={band.name} width={500} height={500} className="w-full h-auto object-cover" />
+          <Image src={`/logos/${band.logo}`} alt={band.name} width={500} height={500} className="h-auto object-cover" />
         </div>
 
         {/* Tekst */}

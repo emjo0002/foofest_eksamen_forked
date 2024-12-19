@@ -16,29 +16,35 @@ export default function LineupPage() {
         const fetchedBands = await getAllBands();
         const fetchedSchedule = await getSchedule();
 
-        // Tilføj scene, start og slut til hvert band
+        // Tilføj scene, start, slut og slug til hvert band
         const updatedBands = fetchedBands.map((band) => {
           let scene = null;
           let start = null;
           let end = null;
 
+          // Find scene, start, og slut-tidspunkt i schedule
           Object.keys(fetchedSchedule).forEach((sceneKey) => {
             Object.values(fetchedSchedule[sceneKey]).forEach((day) => {
               day.forEach((act) => {
                 if (act.act === band.name) {
                   scene = sceneKey;
-                  start = act.start; // Starttidspunkt
-                  end = act.end; // Sluttidspunkt
+                  start = act.start;
+                  end = act.end;
                 }
               });
             });
           });
 
-          return { ...band, scene, start, end };
+          // Generer en slug baseret på bandets navn
+          const slug = band.slug || band.name.toLowerCase().replace(/ /g, "-");
+
+          return { ...band, scene, start, end, slug };
         });
 
         setBands(updatedBands);
         setFilteredBands(updatedBands);
+
+        console.log("Updated Bands:", updatedBands);
       } catch (error) {
         console.error("Fejl ved hentning af data:", error);
       }
