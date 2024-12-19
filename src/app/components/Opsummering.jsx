@@ -1,5 +1,6 @@
 import React from "react";
 import useBookingStore from "../globalkurv/useBookingStore";
+import Basket from "./Basket";
 
 export default function Opsummering({ onNext, onBack }) {
   const { tickets, reservationId, totalTents, calculateTotal, campingSelection, userInfo } = useBookingStore();
@@ -8,8 +9,9 @@ export default function Opsummering({ onNext, onBack }) {
   const selectedTickets = tickets.filter((ticket) => ticket.quantity > 0);
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen p-8">
-      <div className="max-w-3xl w-full border border-white text-white p-6 rounded-lg shadow-lg">
+    <main className="flex flex-col items-center justify-center max-w-6xl mx-auto pb-5">
+      <div className="flex">
+      <div className="max-w-6xl w-full border border-white text-white p-6">
         {/* VISER RESERVATIONSID OG TOTAL TELTE */}
         <div className="mb-8 text-left">
           {reservationId ? (
@@ -58,6 +60,12 @@ export default function Opsummering({ onNext, onBack }) {
                   <strong>Navn:</strong> {info.name}
                 </p>
                 <p className="font-genos text-2xl">
+                  <strong>Efternavn:</strong> {info.lastname}
+                </p>
+                <p className="font-genos text-2xl">
+                  <strong>Telefon nummer:</strong> {info.number}
+                </p>
+                <p className="font-genos text-2xl">
                   <strong>Email:</strong> {info.email}
                 </p>
               </div>
@@ -74,11 +82,15 @@ export default function Opsummering({ onNext, onBack }) {
         </div>
       </div>
 
+      <Basket/>
+
+      </div>
+
       <div className="flex justify-between mt-6 gap-x-80">
-        <button onClick={onBack} className="font-gajraj px-6 py-2 text-3xl text-white hover:text-black">
+        <button onClick={onBack} className="font-gajraj px-6 py-2 text-3xl text-white">
           Tilbage
         </button>
-        <button onClick={onNext} className="font-gajraj px-6 py-2 text-3xl text-white hover:text-black">
+        <button onClick={onNext} className="font-gajraj px-6 py-2 text-3xl text-white">
           Forsæt
         </button>
       </div>

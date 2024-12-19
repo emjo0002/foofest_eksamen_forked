@@ -8,7 +8,7 @@ export default function Basket({ selectedArea }) {
   const { greenCamping } = campingSelection;
 
   return (
-  <div className="w-full text-white flex flex-col lg:border lg:border-white lg:p-8">
+  <div className="w-full text-white flex flex-col max-h-[720px] lg:border lg:border-white lg:p-8">
     <div
       className="text-center lg:cursor-default fixed bottom-0 left-0 right-0 bg-black opacity-95 z-50 lg:h-full lg:static lg:bg-transparent lg:text-white lg:flex lg:flex-col"
       onClick={() => {

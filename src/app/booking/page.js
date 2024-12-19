@@ -73,7 +73,7 @@ export default function Booking() {
       </div>
 
       {timerActive && (
-        <div className="text-white text-primary border-b border-t border-primary text-center py-2 mb-8">
+        <div className="text-white text-xl font-genos text-center p-5">
           Reservation expires in: {Math.floor(timer / 60)}:
           {String(timer % 60).padStart(2, "0")}
         </div>
