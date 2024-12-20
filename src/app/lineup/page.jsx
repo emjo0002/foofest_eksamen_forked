@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import BandCarousel from "../../components/ui/BandCarousel";
+import BandCarousel from "../ui/BandCarousel";
 import { getAllBands, getSchedule } from "../api/api";
 import { IoIosArrowRoundBack } from "react-icons/io";
 

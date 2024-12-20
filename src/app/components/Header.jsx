@@ -1,6 +1,6 @@
 "use client";
 
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import { Sheet, SheetTrigger, SheetContent } from "@/app/ui/sheet";
 import { X } from "lucide-react";
 
 export default function Header() {
