@@ -1,6 +1,6 @@
 "use client";
 
-import "../styles/carousel.css";
+import "../../app/styles/carousel.css";
 import { Carousel } from "react-responsive-carousel";
 import Image from "next/image";
 import Link from "next/link";
