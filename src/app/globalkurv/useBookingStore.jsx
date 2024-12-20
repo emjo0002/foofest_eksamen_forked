@@ -74,6 +74,15 @@ const useBookingStore = create((set, get) => ({
     }
   },
 
+  decrementTimer: () =>
+  set((state) => {
+    if (state.timer > 0) {
+      return { timer: state.timer - 1 };
+    } else {
+      return { timer: 0, timerActive: false };
+    }
+  }),
+
   completeReservation: async () => {
     const { reservationId } = get();
     if (!reservationId) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useBookingStore from "../globalkurv/useBookingStore";
 import { postSub } from "../lib/supabase";
 

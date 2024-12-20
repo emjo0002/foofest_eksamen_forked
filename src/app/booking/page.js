@@ -27,13 +27,7 @@ export default function Booking() {
   let interval;
   if (timerActive) {
     interval = setInterval(() => {
-      set((state) => {
-        if (state.timer > 0) {
-          return { timer: state.timer - 1 };
-        } else {
-          return { timer: 0, timerActive: false }; 
-        }
-      });
+      decrementTimer(); // Brug decrementTimer fra din store
     }, 1000);
   }
 
@@ -42,7 +36,7 @@ export default function Booking() {
       clearInterval(interval); // Ryd op i intervallet
     }
   };
-}, [timerActive, decrementTimer])
+}, [timerActive, decrementTimer]);
 
   //HÅNDTER NÅR TIMER NÅR TIL 0
   useEffect(() => {
