@@ -76,10 +76,10 @@ export default function Payment({ onBack, onSuccess }) {
 
       <div className="flex justify-between mt-6">
         <button onClick={onBack} className="font-gajraj px-6 py-2 text-3xl text-white">
-          BACK
+          Back
         </button>
         <button onClick={handlePayment} className="font-gajraj px-6 py-2 text-3xl text-white">
-          PAY
+          Pay
         </button>
       </div>
     </main>

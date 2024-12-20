@@ -1,4 +1,4 @@
-const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+const baseURL = process.env.NEXT_PUBLIC_API_URL || "https://trapezoidal-prickle-stocking.glitch.me/";
 
 const headersList = {
   Accept: "application/json",
