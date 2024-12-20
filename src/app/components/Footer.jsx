@@ -7,7 +7,7 @@ import Newsletter from "./Newsletter";
 
 export default function Footer() {
   return (
-    <footer className="bg-blue-50 text-black py-8">
+    <footer className="bg-slate-100 text-black py-8">
       <div className="flex flex-col md:flex-row items-start justify-between w-full max-w-7xl mx-auto px-4 gap-8">
         {/* NEWSLETTER */}
         <div className="flex-1">
