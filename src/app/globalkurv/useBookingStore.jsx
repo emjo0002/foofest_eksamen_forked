@@ -23,23 +23,6 @@ const useBookingStore = create((set, get) => ({
   timer: 0,
   timerActive: false,
 
-  // Reducer timeren med 1 sekund
-  decrementTimer: () =>
-    set((state) => {
-      if (state.timer > 0) {
-        return { timer: state.timer - 1 };
-      } else {
-        return { timer: 0, timerActive: false }; // Stop timeren
-      }
-    }),
-
-  // Stop timeren
-  stopTimer: () =>
-    set((state) => ({
-      timer: 0, // Valgfrit: Nulstil timer, hvis ønsket
-      timerActive: false,
-    })),
-
   // Nulstil bookingdata
   resetBooking: () =>
     set({
@@ -90,6 +73,15 @@ const useBookingStore = create((set, get) => ({
       return null;
     }
   },
+
+  decrementTimer: () =>
+  set((state) => {
+    if (state.timer > 0) {
+      return { timer: state.timer - 1 };
+    } else {
+      return { timer: 0, timerActive: false };
+    }
+  }),
 
   completeReservation: async () => {
     const { reservationId } = get();

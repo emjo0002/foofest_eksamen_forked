@@ -23,18 +23,14 @@ export default function Basket({ selectedArea }) {
 
           {/* HER VISES VALGTE BILLETTER */}
           {tickets.map(
-            (ticket) =>
-              ticket.quantity > 0 && (
-                <div className="flex justify-between font-genos text-2xl">
-                  <p key={ticket.id} className="text-white">
-                    {ticket.quantity} x{" "}
-                  </p>
-                  <p>
-                    {ticket.title} {ticket.quantity * ticket.price},-
-                  </p>
-                </div>
-              )
-          )}
+            (ticket, index) =>
+            ticket.quantity > 0 && (
+            <div key={ticket.id || `ticket-${index}`} className="flex justify-between font-genos text-2xl">
+            <p className="text-white">{ticket.quantity} x </p>
+            <p>{ticket.title} {ticket.quantity * ticket.price},-</p>
+      </div>
+    )
+)}
 
           <div className="flex justify-between font-genos text-2xl text-white">
             <p>1 x </p>

@@ -50,9 +50,11 @@ export default function Camping({ onNext, onBack }) {
   };
 
   const handleAreaChange = (area) => {
-    setErrorMessage("");
-    updateCampingArea(area);
-  };
+  setErrorMessage(""); // Reset fejlmeddelelse
+  if (area !== campingSelection.area) {
+    updateCampingArea(area); // Opdater kun, hvis området ændres
+  }
+};
 
   const handleNextClick = () => {
     const errors = [];
@@ -98,11 +100,11 @@ export default function Camping({ onNext, onBack }) {
               <label htmlFor="area-filter" className="mb-2 font-extrabold font-genos text-3xl text-white flex flex-col">
                 Camping area:
               </label>
-              <select id="area-filter" value={campingSelection.area || "Choose area"} onChange={(e) => handleAreaChange(e.target.value)} className="bg-white p-2 rounded-3xl border-none font-genos text-center appearance-none mt-3">
+              <select id={areas.id} value={campingSelection.area || "Choose area"} onChange={(e) => handleAreaChange(e.target.value)} className="bg-white p-2 rounded-3xl border-none font-genos text-center appearance-none mt-3">
                 <option value="Choose area">Choose area</option>
-                {areas.map((area) => (
-                  <option key={area.id} value={area.area}>
-                    {area.area} (Available spots: {area.available})
+                {areas.map((area, index) => (
+                <option key={area.id || `area-${index}`} value={area.area}>
+                  {area.area} (Available spots: {area.available})
                   </option>
                 ))}
               </select>

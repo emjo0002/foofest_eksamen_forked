@@ -11,23 +11,32 @@ import Opsummering from "../components/Opsummering";
 
 export default function Booking() {
   const [currentView, setCurrentView] = useState("tickets");
-  const { fetchReservation, timer, timerActive, decrementTimer, stopTimer, resetBooking, resetReservationId, resetUserInfo } = useBookingStore();
+  const {
+    fetchReservation,
+    timer,
+    timerActive,
+    decrementTimer,
+    stopTimer,
+    resetBooking,
+    resetReservationId,
+    resetUserInfo,
+    
+  } = useBookingStore();
 
-  //STARTER TIMER NEDTÆLLING, NÅR TIMERACTIVE ER TRUE
-  useEffect(() => {
-    let interval;
-    if (timerActive) {
-      interval = setInterval(() => {
-        decrementTimer();
-      }, 1000);
+ useEffect(() => {
+  let interval;
+  if (timerActive) {
+    interval = setInterval(() => {
+      decrementTimer(); // Brug decrementTimer fra din store
+    }, 1000);
+  }
+
+  return () => {
+    if (interval) {
+      clearInterval(interval); // Ryd op i intervallet
     }
-
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [timerActive, decrementTimer]);
+  };
+}, [timerActive, decrementTimer]);
 
   //HÅNDTER NÅR TIMER NÅR TIL 0
   useEffect(() => {
