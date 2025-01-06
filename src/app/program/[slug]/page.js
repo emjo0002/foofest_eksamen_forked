@@ -18,7 +18,7 @@ export default function ArtistPage() {
     async function fetchData() {
       try {
         // FETCHER BAND DATA
-        const bandRes = await fetch(`${baseURL}/bands`);
+        const bandRes = await fetch(`${baseURL}/bands/${slug}`);
         const bandData = await bandRes.json();
         setBand(bandData);
 
@@ -56,10 +56,11 @@ export default function ArtistPage() {
     fetchData();
   }, [slug]);
 
-  if (!band) return <p className="text-white">Loading...</p>;
+  if (!band) return <p className="text-black">Loading...</p>;
 
   //BEGRÆNSER BESKRIVELSEN TIL MAX 300 TEGN
-  const truncatedBio = band.bio.length > 300 ? `${band.bio.slice(0, 300)}...` : band.bio;
+  const truncatedBio =
+  band?.bio?.length > 300 ? `${band.bio.slice(0, 300)}...` : band?.bio || "Ingen beskrivelse tilgængelig";
 
   return (
     <div className="relative dynamic-bg min-h-screen text-white p-8">
