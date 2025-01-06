@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import FAQAccordion from "./components/FAQAccordion";
@@ -9,12 +9,7 @@ import Footer from "./components/Footer";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
-  const [isClient, setIsClient] = useState(false);
-
   useEffect(() => {
-    // Sæt isClient til true når komponenten er monteret på klienten
-    setIsClient(true);
-
     if (typeof window === "undefined") return;
 
     const isDesktop = window.innerWidth > 768;
@@ -63,17 +58,10 @@ export default function Home() {
   return (
     <div className="relative h-screen dynamic-bg min-h-screen bg-cover text-white">
       <section className="h-screen flex flex-col justify-center items-center text-center">
-        {isClient && (
-          <>
-            <h1 className="anim-text font-gajraj text-6xl md:text-9xl tracking-wider mb-4 md:block hidden">FOOFEST</h1>
-            <h1 className="font-gajraj text-6xl md:hidden">FOOFEST</h1>
+        <h1 className="anim-text font-gajraj text-6xl md:text-9xl tracking-wider mb-4">FOOFEST</h1>
+        <p className="anim-text font-genos text-2xl md:text-4xl lg:text-6xl mb-8">August 24 - 31</p>
 
-            <p className="anim-text font-genos text-2xl md:text-4xl lg:text-6xl mb-8 md:block hidden">August 24 - 31</p>
-            <p className="font-genos text-2xl md:hidden">August 24 - 31</p>
-          </>
-        )}
-
-        <div className="absolute bottom-8 right-8 space-y-4 text-right md:block hidden">
+        <div className="absolute bottom-8 right-8 space-y-4 text-right">
           <a href="/booking" className="anim-text block text-xl md:text-3xl font-gajraj font-bold hover:underline">
             TICKETS
           </a>
@@ -94,8 +82,7 @@ export default function Home() {
 
       {/* CARDS */}
       <section className="scroll-section min-h-screen bg-white flex flex-col justify-center items-center pb-">
-        <h2 className="anim-section-text text-black text-4xl md:text-8xl font-gajraj font-bold mb-12 md:block hidden">LATEST NEWS</h2>
-        <h2 className="text-black text-4xl md:hidden font-gajraj font-bold mb-12">LATEST NEWS</h2>
+        <h2 className="anim-section-text text-black text-4xl md:text-8xl font-gajraj font-bold mb-12">LATEST NEWS</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 px-4 md:px-16">
           <div className="p-4 shadow-md border-solid border-2 border-black">
