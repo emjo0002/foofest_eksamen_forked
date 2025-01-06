@@ -5,7 +5,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        custom: "url('/background.png')",
+        custom: "url('/slange.webp')",
       },
       fontFamily: {
         gajraj: ["Gajraj One", "sans-serif"],
