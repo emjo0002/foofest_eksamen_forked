@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Schedule from "../components/Schedule";
 import { getAllBands, getSchedule } from "../api/api";
-import Footer from "../components/Footer";
 import { IoIosArrowRoundBack } from "react-icons/io";
 
 export default function SchedulePage() {

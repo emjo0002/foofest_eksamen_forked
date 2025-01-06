@@ -1,5 +1,7 @@
 "use client";
 
+const baseURL = process.env.NEXT_PUBLIC_API_URL || "https://trapezoidal-prickle-stocking.glitch.me/";
+
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
@@ -16,12 +18,12 @@ export default function ArtistPage() {
     async function fetchData() {
       try {
         // FETCHER BAND DATA
-        const bandRes = await fetch(`http://localhost:8080/bands/${slug}`);
+        const bandRes = await fetch(`${baseURL}/bands`);
         const bandData = await bandRes.json();
         setBand(bandData);
 
         // FETCHER SCHEDULE DATA
-        const scheduleRes = await fetch(`http://localhost:8080/schedule`);
+        const scheduleRes = await fetch(`${baseURL}/schedule`);
         const scheduleData = await scheduleRes.json();
         setSchedule(scheduleData);
 
@@ -54,7 +56,7 @@ export default function ArtistPage() {
     fetchData();
   }, [slug]);
 
-  if (!band) return <p className="text-white">Indlæser...</p>;
+  if (!band) return <p className="text-white">Loading...</p>;
 
   //BEGRÆNSER BESKRIVELSEN TIL MAX 300 TEGN
   const truncatedBio = band.bio.length > 300 ? `${band.bio.slice(0, 300)}...` : band.bio;

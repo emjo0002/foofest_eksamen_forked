@@ -93,7 +93,8 @@ export default function Home() {
       </section>
 
       {/* CARDS */}
-      <section className="scroll-section min-h-screen bg-white flex flex-col justify-center items-center pb-">
+      <div className="bg-custom bg-cover"> 
+      <section className="scroll-section min-h-screen flex flex-col justify-center items-center pb-">
         <h2 className="anim-section-text text-black text-4xl md:text-8xl font-gajraj font-bold mb-12 md:block hidden">LATEST NEWS</h2>
         <h2 className="text-black text-4xl md:hidden font-gajraj font-bold mb-12">LATEST NEWS</h2>
 
@@ -127,6 +128,7 @@ export default function Home() {
       <div className="space-y-12 mt-16 md:mt-0">
         <FAQAccordion />
         <Footer />
+      </div>
       </div>
     </div>
   );
