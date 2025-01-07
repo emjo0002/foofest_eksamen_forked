@@ -1,12 +1,13 @@
 "use client";
+
 import { useEffect } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollToPlugin, ScrollTrigger } from "gsap/all";
 import FAQAccordion from "./components/FAQAccordion";
 import Footer from "./components/Footer";
 
-// Registrer ScrollTrigger-plugin
-gsap.registerPlugin(ScrollTrigger);
+// Registrer plugins
+gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
 
 export default function Home() {
   useEffect(() => {
@@ -55,6 +56,14 @@ export default function Home() {
     }
   }, []);
 
+  const scrollToLatestNews = () => {
+    gsap.to(window, {
+      scrollTo: { y: "#latest-news", offsetY: 0 },
+      duration: 1,
+      ease: "power2.out",
+    });
+  };
+
   return (
     <div className="relative h-screen dynamic-bg min-h-screen bg-cover text-white">
       <section className="h-screen flex flex-col justify-center items-center text-center">
@@ -73,7 +82,7 @@ export default function Home() {
           </a>
         </div>
 
-        <div className="absolute bottom-16 animate-bounce">
+        <div className="absolute bottom-16 animate-bounce" onClick={scrollToLatestNews}>
           <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
           </svg>
@@ -81,7 +90,7 @@ export default function Home() {
       </section>
 
       {/* CARDS */}
-      <section className="scroll-section min-h-screen bg-white flex flex-col justify-center items-center pb-">
+      <section id="latest-news" className="scroll-section min-h-screen bg-white flex flex-col justify-center items-center pb-16">
         <h2 className="anim-section-text text-black text-4xl md:text-8xl font-gajraj font-bold mb-12">LATEST NEWS</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 px-4 md:px-16">
@@ -114,7 +123,6 @@ export default function Home() {
       <div className="space-y-12 mt-16 md:mt-0">
         <FAQAccordion />
         <Footer />
-      </div>
       </div>
     </div>
   );
