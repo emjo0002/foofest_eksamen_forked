@@ -101,25 +101,25 @@ export default function Home() {
           <h2 className="anim-section-text text-black text-4xl sm:text-6xl md:text-8xl font-gajraj font-bold mb-12">LATEST NEWS</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="p-4 shadow-md border-solid border-2 border-black">
+            <div className="p-4 shadow-md bg-slate-100 bg-opacity-50 border-solid border-2 border-black">
               <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=3270&auto=format&fit=crop" alt="Image 1" className="w-full h-48 object-cover mb-4" />
               <h3 className="text-black text-2xl sm:text-3xl font-genos mb-2">FOOL CANCELLED</h3>
               <p className="text-black text-sm sm:text-base">This year we have unfortunately experienced several cancellations. Read more here to see which bands have had to cancel.</p>
             </div>
 
-            <div className="p-4 shadow-md border-solid border-2 border-black">
+            <div className="p-4 shadow-md bg-slate-100 bg-opacity-50 border-solid border-2 border-black">
               <img src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=3270&auto=format&fit=crop" alt="Image 2" className="w-full h-48 object-cover mb-4" />
               <h3 className="text-black text-2xl sm:text-3xl font-genos mb-2">AC/DC OPENS</h3>
               <p className="text-black text-sm sm:text-base">This year we are pleased to welcome our headliner AC/DC!!! Read more about the band and their history here.</p>
             </div>
 
-            <div className="p-4 border-solid border-2 border-black">
+            <div className="p-4 border-solid bg-slate-100 bg-opacity-50 border-2 border-black">
               <img src="https://images.unsplash.com/photo-1552799446-159ba9523315?q=80&w=3270&auto=format&fit=crop" alt="Image 3" className="w-full h-48 object-cover mb-4" />
               <h3 className="text-black text-2xl sm:text-3xl font-genos mb-2">A GREEN FESTIVAL</h3>
               <p className="text-black text-sm sm:text-base">Foofest has launched several initiatives to become even greener. Read more here.</p>
             </div>
 
-            <div className="p-4 shadow-md border-solid border-2 border-black">
+            <div className="p-4 shadow-md border-solid bg-slate-100 bg-opacity-50 border-2 border-black">
               <img src="https://images.unsplash.com/photo-1520066391310-428f06ebd602?q=80&w=3275&auto=format&fit=crop" alt="Image 4" className="w-full h-48 object-cover mb-4" />
               <h3 className="text-black text-2xl sm:text-3xl font-genos mb-2">NEW FOOD STALLS THIS YEAR</h3>
               <p className="text-black text-sm sm:text-base">We have added many new food stalls, so you can enjoy delicious food at the festival.</p>
