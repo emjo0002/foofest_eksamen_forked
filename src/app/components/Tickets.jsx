@@ -25,7 +25,7 @@ export default function Ticket({ onNext }) {
 
   return (
     <main className="px-4 max-w-6xl mx-auto pb-5">
-      <a href="/" className="block mb-4 text-5xl text-white font-bold">
+      <a href="/" className="block mb-4 text-5xl text-white font-bold w-fit">
         <IoIosArrowRoundBack />
       </a>
 

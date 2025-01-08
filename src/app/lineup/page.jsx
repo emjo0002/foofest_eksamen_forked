@@ -72,7 +72,7 @@ export default function LineupPage() {
   return (
     <div className="relative dynamic-bg text-white min-h-screen px-8 py-12 bg-cover bg-center pt-19">
       <h1 className="text-8xl font-gajraj font-bold mb-8">LINE-UP</h1>
-      <a href="/" className="block mb-4 text-5xl font-bold">
+      <a href="/" className="block mb-4 text-5xl font-bold w-fit">
         <IoIosArrowRoundBack />
       </a>
 
