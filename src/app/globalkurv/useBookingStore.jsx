@@ -36,6 +36,13 @@ const useBookingStore = create((set, get) => ({
 
   resetReservationId: () => set({ reservationId: null }),
 
+  // Stop timeren
+  stopTimer: () =>
+  set((state) => ({
+    timer: 0, // Valgfrit: Nulstil timer, hvis ønsket
+    timerActive: false,
+  })),
+
   resetUserInfo: () => set({ userInfo: [] }),
 
   // Funktion til at hente reservation og start timer
