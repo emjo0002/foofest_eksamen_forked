@@ -54,6 +54,10 @@ export default function Home() {
         },
       });
     }
+
+    // Log pilen for at sikre, at den findes
+    const arrow = document.querySelector(".animate-bounce");
+    console.log("Arrow element:", arrow);
   }, []);
 
   const scrollToLatestNews = () => {
@@ -66,7 +70,7 @@ export default function Home() {
 
   return (
     <div className="relative h-screen dynamic-bg min-h-screen bg-cover text-white">
-      <section className="h-screen flex flex-col justify-center items-center text-center">
+      <section className="h-screen flex flex-col justify-center items-center text-center relative">
         <h1 className="anim-text font-gajraj text-6xl md:text-9xl tracking-wider mb-4">FOOFEST</h1>
         <p className="anim-text font-genos text-2xl md:text-4xl lg:text-6xl mb-8">August 24 - 31</p>
 
@@ -85,7 +89,7 @@ export default function Home() {
         <div className="absolute bottom-16 animate-bounce">
           <a href="#latest-news" className="text-white fill-none">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-10 h-10">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" stroke="white" d="M19 9l-7 7-7-7" />
             </svg>
           </a>
         </div>
