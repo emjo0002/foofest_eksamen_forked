@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { getAllBands, getSchedule } from "../api/api";
 
 const Schedule = () => {
@@ -8,6 +9,7 @@ const Schedule = () => {
   const [schedule, setSchedule] = useState({});
   const [filterDay, setFilterDay] = useState("all");
   const [filterScene, setFilterScene] = useState("all");
+  const [favorites, setFavorites] = useState({}); // Track favorites for each band by ID
 
   useEffect(() => {
     async function fetchData() {
@@ -15,7 +17,6 @@ const Schedule = () => {
         const fetchedBands = await getAllBands();
         const fetchedSchedule = await getSchedule();
 
-        // Opdater bands med scenes
         const updatedBands = fetchedBands.map((band) => {
           const scene = Object.keys(fetchedSchedule).find((sceneKey) => Object.values(fetchedSchedule[sceneKey]).some((day) => day.some((act) => act.act === band.name)));
           return { ...band, scene };
@@ -31,7 +32,6 @@ const Schedule = () => {
     fetchData();
   }, []);
 
-  // Filtrering af bands
   const filteredBands = bands.filter((band) => {
     if (!band.scene) return false;
 
@@ -40,14 +40,17 @@ const Schedule = () => {
     const stageSchedule = schedule[band.scene];
     if (!stageSchedule) return false;
 
-    const matchesDay =
-      filterDay === "all" ||
-      Object.keys(stageSchedule).some((dayKey) => {
-        return dayKey === filterDay && stageSchedule[dayKey].some((act) => act.act.toLowerCase() === band.name.toLowerCase());
-      });
+    const matchesDay = filterDay === "all" || Object.keys(stageSchedule).some((dayKey) => dayKey === filterDay && stageSchedule[dayKey].some((act) => act.act.toLowerCase() === band.name.toLowerCase()));
 
     return matchesScene && matchesDay;
   });
+
+  const toggleFavorite = (bandId) => {
+    setFavorites((prevFavorites) => ({
+      ...prevFavorites,
+      [bandId]: !prevFavorites[bandId],
+    }));
+  };
 
   return (
     <div>
@@ -103,7 +106,7 @@ const Schedule = () => {
           const bandTime = bandSchedule && bandSchedule[1].find((act) => act.act.toLowerCase() === band.name.toLowerCase());
 
           return (
-            <div key={band.id || `${band.name}-${band.scene}`} className="p-4 border-2 rounded shadow hover:bg-opacity-10 transition-all">
+            <div key={band.id || `${band.name}-${band.scene}`} className="p-4 border-2 rounded shadow hover:bg-opacity-10 transition-all relative">
               <Image src={band.logo?.startsWith("http") ? band.logo : `/logos/${band.logo}`} width={275} height={250} alt={band.slug || band.name} className="w-full h-48 object-cover mb-4 rounded" />
               <h3 className="text-2xl font-semibold">{band.name}</h3>
               <p className="text-gray-300">Scene: {band.scene}</p>
@@ -116,6 +119,11 @@ const Schedule = () => {
               <Link href={`/program/${band.slug}`}>
                 <button className="mt-4 px-4 py-2 bg-zinc-300 text-black rounded hover:bg-blue-700 hover:text-white">Read more</button>
               </Link>
+
+              {/* Like Button */}
+              <button onClick={() => toggleFavorite(band.id)} className="absolute bottom-2 right-2 text-2xl" aria-label="Toggle favorite">
+                {favorites[band.id] ? <AiFillHeart color="red" /> : <AiOutlineHeart />}
+              </button>
             </div>
           );
         })}
