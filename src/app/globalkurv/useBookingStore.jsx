@@ -22,6 +22,20 @@ const useBookingStore = create((set, get) => ({
   userInfo: [],
   timer: 0,
   timerActive: false,
+  favorites: [], // Tilføjet favoritliste
+
+  // Favorit-funktioner
+  addFavorite: (band) =>
+    set((state) => ({
+      favorites: [...state.favorites, band],
+    })),
+
+  removeFavorite: (slug) =>
+    set((state) => ({
+      favorites: state.favorites.filter((fav) => fav.slug !== slug),
+    })),
+
+  isFavorite: (bandId) => get().favorites.some((fav) => fav.id === bandId),
 
   // Nulstil bookingdata
   resetBooking: () =>
@@ -38,10 +52,10 @@ const useBookingStore = create((set, get) => ({
 
   // Stop timeren
   stopTimer: () =>
-  set((state) => ({
-    timer: 0, // Valgfrit: Nulstil timer, hvis ønsket
-    timerActive: false,
-  })),
+    set((state) => ({
+      timer: 0, // Valgfrit: Nulstil timer, hvis ønsket
+      timerActive: false,
+    })),
 
   resetUserInfo: () => set({ userInfo: [] }),
 
@@ -50,7 +64,6 @@ const useBookingStore = create((set, get) => ({
     try {
       const { reservationId, campingSelection, totalTents } = get();
 
-      // Hvis et reservations-ID allerede findes, returner det direkte
       if (reservationId) {
         console.log("Existing reservation found:", reservationId);
         return reservationId;
@@ -59,13 +72,11 @@ const useBookingStore = create((set, get) => ({
       const { area } = campingSelection;
       const tentsCount = totalTents();
 
-      // Hvis der ikke er et område valgt, eller ingen telte er angivet
       if (!area || tentsCount === 0) {
         console.error("Cannot fetch reservation: area or tents not specified");
         return null;
       }
 
-      // Lav en ny reservation via API'et
       const { id, timeout } = await reserveSpot(area, tentsCount);
       set({
         reservationId: id,
@@ -82,13 +93,13 @@ const useBookingStore = create((set, get) => ({
   },
 
   decrementTimer: () =>
-  set((state) => {
-    if (state.timer > 0) {
-      return { timer: state.timer - 1 };
-    } else {
-      return { timer: 0, timerActive: false };
-    }
-  }),
+    set((state) => {
+      if (state.timer > 0) {
+        return { timer: state.timer - 1 };
+      } else {
+        return { timer: 0, timerActive: false };
+      }
+    }),
 
   completeReservation: async () => {
     const { reservationId } = get();
@@ -160,13 +171,11 @@ const useBookingStore = create((set, get) => ({
       const totalTents = twoPerson + threePerson + ownTent;
       const totalTickets = state.tickets.reduce((sum, ticket) => sum + ticket.quantity, 0);
 
-      // Hvis totalTents overstiger totalTickets, forhindre opdatering
       if (totalTents > totalTickets) {
         console.log("Antallet af telte må ikke overstige antallet af billetter.");
-        return state; // Returner nuværende state uden ændringer
+        return state;
       }
 
-      // Ellers opdater state
       return {
         campingSelection: {
           ...state.campingSelection,
@@ -175,7 +184,6 @@ const useBookingStore = create((set, get) => ({
       };
     }),
 
-  // Funktion til at opdatere campingområde
   updateCampingArea: (area) =>
     set((state) => ({
       campingSelection: {
@@ -184,13 +192,11 @@ const useBookingStore = create((set, get) => ({
       },
     })),
 
-  // Funktion til at fjerne pakkeløsning
   removePackageSelection: () =>
     set(() => ({
       packageSelection: null,
     })),
 
-  // Funktion til at toggle Green Camping
   toggleGreenCamping: () =>
     set((state) => ({
       campingSelection: {

@@ -3,13 +3,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { getAllBands, getSchedule } from "../api/api";
+import useBookingStore from "../globalkurv/useBookingStore";
 
 const Schedule = () => {
   const [bands, setBands] = useState([]);
   const [schedule, setSchedule] = useState({});
   const [filterDay, setFilterDay] = useState("all");
   const [filterScene, setFilterScene] = useState("all");
-  const [favorites, setFavorites] = useState({}); // Track favorites for each band by ID
+
+  // Zustand-funktioner
+  const addFavorite = useBookingStore((state) => state.addFavorite);
+  const removeFavorite = useBookingStore((state) => state.removeFavorite);
+  const favorites = useBookingStore((state) => state.favorites);
 
   useEffect(() => {
     async function fetchData() {
@@ -45,11 +50,14 @@ const Schedule = () => {
     return matchesScene && matchesDay;
   });
 
-  const toggleFavorite = (bandId) => {
-    setFavorites((prevFavorites) => ({
-      ...prevFavorites,
-      [bandId]: !prevFavorites[bandId],
-    }));
+  const toggleFavorite = (band) => {
+    const isFavorited = favorites.some((fav) => fav.slug === band.slug);
+
+    if (isFavorited) {
+      removeFavorite(band.slug); // Fjern bandet fra favoritter
+    } else {
+      addFavorite(band); // Tilføj bandet til favoritter
+    }
   };
 
   return (
@@ -105,6 +113,8 @@ const Schedule = () => {
 
           const bandTime = bandSchedule && bandSchedule[1].find((act) => act.act.toLowerCase() === band.name.toLowerCase());
 
+          const isFavorited = favorites.some((fav) => fav.slug === band.slug);
+
           return (
             <div key={band.id || `${band.name}-${band.scene}`} className="p-4 border-2 rounded shadow hover:bg-opacity-10 transition-all relative">
               <Image src={band.logo?.startsWith("http") ? band.logo : `/logos/${band.logo}`} width={275} height={250} alt={band.slug || band.name} className="w-full h-48 object-cover mb-4 rounded" />
@@ -120,9 +130,9 @@ const Schedule = () => {
                 <button className="mt-4 px-4 py-2 bg-zinc-300 text-black rounded hover:bg-blue-700 hover:text-white">Read more</button>
               </Link>
 
-              {/* Like Button */}
-              <button onClick={() => toggleFavorite(band.id)} className="absolute bottom-2 right-2 text-2xl" aria-label="Toggle favorite">
-                {favorites[band.id] ? <AiFillHeart color="red" /> : <AiOutlineHeart />}
+              {/* Favorit-knap */}
+              <button onClick={() => toggleFavorite(band)} className="absolute bottom-2 right-2 text-2xl" aria-label="Toggle favorite">
+                {isFavorited ? <AiFillHeart color="red" /> : <AiOutlineHeart />}
               </button>
             </div>
           );
