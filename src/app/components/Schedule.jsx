@@ -1,7 +1,37 @@
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { getAllBands, getSchedule } from "../api/api";
 
-const Schedule = ({ bands, schedule, filterScene, filterDay }) => {
+const Schedule = () => {
+  const [bands, setBands] = useState([]);
+  const [schedule, setSchedule] = useState({});
+  const [filterDay, setFilterDay] = useState("all");
+  const [filterScene, setFilterScene] = useState("all");
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const fetchedBands = await getAllBands();
+        const fetchedSchedule = await getSchedule();
+
+        // Opdater bands med scenes
+        const updatedBands = fetchedBands.map((band) => {
+          const scene = Object.keys(fetchedSchedule).find((sceneKey) => Object.values(fetchedSchedule[sceneKey]).some((day) => day.some((act) => act.act === band.name)));
+          return { ...band, scene };
+        });
+
+        setBands(updatedBands);
+        setSchedule(fetchedSchedule);
+      } catch (error) {
+        console.error("Fejl ved hentning af data:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  // Filtrering af bands
   const filteredBands = bands.filter((band) => {
     if (!band.scene) return false;
 
@@ -21,10 +51,38 @@ const Schedule = ({ bands, schedule, filterScene, filterDay }) => {
 
   return (
     <div>
+      {/* Filter-indstillinger */}
+      <header className="flex flex-wrap gap-4 mb-8">
+        <div className="w-full sm:w-1/2 md:w-1/4">
+          <label htmlFor="scene-filter" className="block mb-2"></label>
+          <select id="scene-filter" value={filterScene} onChange={(e) => setFilterScene(e.target.value)} className="w-full p-2 rounded text-black">
+            <option value="all">Alle stages</option>
+            {Object.keys(schedule).map((scene) => (
+              <option key={scene} value={scene}>
+                {scene}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="w-full sm:w-1/2 md:w-1/4">
+          <label htmlFor="day-filter" className="block mb-2"></label>
+          <select id="day-filter" value={filterDay} onChange={(e) => setFilterDay(e.target.value)} className="w-full p-2 rounded text-black">
+            <option value="all">All days</option>
+            <option value="mon">Monday</option>
+            <option value="tue">Tuesday</option>
+            <option value="wed">Wednesday</option>
+            <option value="thu">Thursday</option>
+            <option value="fri">Friday</option>
+            <option value="sat">Saturday</option>
+            <option value="sun">Sunday</option>
+          </select>
+        </div>
+      </header>
+
+      {/* Band-listen */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filteredBands.map((band) => {
           const stageSchedule = schedule[band.scene];
-
           let bandSchedule = null;
           let isCancelled = false;
 
@@ -55,7 +113,6 @@ const Schedule = ({ bands, schedule, filterScene, filterDay }) => {
                 </p>
               )}
               {isCancelled && <p className="text-red-500 font-bold">Cancelled</p>}
-
               <Link href={`/program/${band.slug}`}>
                 <button className="mt-4 px-4 py-2 bg-zinc-300 text-black rounded hover:bg-blue-700 hover:text-white">Read more</button>
               </Link>
