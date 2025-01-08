@@ -92,7 +92,8 @@ export default function Home() {
       </section>
 
       {/* CARDS */}
-      <section id="latest-news" className="scroll-section min-h-screen bg-white flex flex-col justify-center items-center pb-16 px-4 sm:px-8 md:px-16">
+      <div className="bg-custom bg-cover">
+      <section id="latest-news" className="scroll-section min-h-screen flex flex-col justify-center items-center pb-16 px-4 sm:px-8 md:px-16">
         <h2 className="anim-section-text text-black text-4xl sm:text-6xl md:text-8xl font-gajraj font-bold mb-12">LATEST NEWS</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -120,10 +121,14 @@ export default function Home() {
             <p className="text-black text-sm sm:text-base">We have added many new food stalls, so you can enjoy delicious food at the festival.</p>
           </div>
         </div>
+        <div/>
       </section>
-
       <div className="space-y-12 mt-16 md:mt-0">
         <FAQAccordion />
+      </div>
+      </div>
+
+      <div className="space-y-12 mt-16 md:mt-0">
         <Footer />
       </div>
     </div>

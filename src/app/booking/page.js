@@ -12,7 +12,6 @@ import Opsummering from "../components/Opsummering";
 export default function Booking() {
   const [currentView, setCurrentView] = useState("tickets");
   const {
-    fetchReservation,
     timer,
     timerActive,
     decrementTimer,
