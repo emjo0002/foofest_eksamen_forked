@@ -8,9 +8,10 @@ export default function Opsummering({ onNext, onBack }) {
   return (
     <main className="max-w-6xl mx-auto pb-5">
       <div className="flex justify-center gap-8 mt-10 mr-10 ml-10 mb-5 flex-wrap lg:flex-nowrap">
-        <div className="border border-white text-white lg:w-full p-8">
+        <div className="relative border border-white text-white lg:w-full lg:min-h-[29rem] p-8 flex flex-col">
+          <h2 className="font-bold text-4xl mb-4 font-gajraj self-center">User information</h2>
           {/* VISER RESERVATIONSID*/}
-          <div className="mb-8 text-left">
+          <div className="mb-8 self-center">
             {reservationId ? (
               <div>
                 <p className="font-genos text-2xl mb-2">
@@ -24,7 +25,6 @@ export default function Opsummering({ onNext, onBack }) {
 
           {/* BRUGERENS INFORMATION, HVIS ANGIVET */}
           <div className="mb-8">
-            <h3 className="font-genos text-3xl font-extrabold mb-4">User information</h3>
             {userInfo.length > 0 ? (
               userInfo.map((info, index) => (
                 <div key={index} className="mb-4 border-b border-white font-genos text-2xl pb-4">
@@ -47,7 +47,6 @@ export default function Opsummering({ onNext, onBack }) {
             )}
           </div>
         </div>
-
         <Basket />
       </div>
 

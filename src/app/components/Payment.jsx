@@ -30,9 +30,10 @@ export default function Payment({ onBack, onSuccess }) {
 
   return (
     <main className="max-w-6xl mx-auto pb-5">
-      <div className="flex justify-center gap-8 mt-10 mr-10 ml-10 mb-5 flex-wrap lg:flex-nowrap">
-        <div className="border border-white text-white lg:w-full p-8">
-          <div className="mb-8 text-left">
+      <div className="flex justify-center gap-8 mt-10 mr-10 ml-10 mb-5 flex-wrap lg:flex-nowrap lg:min-h-[29rem]">
+        <div className="border border-white text-white lg:w-full p-8 flex flex-col">
+          <h2 className="font-bold text-4xl mb-4 font-gajraj self-center">Card information</h2>
+          <div className="mb-8 self-center">
             {reservationId ? (
               <div>
                 <p className="font-genos text-2xl mb-2">
@@ -48,7 +49,7 @@ export default function Payment({ onBack, onSuccess }) {
           <form id="payment-form">
             <div className="mb-4">
               <label htmlFor="account-number" className="block font-medium mb-2 text-white">
-                Account number:
+                ACCOUNT NUMBER:
               </label>
               <input type="text" name="accountNumber" id="account-number" className="w-full px-3 py-2 border border-gray-300 text-black" placeholder="Enter account number" required />
             </div>

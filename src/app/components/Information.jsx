@@ -62,7 +62,7 @@ export default function Information({ onNext, onBack }) {
 
   return (
     <main className="flex items-center justify-center px-8">
-      <div className="flex flex-col justify-center items-center gap-8 w-full">
+      <div className="flex flex-col justify-center items-center gap-6 w-full">
         <div className="flex flex-col gap-8 justify-center w-full max-w-lg font-genos mt-10">
           {selectedTickets.map((ticket, index) => (
             <div key={`${ticket.id}-${index}`} className="border border-white text-white p-6">
@@ -105,16 +105,17 @@ export default function Information({ onNext, onBack }) {
           ))}
         </div>
 
-        <div className="flex justify-between w-full lg:w-3/4">
-          <button onClick={onBack} className="font-gajraj px-4 py-2 text-3xl text-white lg:text-5xl">
+        <div className="flex justify-between w-full lg:max-w-6xl lgmx-auto">
+          <button onClick={onBack} className="font-gajraj px-4 py-2 text-3xl text-white lg:text-4xl">
             Back
           </button>
-          <button onClick={handleContinue} className="font-gajraj px-4 py-2 text-3xl text-white lg:text-5xl" disabled={isLoading}>
-            {isLoading ? "Saving..." : "Continue"}
+          {error && <p className="font-genos text-2xl text-red-500 text-center lg:px-20">{error}</p>}
+          <button onClick={handleContinue} className="font-gajraj px-4 py-2 text-3xl text-white pb-5 lg:text-4xl" disabled={isLoading}>
+            {isLoading ? "Saving..." : "Next"}
           </button>
         </div>
 
-        {error && <p className="font-genos text-2xl text-red-500 mt-2 mb-10">{error}</p>}
+        
       </div>
     </main>
   );
