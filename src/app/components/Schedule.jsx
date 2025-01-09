@@ -11,7 +11,7 @@ const Schedule = () => {
   const [filterDay, setFilterDay] = useState("all");
   const [filterScene, setFilterScene] = useState("all");
 
-  // FAVORIT FUNKTIONER HENTES FRA ZUSTAND
+  // useBookingStore bruges til at hente funktionerne addFavorite, removeFavorite og favorites fra Zustand.
   const addFavorite = useBookingStore((state) => state.addFavorite);
   const removeFavorite = useBookingStore((state) => state.removeFavorite);
   const favorites = useBookingStore((state) => state.favorites);
@@ -50,13 +50,14 @@ const Schedule = () => {
     return matchesScene && matchesDay;
   });
 
+  // toggleFavorites tjekker om bandet allerede er i “Favorites” baseret på slug.
+
   const toggleFavorite = (band) => {
     const isFavorited = favorites.some((fav) => fav.slug === band.slug);
 
     if (isFavorited) {
-      removeFavorite(band.slug); // Fjern bandet fra favoritter
-    } else {
-      addFavorite(band); // Tilføj bandet til favoritter
+      removeFavorite(band.slug);
+      addFavorite(band);
     }
   };
 
