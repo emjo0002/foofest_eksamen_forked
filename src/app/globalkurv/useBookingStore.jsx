@@ -24,13 +24,20 @@ const useBookingStore = create((set, get) => ({
   timerActive: false,
   favorites: JSON.parse(localStorage.getItem("favorites")) || [], // Tilføjet favoritliste med localStorage
 
-  // Favorit-funktioner
+  // F A V O R I T NEDENFOR
+
+  // Jeg henter den aktuelle favorites-liste fra Zustand med get().
+  // Tilføjer det nye band til listen med  (updatedFavorites).
+  // Gemmer den opdaterede liste i localStorage med JSON.stringify.
+  // Opdaterer Zustand's state ved at kalde set({ favorites: updatedFavorites }).
+
   addFavorite: (band) => {
     const updatedFavorites = [...get().favorites, band];
     localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
     set({ favorites: updatedFavorites });
   },
 
+  //Fjerner et band fra favorites-listen baseret på dens slug.
   removeFavorite: (slug) => {
     const updatedFavorites = get().favorites.filter((fav) => fav.slug !== slug);
     localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
@@ -54,10 +61,10 @@ const useBookingStore = create((set, get) => ({
 
   // Stop timeren
   stopTimer: () =>
-  set((state) => ({
-    timer: 0, // Valgfrit: Nulstil timer, hvis ønsket
-    timerActive: false,
-  })),
+    set((state) => ({
+      timer: 0, // Valgfrit: Nulstil timer, hvis ønsket
+      timerActive: false,
+    })),
 
   resetUserInfo: () => set({ userInfo: [] }),
 
