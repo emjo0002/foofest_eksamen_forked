@@ -50,13 +50,15 @@ const Schedule = () => {
     return matchesScene && matchesDay;
   });
 
+  // toggleFavorites tjekker om bandet allerede er i “Favorites” baseret på slug.
+
   const toggleFavorite = (band) => {
     const isFavorited = favorites.some((fav) => fav.slug === band.slug);
 
     if (isFavorited) {
-      removeFavorite(band.slug); // Fjern bandet fra favoritter
+      removeFavorite(band.slug);
     } else {
-      addFavorite(band); // Tilføj bandet til favoritter
+      addFavorite(band);
     }
   };
 
