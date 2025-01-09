@@ -57,6 +57,7 @@ const Schedule = () => {
 
     if (isFavorited) {
       removeFavorite(band.slug);
+    } else {
       addFavorite(band);
     }
   };

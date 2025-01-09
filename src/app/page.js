@@ -87,11 +87,11 @@ export default function Home() {
         </div>
 
         <div className="absolute bottom-16 animate-bounce">
-          <a href="#latest-news" className="text-white fill-none">
+          <button onClick={scrollToLatestNews} className="text-white fill-none">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-10 h-10">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" stroke="white" d="M19 9l-7 7-7-7" />
             </svg>
-          </a>
+          </button>
         </div>
       </section>
 
