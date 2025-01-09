@@ -11,7 +11,7 @@ const Schedule = () => {
   const [filterDay, setFilterDay] = useState("all");
   const [filterScene, setFilterScene] = useState("all");
 
-  // Zustand-funktioner
+  // FAVORIT FUNKTIONER KOBLET OP PÅ ZUSTAND
   const addFavorite = useBookingStore((state) => state.addFavorite);
   const removeFavorite = useBookingStore((state) => state.removeFavorite);
   const favorites = useBookingStore((state) => state.favorites);
