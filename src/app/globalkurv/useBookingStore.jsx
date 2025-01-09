@@ -52,10 +52,10 @@ const useBookingStore = create((set, get) => ({
 
   // Stop timeren
   stopTimer: () =>
-    set((state) => ({
-      timer: 0, // Valgfrit: Nulstil timer, hvis ønsket
-      timerActive: false,
-    })),
+  set((state) => ({
+    timer: 0, // Valgfrit: Nulstil timer, hvis ønsket
+    timerActive: false,
+  })),
 
   resetUserInfo: () => set({ userInfo: [] }),
 

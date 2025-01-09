@@ -42,12 +42,13 @@ export default function Booking() {
     if (timer === 0 && timerActive) {
       alert("Din reservation er udløbet.");
       resetBooking();
+      resetUserInfo();
       setCurrentView("tickets");
     }
   }, [timer, timerActive, resetBooking]);
 
   // DENNE FUKTION BESTEMMER TRIN STYLING BASERET PÅ CURRUNTVIEW
-  const stepIndicator = (viewName, stepNumber) => {
+  const stepIndicator = (viewName) => {
     const isActive = currentView === viewName;
     return `flex items-center justify-center rounded-full 
             ${isActive ? "w-12 h-12 bg-white border-2 border-black text-black" : "w-10 h-10 bg-black bg-opacity-70 text-white"} 
@@ -70,13 +71,7 @@ export default function Booking() {
   };
 
   return (
-    <div className="mx-auto relative dynamic-bg lg:px-4">
-      <div className="flex justify-center lg:justify-start">
-        <h1 className="text-white text-7xl font-gajraj font-bold pt-20 lg:pb-2">TICKETS</h1>
-      </div>
-
-      <h2 className="flex text-white justify-center text-5xl font-gajraj pb-6">{currentView}</h2>
-
+    <div className="mx-auto relative dynamic-bg pt-14 lg:px-4">
       {/* VORES TRIN I BOOKINGFLOW */}
       <div className="flex justify-center items-center gap-4">
         <div className={stepIndicator("tickets", 1)}>1</div>
@@ -86,11 +81,21 @@ export default function Booking() {
         <div className={stepIndicator("payment", 5)}>5</div>
       </div>
 
-      {timerActive && (
-        <div className="text-white text-xl font-genos text-center p-5">
-          Reservation expires in: {Math.floor(timer / 60)}:{String(timer % 60).padStart(2, "0")}
-        </div>
-      )}
+      
+        {currentView === "information" && !timerActive && (
+          <div className="text-white text-xl font-genos text-center p-5 pt-10">
+          <p>Reservation time is loading...</p>
+           </div>
+          )}
+          {timerActive && (
+          <div className="text-white text-xl font-genos text-center p-5 pt-10">
+          <p>
+            Reservation expires in: {Math.floor(timer / 60)}:
+            {String(timer % 60).padStart(2, "0")}
+          </p>
+          </div>
+        )}
+       
 
       {/* OVERSIGT OVER NAVIGATIONS PÅ BOOKINGFLOW */}
       <div>
