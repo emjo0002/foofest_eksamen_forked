@@ -10,6 +10,7 @@ const Schedule = () => {
   const [schedule, setSchedule] = useState({});
   const [filterDay, setFilterDay] = useState("all");
   const [filterScene, setFilterScene] = useState("all");
+  const [visibleBands, setVisibleBands] = useState(10);
 
   // FAVORIT FUNKTIONER HENTES FRA ZUSTAND
   const addFavorite = useBookingStore((state) => state.addFavorite);
@@ -62,6 +63,10 @@ const Schedule = () => {
     }
   };
 
+  const showMoreBands = () => {
+    setVisibleBands((prevVisible) => prevVisible + 10);
+  };
+
   return (
     <div className="container mx-auto px-4 min-w-[320px]">
       {/* Filter-indstillinger */}
@@ -94,7 +99,7 @@ const Schedule = () => {
 
       {/* Band-listen */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {filteredBands.map((band) => {
+        {filteredBands.slice(0, visibleBands).map((band) => {
           const isFavorited = favorites.some((fav) => fav.slug === band.slug);
 
           return (
@@ -114,6 +119,15 @@ const Schedule = () => {
           );
         })}
       </div>
+
+      {/* Show More Button */}
+      {visibleBands < filteredBands.length && (
+        <div className="text-center mt-8">
+          <button onClick={showMoreBands} className="px-6 py-2 bg-blue-700 text-white rounded hover:bg-blue-500">
+            Show more
+          </button>
+        </div>
+      )}
     </div>
   );
 };
