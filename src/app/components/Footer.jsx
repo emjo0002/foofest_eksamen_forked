@@ -1,8 +1,8 @@
 import { SlSocialInstagram } from "react-icons/sl";
 import { SlSocialLinkedin } from "react-icons/sl";
 import { SlLocationPin } from "react-icons/sl";
-import { FaSpotify } from "react-icons/fa";
-import { IoPerson } from "react-icons/io5";
+import { SlSocialSpotify } from "react-icons/sl";
+import { IoPersonOutline } from "react-icons/io5";
 import Newsletter from "./Newsletter";
 
 export default function Footer() {
@@ -23,10 +23,10 @@ export default function Footer() {
               <SlLocationPin size={24} />
             </a>
             <a href="#" className="hover:text-blue-700">
-              <FaSpotify size={24} />
+              <SlSocialSpotify size={24} />
             </a>
             <a href="#" className="hover:text-blue-700">
-              <IoPerson size={24} />
+              <IoPersonOutline size={24} />
             </a>
           </div>
         </div>
