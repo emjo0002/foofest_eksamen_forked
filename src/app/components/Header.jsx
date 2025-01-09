@@ -11,7 +11,7 @@ export default function Header() {
     <header className="absolute z-10 w-full flex justify-between items-center p-4 text-white">
       <a href="/">
         <div className="text-xs font-bold">
-          <b className="text-4xl font-gajraj">F</b>oofest
+          <b className="text-4xl font-gajraj">F</b>oofestival
         </div>
       </a>
 
