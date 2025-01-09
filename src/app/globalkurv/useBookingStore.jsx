@@ -22,18 +22,20 @@ const useBookingStore = create((set, get) => ({
   userInfo: [],
   timer: 0,
   timerActive: false,
-  favorites: [], // Tilføjet favoritliste
+  favorites: JSON.parse(localStorage.getItem("favorites")) || [], // Tilføjet favoritliste med localStorage
 
   // Favorit-funktioner
-  addFavorite: (band) =>
-    set((state) => ({
-      favorites: [...state.favorites, band],
-    })),
+  addFavorite: (band) => {
+    const updatedFavorites = [...get().favorites, band];
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+    set({ favorites: updatedFavorites });
+  },
 
-  removeFavorite: (slug) =>
-    set((state) => ({
-      favorites: state.favorites.filter((fav) => fav.slug !== slug),
-    })),
+  removeFavorite: (slug) => {
+    const updatedFavorites = get().favorites.filter((fav) => fav.slug !== slug);
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+    set({ favorites: updatedFavorites });
+  },
 
   isFavorite: (bandId) => get().favorites.some((fav) => fav.id === bandId),
 

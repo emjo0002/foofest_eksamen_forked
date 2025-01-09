@@ -11,7 +11,7 @@ const Schedule = () => {
   const [filterDay, setFilterDay] = useState("all");
   const [filterScene, setFilterScene] = useState("all");
 
-  // FAVORIT FUNKTIONER KOBLET OP PÅ ZUSTAND
+  // FAVORIT FUNKTIONER HENTES FRA ZUSTAND
   const addFavorite = useBookingStore((state) => state.addFavorite);
   const removeFavorite = useBookingStore((state) => state.removeFavorite);
   const favorites = useBookingStore((state) => state.favorites);
@@ -61,7 +61,7 @@ const Schedule = () => {
   };
 
   return (
-    <div>
+    <div className="container mx-auto px-4 min-w-[320px]">
       {/* Filter-indstillinger */}
       <header className="flex flex-wrap gap-4 mb-8">
         <div className="w-full sm:w-1/2 md:w-1/4">
@@ -93,39 +93,13 @@ const Schedule = () => {
       {/* Band-listen */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filteredBands.map((band) => {
-          const stageSchedule = schedule[band.scene];
-          let bandSchedule = null;
-          let isCancelled = false;
-
-          if (stageSchedule) {
-            bandSchedule = Object.entries(stageSchedule).find(([day, acts]) =>
-              acts.some((act) => {
-                if (act.act.toLowerCase() === band.name.toLowerCase()) {
-                  if (act.cancelled) {
-                    isCancelled = true;
-                  }
-                  return true;
-                }
-                return false;
-              })
-            );
-          }
-
-          const bandTime = bandSchedule && bandSchedule[1].find((act) => act.act.toLowerCase() === band.name.toLowerCase());
-
           const isFavorited = favorites.some((fav) => fav.slug === band.slug);
 
           return (
             <div key={band.id || `${band.name}-${band.scene}`} className="p-4 border-2 rounded shadow hover:bg-opacity-10 transition-all relative">
-              <Image src={band.logo?.startsWith("http") ? band.logo : `/logos/${band.logo}`} width={275} height={250} alt={band.slug || band.name} className="w-full h-48 object-cover mb-4 rounded" />
+              <Image src={band.logo?.startsWith("http") ? band.logo : `/logos/${band.logo}`} width={275} height={250} alt={band.slug || band.name} className="w-full max-w-[200px] h-48 object-cover mb-4 rounded mx-auto" />
               <h3 className="text-2xl font-semibold">{band.name}</h3>
               <p className="text-gray-300">Scene: {band.scene}</p>
-              {bandTime && (
-                <p className="text-gray-400">
-                  Time: {bandTime.start} - {bandTime.end}
-                </p>
-              )}
-              {isCancelled && <p className="text-red-500 font-bold">Cancelled</p>}
               <Link href={`/program/${band.slug}`}>
                 <button className="mt-4 px-4 py-2 bg-zinc-300 text-black rounded hover:bg-blue-700 hover:text-white">Read more</button>
               </Link>

@@ -71,7 +71,7 @@ export default function Home() {
   return (
     <div className="relative h-screen dynamic-bg min-h-screen bg-cover text-white">
       <section className="h-screen flex flex-col justify-center items-center text-center relative">
-        <h1 className="anim-text font-gajraj text-6xl md:text-9xl tracking-wider mb-4">FOOFEST</h1>
+        <h1 className="anim-text font-gajraj text-6xl md:text-9xl tracking-wider mb-4">FOO FESTIVAL</h1>
         <p className="anim-text font-genos text-2xl md:text-4xl lg:text-6xl mb-8">August 24 - 31</p>
 
         <div className="absolute bottom-8 right-8 space-y-4 text-right">

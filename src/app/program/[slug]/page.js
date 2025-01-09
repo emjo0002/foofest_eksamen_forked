@@ -59,8 +59,7 @@ export default function ArtistPage() {
   if (!band) return <p className="text-black">Loading...</p>;
 
   //BEGRÆNSER BESKRIVELSEN TIL MAX 300 TEGN
-  const truncatedBio =
-  band?.bio?.length > 300 ? `${band.bio.slice(0, 300)}...` : band?.bio || "Ingen beskrivelse tilgængelig";
+  const truncatedBio = band?.bio?.length > 300 ? `${band.bio.slice(0, 300)}...` : band?.bio || "Ingen beskrivelse tilgængelig";
 
   return (
     <div className="relative dynamic-bg min-h-screen text-white p-8">
