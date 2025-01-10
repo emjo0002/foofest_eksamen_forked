@@ -10,7 +10,7 @@ const Schedule = () => {
   const [schedule, setSchedule] = useState({});
   const [filterDay, setFilterDay] = useState("all");
   const [filterScene, setFilterScene] = useState("all");
-  const [visibleBands, setVisibleBands] = useState(10);
+  const [visibleBands, setVisibleBands] = useState(12);
 
   // useBookingStore bruges til at hente funktionerne addFavorite, removeFavorite og favorites fra Zustand.
   const addFavorite = useBookingStore((state) => state.addFavorite);
@@ -64,7 +64,7 @@ const Schedule = () => {
   };
 
   const showMoreBands = () => {
-    setVisibleBands((prevVisible) => prevVisible + 10);
+    setVisibleBands((prevVisible) => prevVisible + 12);
   };
 
   return (
