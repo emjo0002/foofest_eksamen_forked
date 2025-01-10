@@ -22,7 +22,7 @@ const useBookingStore = create((set, get) => ({
   userInfo: [],
   timer: 0,
   timerActive: false,
-  favorites: JSON.parse(localStorage.getItem("favorites")) || [], // Tilføjet favoritliste med localStorage
+  favorites: JSON.parse(localStorage.getItem("favorites")) || [],
 
   // Favorit-funktioner
   addFavorite: (band) => {
