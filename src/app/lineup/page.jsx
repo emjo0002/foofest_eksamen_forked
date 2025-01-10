@@ -67,7 +67,7 @@ export default function LineupPage() {
     setFilteredBands(filtered);
   }, [bands, selectedGenre, searchQuery]);
 
-  const genres = ["All", ...new Set(bands.map((band) => band.genre))];
+  const genres = ["Choose genre", ...new Set(bands.map((band) => band.genre))];
 
   return (
     <div className="relative dynamic-bg text-white min-h-screen px-8 py-12 bg-cover bg-center pt-19">
