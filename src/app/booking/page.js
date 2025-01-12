@@ -11,15 +11,14 @@ import Opsummering from "../components/Opsummering";
 
 export default function Booking() {
   const [currentView, setCurrentView] = useState("tickets");
+  const [postedIds, setPostedIds] = useState([]);
   const {
     timer,
     timerActive,
     decrementTimer,
     stopTimer,
     resetBooking,
-    resetReservationId,
-    resetUserInfo,
-    
+    resetReservationId
   } = useBookingStore();
 
  useEffect(() => {
@@ -42,7 +41,6 @@ export default function Booking() {
     if (timer === 0 && timerActive) {
       alert("Din reservation er udløbet.");
       resetBooking();
-      resetUserInfo();
       setCurrentView("tickets");
     }
   }, [timer, timerActive, resetBooking]);
@@ -63,9 +61,6 @@ export default function Booking() {
     if (currentView === "information") {
       stopTimer();
       resetReservationId();
-    }
-    if (currentView === "opsummering") {
-      useBookingStore.getState().resetUserInfo();
     }
     setCurrentView(previousView);
   };
@@ -100,14 +95,24 @@ export default function Booking() {
       {/* OVERSIGT OVER NAVIGATIONS PÅ BOOKINGFLOW */}
       <div>
         {currentView === "tickets" && <Ticket onNext={() => handleNext("camping")} />}
-        {currentView === "camping" && <Camping onNext={() => handleNext("information")} onBack={() => handleBack("tickets")} />}
-        {currentView === "information" && <Information onNext={() => handleNext("opsummering")} onBack={() => handleBack("camping")} />}
-        {currentView === "opsummering" && <Opsummering onNext={() => handleNext("payment")} onBack={() => handleBack("information")} />}
+        {currentView === "camping" && <Camping onNext={() => handleNext("information")} onBack={() => handleBack("tickets")}/>}
+        {currentView === "information" && 
+        <Information
+         onNext={() => handleNext("opsummering")} 
+         onBack={() => handleBack("camping")} 
+         setPostedIds={setPostedIds}
+         />}
+        {currentView === "opsummering" && 
+        <Opsummering 
+        onNext={() => handleNext("payment")} 
+        onBack={() => handleBack("information")} 
+        postedIds={postedIds}
+        />}
         {currentView === "payment" && (
           <Payment
             onBack={() => handleBack("opsummering")}
             onSuccess={() => {
-              resetUserInfo(), resetBooking();
+              resetBooking();
               setCurrentView("tickets");
             }}
           />

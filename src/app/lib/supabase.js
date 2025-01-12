@@ -37,6 +37,38 @@ export async function getSubById(id) {
   return data[0]; // Returnér første resultat
 }
 
+// Hent flere subscribers efter en liste af ID'er
+export async function getSubsByIds(ids) {
+  try {
+    // Map over ID'erne og kald getSubById for hver
+    const promises = ids.map((id) => getSubById(id));
+    const results = await Promise.all(promises); // Vent på alle promises
+    return results; // Returnér listen af resultater
+  } catch (error) {
+    throw new Error(`Failed to fetch subscribers by IDs: ${error.message}`);
+  }
+}
+
+//Delete
+export async function deleteSub (id) {
+  const response = await fetch(`${url}?id=eq.${id}`, {
+    method: 'DELETE',
+    headers: {
+      apikey: key,
+      Prefer: 'return=representation'
+    }
+  })
+  // eksempel på håndtering af svar
+  if (response.ok) {
+    console.log('Resource deleted successfully')
+  } else {
+    console.error('Failed to delete resource')
+  }
+  const data = await response.json()
+  return data
+}
+
+
 // Opret ny subscriber
 export async function postSub(subdata) {
   const response = await fetch(url, {
