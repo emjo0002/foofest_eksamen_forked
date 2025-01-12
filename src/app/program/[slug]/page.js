@@ -64,11 +64,10 @@ export default function ArtistPage() {
   return (
     <div className="relative dynamic-bg min-h-screen text-white p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-8xl font-gajraj font-bold mb-8 mt-10">{band.name.toUpperCase()}</h1>
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-gajraj font-bold mb-8 mt-10 text-center">{band.name.toUpperCase()}</h1>{" "}
         <a href="/schedule" className="text-white text-4xl hover:scale-110 hover:text-blue-400 transition-transform duration-200">
           <IoIosArrowRoundBack />
         </a>
-
         <div className="flex flex-col md:flex-row items-start gap-12">
           <div className="max-w-lg">
             <Image src={`/logos/${band.logo}`} alt={band.name} width={500} height={500} className="h-auto object-cover" />
