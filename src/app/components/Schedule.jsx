@@ -74,7 +74,7 @@ const Schedule = () => {
         <div className="w-full sm:w-1/2 md:w-1/4">
           <label htmlFor="scene-filter" className="block mb-2"></label>
           <select id="scene-filter" value={filterScene} onChange={(e) => setFilterScene(e.target.value)} className="w-full p-2 rounded text-black">
-            <option value="all">Alle stages</option>
+            <option value="all">All stages</option>
             {Object.keys(schedule).map((scene) => (
               <option key={scene} value={scene}>
                 {scene}

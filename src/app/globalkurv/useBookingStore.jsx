@@ -19,7 +19,6 @@ const useBookingStore = create((set, get) => ({
   reservationId: null,
   packageSelection: null,
   bookingFee: 99,
-  userInfo: [],
   timer: 0,
   timerActive: false,
   favorites: JSON.parse(localStorage.getItem("favorites")) || [],
@@ -66,8 +65,6 @@ const useBookingStore = create((set, get) => ({
       timerActive: false,
     })),
 
-  resetUserInfo: () => set({ userInfo: [] }),
-
   // Funktion til at hente reservation og start timer
   fetchReservation: async () => {
     try {
@@ -89,7 +86,7 @@ const useBookingStore = create((set, get) => ({
       const { id, timeout } = await reserveSpot(area, tentsCount);
       set({
         reservationId: id,
-        timer: timeout / 1000, // Konverter timeout til sekunder
+        timer: timeout / 100, // Konverter timeout til sekunder
         timerActive: true,
       });
 
@@ -127,11 +124,6 @@ const useBookingStore = create((set, get) => ({
       return null;
     }
   },
-
-  updateUserInfo: (newUser) =>
-    set((state) => ({
-      userInfo: [...state.userInfo, newUser],
-    })),
 
   calculateTotal: () => {
     const { tickets, campingSelection, packageSelection, bookingFee } = get();
