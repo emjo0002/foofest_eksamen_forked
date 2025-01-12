@@ -17,13 +17,11 @@ export default function LineupPage() {
         const fetchedBands = await getAllBands();
         const fetchedSchedule = await getSchedule();
 
-        //TILFØJER SCENE, START SLUT OG SLUG TIL HVERT BAND VI KALDER
         const updatedBands = fetchedBands.map((band) => {
           let scene = null;
           let start = null;
           let end = null;
 
-          // SCENE, START, OG SLUT TIDSPUNKT
           Object.keys(fetchedSchedule).forEach((sceneKey) => {
             Object.values(fetchedSchedule[sceneKey]).forEach((day) => {
               day.forEach((act) => {
@@ -36,7 +34,6 @@ export default function LineupPage() {
             });
           });
 
-          // GENERER SLUG BASERET PÅ NAVN
           const slug = band.slug || band.name.toLowerCase().replace(/ /g, "-");
 
           return { ...band, scene, start, end, slug };
@@ -44,8 +41,6 @@ export default function LineupPage() {
 
         setBands(updatedBands);
         setFilteredBands(updatedBands);
-
-        console.log("Updated Bands:", updatedBands);
       } catch (error) {
         console.error("Fejl ved hentning af data:", error);
       }
@@ -67,30 +62,30 @@ export default function LineupPage() {
     setFilteredBands(filtered);
   }, [bands, selectedGenre, searchQuery]);
 
-  const genres = ["All", ...new Set(bands.map((band) => band.genre))];
+  const genres = ["Choose genre", ...new Set(bands.map((band) => band.genre))];
 
   return (
     <div className="relative dynamic-bg text-white min-h-screen px-8 py-12 bg-cover bg-center pt-19">
       <h1 className="text-8xl font-gajraj font-bold mb-8">LINE-UP</h1>
-      <a href="/" className="block mb-4 text-5xl font-bold w-fit">
-        <IoIosArrowRoundBack />
-      </a>
+      <div className="flex items-center justify-between mb-8">
+        <a href="/" className="flex items-center text-4xl font-bold">
+          <IoIosArrowRoundBack className="mr-2" />
+        </a>
 
-      <div className="sm:w-4/5 lg:flex gap-10">
-        <div className="mb-8">
-          <label htmlFor="genre-filter" className="mr-4 text-lg font-semibold"></label>
-          <select id="genre-filter" value={selectedGenre} onChange={(e) => setSelectedGenre(e.target.value)} className="bg-white text-black px-6 py-2 rounded-lg">
-            {genres.map((genre) => (
-              <option key={genre} value={genre}>
-                {genre}
-              </option>
-            ))}
-          </select>
-        </div>
+        <div className="flex items-center space-x-4">
+          <div>
+            <select id="genre-filter" value={selectedGenre} onChange={(e) => setSelectedGenre(e.target.value)} className="bg-white text-black px-6 py-2 rounded-lg">
+              {genres.map((genre) => (
+                <option key={genre} value={genre}>
+                  {genre}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <div className="mb-8 flex items-center">
-          <label htmlFor="search" className="mr-4 text-lg font-semibold"></label>
-          <input id="search" type="text" placeholder="Search by name..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="bg-white text-black px-4 py-2 rounded-lg w-full max-w-72" />
+          <div>
+            <input id="search" type="text" placeholder="Search by name..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="bg-white text-black px-4 py-2 rounded-lg w-full max-w-xs" />
+          </div>
         </div>
       </div>
 
