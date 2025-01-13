@@ -19,7 +19,7 @@ export default function Basket({ selectedArea }) {
       >
         {/* TOTALPRISEN */}
         <div className={`${isOpen ? "block p-10 border-t lg:border-none lg:p-0" : "hidden"} lg:block lg:flex-grow`}>
-          <h2 className="font-bold text-4xl mb-4 font-gajraj justify-center">Basket</h2>
+          <h2 className="font-bold text-5xl mb-4 font-gajraj justify-center">Basket</h2>
 
           {/* HER VISES VALGTE BILLETTER */}
           {tickets.map(
@@ -34,7 +34,7 @@ export default function Basket({ selectedArea }) {
 
           <div className="flex justify-between font-genos text-xl text-white">
             <p>1 x </p>
-            <p>Booking Fee {bookingFee},-</p>
+            <p>Booking Fee {bookingFee},-*</p>
           </div>
 
           {/* VISER PAKKELØSNING HVIS DEN ER VALGT */}
@@ -95,7 +95,7 @@ export default function Basket({ selectedArea }) {
             <p>{calculateTotal()},-</p>
             <span className="text-2xl lg:hidden">{isOpen ? "▼" : "▲"}</span>
           </div>
-          <p className="text-lg">Booking fee: 99,-*</p>
+          <p className="text-lg">Note: This includes setting up your tent by our team</p>
         </div>
       </div>
     </div>

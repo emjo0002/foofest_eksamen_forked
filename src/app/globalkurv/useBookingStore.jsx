@@ -61,7 +61,7 @@ const useBookingStore = create((set, get) => ({
   // Stop timeren
   stopTimer: () =>
     set((state) => ({
-      timer: 0, // Valgfrit: Nulstil timer, hvis ønsket
+      timer: 0, // Valgfrit: Nulstil timer
       timerActive: false,
     })),
 
@@ -86,7 +86,7 @@ const useBookingStore = create((set, get) => ({
       const { id, timeout } = await reserveSpot(area, tentsCount);
       set({
         reservationId: id,
-        timer: timeout / 100, // Konverter timeout til sekunder
+        timer: timeout / 1000, // Konverter timeout til sekunder
         timerActive: true,
       });
 
