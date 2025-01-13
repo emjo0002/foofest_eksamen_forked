@@ -1,14 +1,16 @@
 .carousel .slider-wrapper.axis-horizontal {
-    overflow: visible;
-    max-width: 500px;
+  overflow: visible;
+  max-width: 500px;
 }
 
 .carousel-root .carousel-slider .control-arrow.control-next {
-    height: fit-content;
-    top: 30%;
+  height: fit-content;
+  top: 30%;
+  font-size: 2.5rem;
 }
 
 .carousel-root .carousel-slider .control-arrow.control-prev {
-    height: fit-content;
-    top: 30%;
-} 
+  height: fit-content;
+  top: 30%;
+  font-size: 2.5rem;
+}
