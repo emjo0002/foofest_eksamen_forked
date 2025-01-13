@@ -41,9 +41,10 @@ export default function Booking() {
     if (timer === 0 && timerActive) {
       alert("Din reservation er udløbet.");
       resetBooking();
+      stopTimer();
       setCurrentView("tickets");
     }
-  }, [timer, timerActive, resetBooking]);
+  }, [timer, timerActive, resetBooking, stopTimer]);
 
   // DENNE FUKTION BESTEMMER TRIN STYLING BASERET PÅ CURRUNTVIEW
   const stepIndicator = (viewName) => {
